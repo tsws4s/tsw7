@@ -1,0 +1,49 @@
+	.theme-bar-color 											{ background-color:#000; }
+	
+	/*** Body - Background color *******************************/
+	body 														{ background:#fff; }	
+
+	/*** Body - Background transparency ************************/
+	#style-background 											{ opacity:1;background:url('../images/back-body-texture.png'); }
+	
+	/*** Body - Top light transparency *************************/
+	#style-shadow 												{ opacity:1;background:url('../images/back-body-light.png') no-repeat center top;}
+	
+	/*** Panel - Title bar color  *****   BLUE  ********************/
+	.panel .title,
+	.panel .title-large 										{ background:orange; }
+	.tabularData .sorting_asc									{ color:#000;background:orange; opacity:1; }
+	.tabularData tfoot,
+	.tabularData thead 											{ color:#fff;background:orange; opacity:0.7;}
+
+	#header #notice-wrapper-left								{ background:url('../images/back-bar-headerO.png') repeat-x left top;height:40px;margin-bottom:10px; }
+	#header .nav div.sel 										{ background:url('../images/back-menu-center-selected.png') no-repeat center bottom;position:absolute;top:0;left:0;right:0;bottom:0;z-index:0;display:none; }
+    															  
+	/*** Panel - Gradient transparency *************************/
+	.panel .title .theme,
+	.panel .title-large .theme 									{ opacity:1; }
+	
+	/*** Bar - Button Bar    rgb(209, 209, 209)  *************************/
+	.button-bar													{ padding-left:100px;padding-top:7px;padding-bottom:7px;background-color:rgb(209, 209, 209); }
+	.button-clean span 											{ margin-bottom:0px;vertical-align: middle; }
+
+		:invalid { 
+		  border-color: #e88;
+		  -webkit-box-shadow: 0 0 5px rgba(255, 0, 0, .8);
+		  -moz-box-shadow: 0 0 5px rbba(255, 0, 0, .8);
+		  -o-box-shadow: 0 0 5px rbba(255, 0, 0, .8);
+		  -ms-box-shadow: 0 0 5px rbba(255, 0, 0, .8);
+		  box-shadow:0 0 5px rgba(255, 0, 0, .8);
+		}
+		
+		:required {
+		  border-color: #88a;
+		  -webkit-box-shadow: 0 0 5px rgba(0, 0, 255, .5);
+		  -moz-box-shadow: 0 0 5px rgba(0, 0, 255, .5);
+		  -o-box-shadow: 0 0 5px rgba(0, 0, 255, .5);
+		  -ms-box-shadow: 0 0 5px rgba(0, 0, 255, .5);
+		  box-shadow: 0 0 5px rgba(0, 0, 255, .5);
+		}
+
+
+}
