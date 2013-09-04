@@ -1,0 +1,19 @@
+<html>
+<head>
+</head>
+	<body>
+		<h3>${user.username}, logged into Team Sportsware!</h3>
+		<div>
+		<p>Team Sportsware - Login <br />
+		   Login User: ${user.username}</p>
+		</div>
+		<div>
+		<p> </p>
+		<p>You have requested to be notified upon login of users.</p>
+		<p> </p>
+		<p>Sincerely,</p>
+		<p> </p>
+		<p>Your friends at Team Sportsware</p>
+		</div>
+	</body>
+</html>
