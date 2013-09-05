@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-module
+  type="WEB"
+  name="WebDirectTesting"
+  id="myeclipse.1375079154761"
+  context-root="/WebDirectTesting"
+  j2ee-spec="6.0"
+  archive="WebDirectTesting.war">
+  <attributes>
+    <attribute name="webrootdir" value="src/main/webapp" />
+  </attributes>
+</project-module>
+
