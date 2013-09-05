@@ -1,0 +1,207 @@
+<%@ jet 
+package="com.skyway.integration.java.spring.jet.config" 
+class="WebContextTemplate" 
+%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+<%@taglib prefix="swspr" id="org.skyway.integration.java.spring.skywaySpringCodeGenTags"%>
+<%@taglib prefix="swsprjee" id="com.skyway.integration.java.spring.skywaySpringJeeCodeGenTags"%>
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:tx="http://www.springframework.org/schema/tx" 
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:jee="http://www.springframework.org/schema/jee" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:lang="http://www.springframework.org/schema/lang"
+	xmlns:security="http://www.springframework.org/schema/security"
+	<swspr:compareSpringVersion select="$model" version="3.1" compareType=">=" var="spring31" />
+	<swspr:compareSpringVersion select="$model" version="3.0" compareType="==" var="spring3" />
+	<c:choose>
+	<c:when test="toBoolean($spring31)" >
+     xmlns:mvc="http://www.springframework.org/schema/mvc"	
+	 xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	   http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+      http://www.springframework.org/schema/aop 
+       http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
+	   http://www.springframework.org/schema/tx
+	   http://www.springframework.org/schema/tx/spring-tx-3.1.xsd
+	   http://www.springframework.org/schema/context
+	   http://www.springframework.org/schema/context/spring-context-3.1.xsd
+	   http://www.springframework.org/schema/jee
+	   http://www.springframework.org/schema/jee/spring-jee-3.1.xsd
+	   http://www.springframework.org/schema/lang
+       http://www.springframework.org/schema/lang/spring-lang-3.1.xsd
+       http://www.springframework.org/schema/mvc
+       http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
+       http://www.springframework.org/schema/security
+       http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+     </c:when>
+	<c:when test="toBoolean($spring3)" >
+     xmlns:mvc="http://www.springframework.org/schema/mvc"	
+	 xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	   http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+      http://www.springframework.org/schema/aop 
+       http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+	   http://www.springframework.org/schema/tx
+	   http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+	   http://www.springframework.org/schema/context
+	   http://www.springframework.org/schema/context/spring-context-3.0.xsd
+	   http://www.springframework.org/schema/jee
+	   http://www.springframework.org/schema/jee/spring-jee-3.0.xsd
+	   http://www.springframework.org/schema/lang
+       http://www.springframework.org/schema/lang/spring-lang-3.0.xsd
+       http://www.springframework.org/schema/mvc
+       http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+       http://www.springframework.org/schema/security
+       http://www.springframework.org/schema/security/spring-security-3.0.xsd">
+     </c:when>
+     <c:otherwise>
+     xsi:schemaLocation="http://www.springframework.org/schema/beans
+      http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+      http://www.springframework.org/schema/aop
+      http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+      http://www.springframework.org/schema/tx
+      http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
+      http://www.springframework.org/schema/context 
+      http://www.springframework.org/schema/context/spring-context-2.5.xsd
+      http://www.springframework.org/schema/jee
+      http://www.springframework.org/schema/jee/spring-jee-2.5.xsd
+      http://www.springframework.org/schema/lang
+      http://www.springframework.org/schema/lang/spring-lang-2.5.xsd
+      http://www.springframework.org/schema/security 
+      http://www.springframework.org/schema/security/spring-security-2.0.1.xsd">
+     </c:otherwise>
+     </c:choose>
+<swspr:springProjectVar select="$model" var="springProject" />
+<swsprjee:springJeeProjectVar select="$model" var="springJeeProject" />
+<swsprjee:springJeeDeployables select="$model" container="containerType" persistenceManager="persistenceManager" transactionManager="transactionManager" />
+ 	
+ 	<c:if test="toBoolean($spring3) or toBoolean($spring31)">
+ 	<!-- ******************************************************************** -->
+	<!-- Spring 3.0 configuration -->
+	<!-- ******************************************************************** -->
+ 	<mvc:annotation-driven/>
+	
+	<!-- Allows for mapping the DispatcherServlet to "/" by forwarding static resource requests to the container's default Servlet -->
+	<mvc:default-servlet-handler/>
+	</c:if>
+	
+	<!-- ******************************************************************** -->
+	<!-- Mark bean transactions as annotation driven -->
+	<!-- ******************************************************************** -->
+	<tx:annotation-driven transaction-manager="transactionManager" />
+	
+ 	<!-- ******************************************************************** -->
+	<!-- Register Multi Part Resolve -->
+	<!-- ******************************************************************** -->	
+	<bean id="multipartResolver" class="org.skyway.spring.util.web.binary.ModelBindingMultipartResolver" />
+	
+	<!-- ******************************************************************** -->
+	<!-- Register Streamed Binary Content View -->
+	<!-- ******************************************************************** -->	
+	<bean id="streamedBinaryContentView" class="org.skyway.spring.util.web.binary.ModelAttributeStreamer" />
+	
+	<!-- ******************************************************************** -->
+	<!-- Bean Name View Resolver used to Redirect to Beans by id, required by Binary Content View -->
+	<!-- ******************************************************************** -->
+	<bean id="beanNameViewResolver" class="org.springframework.web.servlet.view.BeanNameViewResolver" />
+	
+	<bean id="viewResolver" class="org.springframework.web.servlet.view.UrlBasedViewResolver">
+		<property name="viewClass" value="org.springframework.web.servlet.view.JstlView" />
+        <property name="prefix" value="/WEB-INF/pages/" />
+	</bean>
+
+	<bean id="iPhoneUserAgentViewResolver" class="org.skyway.spring.util.viewresolution.UserAgentViewResolver">
+        <property name="viewClass" value="org.springframework.web.servlet.view.JstlView" />
+        <property name="agentSubstring" value="iPhone" />
+        <property name="prefix" value="/WEB-INF/iphone/" />
+        <property name="order" value="0" />
+    </bean>
+
+	<bean id="webInfViewResolver" class="org.skyway.spring.util.viewresolution.AbsolutePathViewResolver">
+        <property name="viewClass" value="org.springframework.web.servlet.view.JstlView" />
+        <property name="order" value="-1" />
+    </bean>
+    
+	<!-- ******************************************************************** -->
+	<!-- Scan for web layer annotated beans -->
+	<!-- ******************************************************************** -->
+	<c:choose>
+		<c:when test="$containerType = 'JBOSS'" >
+			<!-- there is a defect in JBoss that prevents Spring component scanning:  http://jira.springframework.org/browse/SPR-5120 -->
+			
+			<!-- Controllers -->
+			<c:iterate select="$model/webControllers" var="controller">
+				<sw:getModelExtension select="$controller" extension="controllerbean" var="beanDetail" />
+				<bean id="<swspr:componentID select="$controller" />" class="<sw:javaType package="true" select="$controller" />" scope="<c:get select="$beanDetail/scope" />" ><c:if test="$beanDetail/scope != 'singleton'">
+					<aop:scoped-proxy /></c:if>
+				</bean>
+			</c:iterate>
+	
+			<!-- Components -->
+			<c:iterate select="$model/conversations" var="conversation">
+				<sw:getModelExtension select="$conversation" extension="componentbean" var="beanDetail" />
+				<bean id="<swspr:componentID select="$conversation" alias="interface"/>" class="<sw:javaType package="true" select="$conversation" />" scope="<c:get select="$beanDetail/scope" />" ><c:if test="$beanDetail/scope != 'singleton'">
+					<aop:scoped-proxy /></c:if>
+				</bean>
+			</c:iterate>
+			
+			<!-- DAOs -->
+			<c:iterate select="$model/dataStores" var="datastore">
+				<sw:getModelExtension select="$datastore" extension="daobean" var="beanDetail" />
+				<bean id="<swspr:componentID select="$datastore" alias="interface"/>" class="<sw:javaType package="true" select="$datastore" alias="primary"/>" scope="<c:get select="$beanDetail/scope" />" ><c:if test="$beanDetail/scope != 'singleton'">
+					<aop:scoped-proxy /></c:if>
+				</bean>
+			</c:iterate>
+			
+			<!-- Services -->
+			<c:iterate select="$model/services" var="service">
+				<sw:getModelExtension select="$service" extension="servicebean" var="beanDetail" />
+				<bean id="<swspr:componentID select="$service"alias="interface" />" class="<sw:javaType package="true" select="$service" />" scope="<c:get select="$beanDetail/scope" />" ><c:if test="$beanDetail/scope != 'singleton'">
+					<aop:scoped-proxy /></c:if>
+				</bean>
+			</c:iterate>
+			
+			<context:annotation-config />
+			<tx:annotation-driven transaction-manager="transactionManager" />
+		</c:when>
+		<c:otherwise>
+	<swspr:componentScanPackages select="$model" var="packagesToScan" types="web" />
+	<c:iterate select="$packagesToScan" var="packageToScan">
+	<context:component-scan base-package="<c:get select="$packageToScan" />" scoped-proxy="interfaces" />
+	</c:iterate>
+		</c:otherwise>
+	</c:choose>
+	
+	<c:setVariable select="'false'" var="hasEmittedCustomizer" /> 
+	<c:iterate select="$model/operations" var="currentOperation">
+		<sw:getModelExtension select="$currentOperation" extension="operationbean" var="beanDetail" />
+		<c:if test="toBoolean($currentOperation/@groovy)">
+			<c:if test="$hasEmittedCustomizer = 'false'">
+				<!-- ******************************************************************** -->
+				<!-- Groovy Scripts -->
+				<!-- ******************************************************************** -->
+				<bean scope="singleton" id="groovyServiceCustomizer" class="org.skyway.spring.util.groovy.GroovyScriptCustomizer" >
+					<constructor-arg>
+						<list>
+							<c:iterate select="$model/functionProviderClassNames" var="className">
+								<value><c:get select="$className" /></value>
+							</c:iterate>
+						</list>
+					</constructor-arg>
+				</bean>
+
+				<c:setVariable select="'true'" var="hasEmittedCustomizer" />
+			</c:if>
+			<lang:groovy id="<swspr:componentID select="$currentOperation" alias="groovyinterface" />" script-source="classpath:<sw:configFile select="$currentOperation" alias="groovyscript" classPathRelative="true" />" customizer-ref="groovyServiceCustomizer" scope="prototype" />
+		</c:if>
+	</c:iterate>
+	
+	<swspr:springContexts select="$model" var="springContexts" contextTypes="webcontext-contributions" />
+	<c:iterate select="$springContexts" var="springContext">
+		<import resource="<swspr:springContextPath select="$springContext" pathFormat="classpath" />" />
+	</c:iterate>
+</beans>

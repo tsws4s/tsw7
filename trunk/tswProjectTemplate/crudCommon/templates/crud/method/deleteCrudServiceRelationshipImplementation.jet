@@ -1,0 +1,56 @@
+<%@ jet 
+package="com.skyway.scaffolding.crud.templates.method" 
+class="DeleteCrudServiceRelationshipImplementationTemplate" 
+%>
+<%@taglib prefix="jet" id="org.eclipse.jet.controlTags"%>  
+<%@taglib prefix="f" id="org.eclipse.jet.formatTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+<%@taglib prefix="gen" id="com.skyway.scaffolding.crud.common.generationTags"%>
+<%@taglib prefix="persistence" id="org.skyway.integration.data.persistence.skywayPersistenceTags"%>
+<persistence:isRelationshipOwner select="$relationship" var="isOwner"/>
+<sw:compareElements sourceElement="$parentType" targetElement="$childType" var="isSelfRelationship"/>
+<jet:choose>
+<jet:when test="($isOwner = 'false') and ($isSelfRelationship = 'false')">
+	<jet:setVariable select="concat('related_',lower-case($relationship/@name))" var="parentVarName"/>
+	<jet:setVariable select="lower-case($childType/@name)" var="childVarName"/>
+</jet:when>
+<jet:otherwise>
+	<jet:setVariable select="concat('related_',lower-case($relationship/@name))" var="childVarName"/>
+	<jet:setVariable select="lower-case($parentType/@name)" var="parentVarName"/>
+</jet:otherwise>
+</jet:choose>
+<jet:choose>
+	<jet:when test="$isOwner = 'true'">
+		<jet:setVariable select="0" var="keyCount" />
+		<jet:get select="$parentType/@name"/> <jet:get select="lower-case($dataType/@name)"/> = <jet:get select="lowercaseFirst($dataType/dataStore/@name)"/>.find<jet:get select="$dataType/@name"/>ByPrimaryKey(<jet:iterate select="$dataType/fields" var="field" ><jet:if test="$field/@primaryKey = 'true'"><jet:if test="$keyCount > 0">, </jet:if><jet:get select="lower-case($dataType/@name)" />_<jet:get select="$field/@name" /><jet:setVariable select="$keyCount+1" var="keyCount" /></jet:if></jet:iterate>, -1, -1);
+		<jet:setVariable select="0" var="keyCount" />
+		<jet:get select="$relationship/targetDataType/@name"/> related_<jet:get select="lower-case($relationship/@name)"/> = <jet:get select="lowercaseFirst($childType/dataStore/@name)"/>.find<jet:get select="$childType/@name"/>ByPrimaryKey(<jet:iterate select="$childType/fields" var="field" ><jet:if test="$field/@primaryKey = 'true'"><jet:if test="$keyCount > 0">, </jet:if>related_<jet:get select="lower-case($relationship/@name)" />_<jet:get select="$field/@name" /><jet:setVariable select="$keyCount+1" var="keyCount" /></jet:if></jet:iterate>, -1, -1);
+	
+		<gen:breakRelationshipText />
+		
+		<jet:get select="lower-case($dataType/@name)"/> = <jet:get select="lowercaseFirst($dataType/dataStore/@name)"/>.store(<jet:get select="lower-case($dataType/@name)"/>);
+		<jet:get select="lowercaseFirst($dataType/dataStore/@name)"/>.flush();
+		
+		related_<jet:get select="lower-case($relationship/@name)"/> = <jet:get select="lowercaseFirst($relationship/targetDataType/dataStore/@name)"/>.store(related_<jet:get select="lower-case($relationship/@name)"/>);
+		<jet:get select="lowercaseFirst($childType/dataStore/@name)"/>.flush();
+		
+		<jet:get select="lowercaseFirst($relationship/targetDataType/dataStore/@name)"/>.remove(related_<jet:get select="lower-case($relationship/@name)"/>);
+		<jet:get select="lowercaseFirst($relationship/targetDataType/dataStore/@name)"/>.flush();
+	</jet:when>
+	<jet:otherwise>
+		<jet:setVariable select="0" var="keyCount" />
+		<jet:get select="$relationship/targetDataType/@name"/> related_<jet:get select="lower-case($relationship/@name)"/> = <jet:get select="lowercaseFirst($relationship/targetDataType/dataStore/@name)"/>.find<jet:get select="$relationship/targetDataType/@name"/>ByPrimaryKey(<jet:iterate select="$relationship/targetDataType/fields" var="field" ><jet:if test="$field/@primaryKey = 'true'"><jet:if test="$keyCount > 0">, </jet:if>related_<jet:get select="lower-case($relationship/@name)" />_<jet:get select="$field/@name" /><jet:setVariable select="$keyCount+1" var="keyCount" /></jet:if></jet:iterate>, -1, -1);
+	
+		<jet:setVariable select="0" var="keyCount" />
+		<jet:get select="$dataType/@name"/> <jet:get select="lower-case($dataType/@name)"/> = <jet:get select="lowercaseFirst($dataType/dataStore/@name)"/>.find<jet:get select="$dataType/@name"/>ByPrimaryKey(<jet:iterate select="$dataType/fields" var="field" ><jet:if test="$field/@primaryKey = 'true'"><jet:if test="$keyCount > 0">, </jet:if><jet:get select="lower-case($dataType/@name)" />_<jet:get select="$field/@name" /><jet:setVariable select="$keyCount+1" var="keyCount" /></jet:if></jet:iterate>, -1, -1);
+	
+		<gen:breakRelationshipText />
+		
+	
+		<jet:get select="lowercaseFirst($relationship/targetDataType/dataStore/@name)"/>.remove(related_<jet:get select="lower-case($relationship/@name)"/>);
+		<jet:get select="lowercaseFirst($relationship/targetDataType/dataStore/@name)"/>.flush();
+		
+		</jet:otherwise>
+</jet:choose>
+
+return <jet:get select="lower-case($dataType/@name)"/>;

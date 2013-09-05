@@ -1,0 +1,93 @@
+<%@ jet 
+package="com.skyway.integration.google.webtoolkit.deploy.templates" 
+class="GWTDataTypeIDTemplate" 
+%>
+
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+<%@taglib prefix="swgwt" id="com.skyway.integration.google.webtoolkit.common.skywayGWTCodeGenTags"%>
+
+package <sw:package select="$model" alias="gwtdatatype" var="pkg"/>;
+
+<sw:javaType select="$model" package="true" var="fullyQualifiedClassName" emit="false"/>
+<java:importsLocation package="{$pkg}"/>
+<java:impliedImport name="{$fullyQualifiedClassName}"/>
+
+/**
+ * Strongly Typed Identifyer Class for <sw:javaType select="$model" alias="gwtdatatype" package="false"/>
+ <sw:generated />
+ */
+public class <sw:javaType select="$model" alias="gwtdatatypeid" package="false"/> implements <java:import><sw:javaType select="$model/project" alias="gwtid" package="true"/></java:import> {
+	
+	/**
+	* GWT Serializer requires public no arg constructor
+	<sw:generated />
+	*/
+	public <sw:javaType select="$model" alias="gwtdatatypeid" package="false"/>() {
+	}
+	
+	<c:iterate select="$model/fields" var="field">
+	<c:if test="$field/@primaryKey = 'true'">
+	/**
+	<sw:documentation select="$field" format=" * "/>
+	<sw:generated />
+	 */
+	<c:choose><c:when test="$field/@collection = 'true'"><sw:modifiers select="$field" /> <sw:declareClassVariable select="$field" ><swgwt:javaType select="$field" package="true" emitCollectionPolicy="concrete" emitIncludes="true"/> </sw:declareClassVariable>;</c:when><c:otherwise><sw:modifiers select="$field" /> <sw:declareClassVariable select="$field" ><swgwt:javaType select="$field" package="true" emitIncludes="true"/> </sw:declareClassVariable>;</c:otherwise></c:choose>
+	</c:if>
+	</c:iterate>
+	
+	/**
+	<sw:generated />
+ 	*/
+	public <sw:javaType select="$model" alias="gwtdatatypeid" package="false"/>(<sw:javaType select="$model" alias="gwtdatatype" package="false"/> <sw:getVariableName select="$model" capitalize="false"/>) {
+		<c:iterate select="$model/fields" var="field">
+		<c:if test="$field/@primaryKey = 'true'">
+		set<sw:getVariableName select="$field" capitalize="true"/>(<sw:getVariableName select="$model" capitalize="false"/>.get<sw:getVariableName select="$field" capitalize="true"/>());
+		</c:if>
+		</c:iterate>
+	}
+	
+	<c:iterate select="$model/fields" var="field">
+	<c:if test="$field/@primaryKey = 'true'">
+	/**
+	<sw:documentation select="$field" format=" * "/>
+	<sw:generated />
+	*/
+	public void set<sw:getVariableName select="$field" capitalize="true"/>(<c:choose><c:when test="$field/@collection = 'true'"><swgwt:javaType select="$field" package="true" emitCollectionPolicy="concrete" emitIncludes="true"/> <sw:getVariableName select="$field"/></c:when><c:otherwise><swgwt:javaType select="$field" package="true" emitIncludes="true"/> <sw:getVariableName select="$field"/></c:otherwise></c:choose>) {
+		this.<sw:getVariableName select="$field"/> = <sw:getVariableName select="$field"/>;
+	}
+	
+	/**
+	<sw:documentation select="$field" format=" * "/>
+	<sw:generated />
+	*/
+	public <c:choose><c:when test="$field/@collection = 'true'"><swgwt:javaType select="$field" package="true" emitCollectionPolicy="concrete" emitIncludes="true"/></c:when><c:otherwise><swgwt:javaType select="$field" package="true" emitIncludes="true"/></c:otherwise></c:choose>
+		get<sw:getVariableName select="$field" capitalize="true"/>() {			
+		return this.<sw:getVariableName select="$field"/>;
+	} 
+</c:if>
+</c:iterate>
+
+	/**
+	* Returns a textual representation of a bean.
+	*
+	<sw:generated />  
+	*/
+	public String toString(){
+		
+		<java:import>java.lang.StringBuilder</java:import> buffer = new <java:import>java.lang.StringBuilder</java:import>();
+		
+		<c:iterate select="$model/fields" var="field">
+		<c:if test="$field/@primaryKey = 'true'">
+		buffer.append("<sw:getVariableName select="$field"/>=[").append(<sw:getVariableName select="$field"/>).append("] ");
+		</c:if>
+		</c:iterate>
+		
+		return buffer.toString();
+	}	
+	
+	<c:setVariable select="'gwtdatatypeid'" var="equalsTypeAlias" />
+	<c:include template="templates/common/jpa/HashCodeAndEquals.jet" />
+}

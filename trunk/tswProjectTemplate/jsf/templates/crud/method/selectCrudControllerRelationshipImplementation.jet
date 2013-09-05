@@ -1,0 +1,10 @@
+<%@ jet 
+package="com.skyway.scaffolding.crud.templates.method" 
+class="SelectCrudControllerRelationshipImplementationTemplate" 
+%>
+<%@taglib prefix="jet" id="org.eclipse.jet.controlTags"%>  
+<%@taglib prefix="f" id="org.eclipse.jet.formatTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+<jet:setVariable select="0" var="keyCount" />
+<jet:get select="lower-case($relationship/@name)"/> = <jet:get select="lowercaseFirst($relationship/targetDataType/dataStore/@name)"/>.find<jet:get select="$relationship/targetDataType/@name"/>ByPrimaryKey(<jet:iterate select="$relationship/targetDataType/fields" var="field" ><jet:if test="$field/@primaryKey = 'true'"><jet:if test="$keyCount > 0">, </jet:if>related_<jet:get select="lower-case($relationship/@name)"/>_<jet:get select="$field/@name" /><jet:setVariable select="$keyCount+1" var="keyCount" /></jet:if></jet:iterate>, -1, -1);
+return "/jsf/<jet:get select="lower-case($dataType/@name)"/>/<jet:get select="lower-case($relationship/@name)"/>/view<jet:get select="uppercaseFirst($relationship/@name)"/>.xhtml";

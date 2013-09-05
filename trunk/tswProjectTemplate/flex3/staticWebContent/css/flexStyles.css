@@ -1,0 +1,122 @@
+@namespace "library://ns.adobe.com/flex/mx";
+
+Application
+{
+	background-color:#FFFFFF;
+	backgroundGradientColors: #FFFFFF, #FFFFFF;
+	backgroundGradientAlphas: 0, 0;
+}
+
+Label.pageTitle
+{
+	font-size:16px;
+	font-weight:bold;
+}
+
+Label.tabUserMessage
+{
+	color:#146400;
+	font-weight:bold;
+	font-style:italic;
+	background-color:#BDD5EF;
+}
+
+Label.accordionUserMessage
+{
+	color:#146400;
+	font-weight:bold;
+	font-style:italic;
+	background-color:#ECE9D8;
+}
+
+
+VRule
+{
+	stroke-color:#464646;
+	stroke-width:1px;
+	
+}
+Panel
+{	
+	padding-bottom:5px;
+	padding-left:5px;
+	padding-right:5px;
+	padding-top:5px;
+}
+
+TabNavigator
+{
+	background-color:#BDD5EF;
+	padding-bottom:5px;
+	padding-left:5px;
+	padding-right:5px;
+	padding-top:5px;
+}
+
+Accordion
+{
+	background-color:#ECE9D8;
+}
+
+VBox.section
+{
+	padding-bottom:5px;
+	padding-left:5px;
+	padding-right:5px;
+	padding-top:5px;
+}
+
+HBox.tabheader
+{
+ padding-right:17px;
+}
+
+Button.logo
+{
+	up-skin: Embed("../images/me4s_logo.png");	
+	over-skin: Embed("../images/me4s_logo.png");
+	down-skin: Embed("../images/me4s_logo.png");
+}
+
+Button.back
+{
+ icon: Embed("../images/icons/back.gif");
+}
+
+
+Button.new
+{
+ icon: Embed("../images/icons/new.png");
+}
+
+Button.delete
+{
+	icon: Embed("../images/icons/delete.png");
+}
+
+Button.save
+{
+	icon: Embed("../images/icons/save.png");
+}
+
+Button.edit
+{
+	icon: Embed("../images/icons/edit.png");
+}
+
+Button.view
+{
+	icon: Embed("../images/icons/view.png");
+}
+
+Button.cancel
+{
+	icon: Embed("../images/icons/cancel.png");
+}
+
+Button.closetab
+{
+	up-skin: Embed("../images/icons/close.png");	
+	over-skin: Embed("../images/icons/close_hover.png");
+	down-skin: Embed("../images/icons/close_clicked.png");
+}

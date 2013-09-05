@@ -1,0 +1,54 @@
+<%@ jet 
+package="org.skyway.integration.java.spring.jet.core" 
+class="DataTypeBeanInfoTemplate" 
+%>
+
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+<%@taglib prefix="persistence" id="org.skyway.integration.data.persistence.skywayPersistenceTags"%>
+
+package <sw:package alias="beaninfo" select="$model" var="pkg"/>;
+
+<sw:javaType select="$model" alias="beaninfo" package="true" var="fullyQualifiedClassName" emit="false"/>
+<java:importsLocation package="{$pkg}"/>
+<java:impliedImport name="{$fullyQualifiedClassName}"/>
+
+/**
+<sw:documentation select="$model" format=" * " />
+<sw:generated />
+<sw:auxiliaryModelComponent />
+ */
+<sw:variableStorageReset scope="class" />
+public class <sw:javaType alias="beaninfo" select="$model" package="false"/> extends <java:import>java.beans.SimpleBeanInfo</java:import>	{
+
+	/**
+	 <sw:generated />  
+	 */
+	public <sw:javaType alias="beaninfo" select="$model" package="false"/>()	{
+	}
+
+	/**
+	 * Returns the property descriptors used by BeanInfo for getters and setters within this class.
+	 <sw:generated />
+	 */
+	public <java:import>java.beans.PropertyDescriptor</java:import>[] getPropertyDescriptors()	{
+		try{
+			return new <java:import>java.beans.PropertyDescriptor</java:import>[]{
+			<c:setVariable select="false()" var="emitCommaFlag" />
+			<c:iterate select="$model/fields" var="field"><c:if test="$emitCommaFlag">,</c:if>
+				new <java:import>java.beans.PropertyDescriptor</java:import>("<sw:getVariableName select="$field" />", <sw:javaType select="$model" package="false"/>.class, "get<sw:getVariableName select="$field" capitalize="true"/>", "set<sw:getVariableName select="$field" capitalize="true"/>")
+				<c:setVariable select="true()" var="emitCommaFlag" />
+			</c:iterate>
+			<c:iterate select="$model/relationships" var="relationship" ><c:if test="$emitCommaFlag">,</c:if>
+				new <java:import>java.beans.PropertyDescriptor</java:import>("<sw:getVariableName select="$relationship" />", <sw:javaType select="$model" package="false"/>.class, "get<sw:getVariableName select="$relationship" capitalize="true"/>", "set<sw:getVariableName select="$relationship" capitalize="true"/>")
+				<c:setVariable select="true()" var="emitCommaFlag" />
+			</c:iterate>
+			};
+		}catch(<java:import>java.beans.IntrospectionException</java:import> x){
+			throw new <java:import>java.lang.RuntimeException</java:import>("Error getting property descriptors for [<sw:javaType select="$model"  package="true"/>]:", x);
+		}
+	}
+
+}

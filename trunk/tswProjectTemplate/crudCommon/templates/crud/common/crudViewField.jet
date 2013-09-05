@@ -1,0 +1,24 @@
+<%@ jet 
+package="com.skyway.scaffolding.crud.templates.common" 
+class="CrudViewFieldTemplate" 
+%>
+<%@taglib prefix="jet" id="org.eclipse.jet.controlTags"%>  
+<%@taglib prefix="f" id="org.eclipse.jet.formatTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+<%@taglib prefix="gen" id="com.skyway.scaffolding.crud.common.generationTags"%>
+						<gen:isCalendarField select="$field" var="isCalendarField" />
+						<jet:choose>
+							<jet:when test="$field/dataType/@type = 'DATE'">
+							<fmt:formatDate dateStyle="short" type="date" value="${<jet:get select="$currentDataTypeName"/>.<jet:get select="$field/@name" /><jet:if test="$isCalendarField">.time</jet:if>}"/>
+							</jet:when>
+							<jet:when test="$field/dataType/@type = 'DATETIME'">
+							<fmt:formatDate dateStyle="short" type="both" value="${<jet:get select="$currentDataTypeName"/>.<jet:get select="$field/@name" /><jet:if test="$isCalendarField">.time</jet:if>}"/>
+							</jet:when>
+							<jet:when test="$field/dataType/@type = 'TIME'">
+							<fmt:formatDate timeStyle="short" type="time" value="${<jet:get select="$currentDataTypeName"/>.<jet:get select="$field/@name" /><jet:if test="$isCalendarField">.time</jet:if>}"/>
+							</jet:when>
+							<jet:otherwise>
+							${<jet:get select="$currentDataTypeName"/>.<jet:get select="$field/@name" />}
+							</jet:otherwise>
+						</jet:choose>
+						&nbsp;

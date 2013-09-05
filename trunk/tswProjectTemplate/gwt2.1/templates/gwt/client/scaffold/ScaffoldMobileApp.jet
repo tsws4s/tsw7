@@ -1,0 +1,237 @@
+<%@ jet package="com.skyway.templates" class="ScaffoldMobileAppTemplate"%>
+<%@taglib prefix="swgwt" id="com.skyway.integration.google.webtoolkit.common.skywayGWTCodeGenTags"%>
+
+package <sw:package select="$model" alias="ScaffoldMobileApp"var="pkg"/>;
+<java:importsLocation package="{$pkg}"/>
+
+import com.google.gwt.activity.shared.*;
+import com.google.gwt.place.shared.*;
+
+
+/**
+ * Mobile application for browsing entities.
+ */
+public class <sw:javaType select="$model" alias="ScaffoldMobileApp" package="false"/> extends ScaffoldApp {
+
+	/**
+	 * The root activity that shows all entities.
+	 */
+	private static class DefaultActivity extends AbstractActivity implements
+			<sw:javaType select="$model" alias="IsScaffoldMobileActivity" emitIncludes="true" package="true"/>  {
+
+		private final <java:import>com.google.gwt.user.client.ui.Widget</java:import> widget;
+
+		public DefaultActivity(Widget widget) {
+			this.widget = widget;
+		}
+
+		public void start(<java:import>com.google.gwt.user.client.ui.AcceptsOneWidget</java:import> panel, <java:import>com.google.gwt.event.shared.EventBus</java:import> eventBus) {
+			panel.setWidget(widget);
+		}
+
+		public Place getBack<java:import>com.google.gwt.user.client.ui.Button</java:import>Place() {
+			return null;
+		}
+
+		public String getBackButtonText() {
+			return null;
+		}
+
+		public Place getEditButtonPlace() {
+			return null;
+		}
+
+		public String getTitleText() {
+			return "All Entities";
+		}
+
+		public boolean hasEditButton() {
+			return false;
+		}
+	}
+
+	public static final Place ROOT_PLACE = new Place() {
+	};
+
+	private static <sw:javaType select="$model" alias="MobileListResources" emitIncludes="true" package="true"/>  res = <java:import>com.google.gwt.core.client.GWT</java:import>.create(MobileListResources.class);
+
+	/**
+	 * Get the list resources used for mobile.
+	 */
+	public static MobileListResources getMobileListResources() {
+		if (res == null) {
+			res = GWT.create(MobileListResources.class);
+			res.cellListStyle().ensure<java:import>com.google.inject.Inject</java:import>ed();
+		}
+		return res;
+	}
+
+	private <java:import><sw:javaType select="$model" alias="IsScaffoldMobileActivity" package="true"/></java:import> lastActivity = null;
+
+    private static final <java:import>java.util.logging.Logger</java:import> log = Logger.getLogger(Scaffold.class.getName());
+
+    private final <java:import><sw:javaType select="$model" alias="ScaffoldMobileShell" package="true"/></java:import> shell;
+    private final <java:import><sw:javaType select="$model" alias="ScaffoldMobileActivities" package="true"/></java:import> scaffoldMobileActivities;
+    private final <java:import><sw:javaType select="$model" alias="ApplicationRequestFactory" package="true"/></java:import>  requestFactory;
+    private final EventBus eventBus;
+    private final PlaceController placeController;
+    private final <java:import><sw:javaType select="$model" alias="PlaceHistoryFactory" package="true"/></java:import> placeHistoryFactory;
+
+    @Inject
+    public <sw:javaType select="$model" alias="ScaffoldMobileApp" package="false"/>(ScaffoldMobileShell shell, ApplicationRequestFactory requestFactory, EventBus eventBus,
+                               PlaceController placeController, ScaffoldMobileActivities scaffoldMobileActivities,
+                               PlaceHistoryFactory placeHistoryFactory) {
+        this.shell = shell;
+        this.requestFactory = requestFactory;
+        this.eventBus = eventBus;
+        this.placeController = placeController;
+        this.scaffoldMobileActivities = scaffoldMobileActivities;
+        this.placeHistoryFactory = placeHistoryFactory;
+
+    }
+
+	@Override
+    public void run() {
+		isMobile = true;
+
+        /* Add handlers, setup activities */
+
+        init();
+
+        /* Hide the loading message */
+        <java:import>com.google.gwt.dom.client.Element</java:import> loading = <java:import>com.google.gwt.dom.client.Document</java:import>.get().getElementById("loading");
+        loading.getParentElement().removeChild(loading);
+
+        /* And show the user the shell */
+
+		<java:import>com.google.gwt.user.client.ui.RootPanel</java:import>.get().add(shell);
+    }
+
+    private void init() {
+
+        GWT.setUncaughtExceptionHandler(new GWT.UncaughtExceptionHandler() {
+	    public void onUncaughtException(Throwable e) {
+	        <java:import>com.google.gwt.user.client.Window</java:import>.alert("Error: " + e.getMessage());
+	        log.log(<java:import>java.util.logging.Level</java:import>.SEVERE, e.getMessage(), e);
+	    }
+        });
+
+        if (<java:import>com.google.gwt.logging.client.LogConfiguration</java:import>.loggingIsEnabled()) {
+          /* Add remote logging handler */
+          <java:import><swgwt:getRequestFactoryPackage suffix="gwt"/>.client.RequestFactoryLogHandler</java:import>.LoggingRequestProvider provider = new RequestFactoryLogHandler.LoggingRequestProvider() {
+              public <java:import><swgwt:getRequestFactoryPackage/>.shared.LoggingRequest</java:import> getLoggingRequest() {
+                return requestFactory.loggingRequest();
+              }
+            };
+          Logger.getLogger("").addHandler(
+              new RequestFactoryLogHandler(provider, Level.WARNING,
+                                           new <java:import>java.util.ArrayList</java:import><String>()));
+        }
+
+        /* Left side lets us pick from all the types of entities */
+
+		final <java:import>com.google.gwt.text.shared.Renderer</java:import><<sw:javaType select="$model" alias="ProxyListPlace" emitIncludes="true" package="true"/>> placePickerRenderer = new <java:import><sw:javaType select="$model" alias="ApplicationListPlaceRenderer" package="true"/></java:import>();
+		<java:import>com.google.gwt.cell.client.Cell</java:import><<sw:javaType select="$model" alias="ProxyListPlace"/>> placePickerCell = new <java:import>com.google.gwt.cell.client.AbstractCell</java:import><<sw:javaType select="$model" alias="ProxyListPlace"/>>() {
+			@Override
+			public void render(<java:import>com.google.gwt.cell.client.Cell.Context</java:import> context,<sw:javaType select="$model" alias="ProxyListPlace"/> value, 
+					<java:import>com.google.gwt.safehtml.shared.SafeHtmlBuilder</java:import> sb) {
+				sb.appendEscaped(placePickerRenderer.render(value));
+			}
+		};
+		<java:import>com.google.gwt.user.cellview.client.CellList</java:import><<sw:javaType select="$model" alias="ProxyListPlace"/>> placePickerList = new CellList<<sw:javaType select="$model" alias="ProxyListPlace"/>>(
+				placePickerCell, getMobileListResources());
+		placePickerList.set<java:import>com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy</java:import>(KeyboardSelectionPolicy.DISABLED);
+		final <java:import>com.google.gwt.user.client.ui.ValuePicker</java:import><ProxyListPlace> placePickerView = new ValuePicker<ProxyListPlace>(
+				placePickerList);
+		Activity defaultActivity = new DefaultActivity(placePickerView);
+        <sw:javaType select="$model" alias="ProxyPlaceToListPlace" package="true" emitIncludes="true"/> proxyPlaceToListPlace = new <sw:javaType select="$model" alias="ProxyPlaceToListPlace"/>();
+		<sw:javaType select="$model" alias="ProxyListPlacePicker" package="true" emitIncludes="true"/> proxyListPlacePicker = new <sw:javaType select="$model" alias="ProxyListPlacePicker"/>(
+				placeController, proxyPlaceToListPlace);
+        placePickerView.setAcceptableValues(getTopPlaces());
+        proxyListPlacePicker.register(eventBus, placePickerView);
+
+        /*
+		 * Wrap the scaffoldMobileActivities so we can intercept activity requests
+		 * and remember the last activity (for back button support).
+       */
+
+		scaffoldMobileActivities.setRootActivity(defaultActivity);
+		ActivityMapper activityMapper = new ActivityMapper() {
+			public Activity getActivity(Place place) {
+				// Defer to scaffoldMobileActivities.
+				Activity nextActivity = scaffoldMobileActivities.getActivity(place);
+
+				// Clear the value of the placePicker so we can select a new top level
+				// value.
+				placePickerView.setValue(null, false);
+
+				// Update the title, back and edit buttons.
+				Button backButton = shell.getBackButton();
+				if (nextActivity instanceof IsScaffoldMobileActivity) {
+					lastActivity = (IsScaffoldMobileActivity) nextActivity;
+
+					// Update the title.
+					shell.setTitleText(lastActivity.getTitleText());
+
+					// Update the back button.
+					String backButtonText = lastActivity.getBackButtonText();
+					if (backButtonText == null || backButtonText.length() == 0) {
+						shell.setBackButtonVisible(false);
+					} else {
+						shell.setBackButtonVisible(true);
+						backButton.setText(backButtonText);
+					}
+
+					// Update the edit button.
+					shell.setEditButtonVisible(lastActivity.hasEditButton());
+				} else {
+					lastActivity = null;
+					shell.setTitleText("");
+					shell.setBackButtonVisible(false);
+					shell.setEditButtonVisible(false);
+				}
+
+				// Return the activity.
+				return nextActivity;
+			}
+		};
+
+		/*
+		 * The body is run by an ActivityManager that listens for PlaceChange events
+		 * and finds the corresponding Activity to run
+		 */
+
+		final ActivityManager activityManager = new ActivityManager(
+				activityMapper, eventBus);
+
+        activityManager.setDisplay(shell.getBody());
+        
+        /* Browser history integration */
+        <sw:javaType select="$model" alias="ScaffoldPlaceHistoryMapper" emitIncludes="true" package="true"/> mapper = GWT.create(ScaffoldPlaceHistoryMapper.class);
+        mapper.setFactory(placeHistoryFactory);
+        PlaceHistoryHandler placeHistoryHandler = new PlaceHistoryHandler(mapper);
+		placeHistoryHandler.register(placeController, eventBus, ROOT_PLACE);
+        placeHistoryHandler.handleCurrentHistory();
+
+		shell.getBackButton().add<java:import>com.google.gwt.event.dom.client.ClickHandler</java:import>(new ClickHandler() {
+			public void onClick(<java:import>com.google.gwt.event.dom.client.ClickEvent</java:import> event) {
+				if (lastActivity != null) {
+					Place backPlace = lastActivity.getBackButtonPlace();
+					if (backPlace != null) {
+						placeController.goTo(backPlace);
+}
+				}
+			}
+		});
+		shell.getEditButton().addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				if (lastActivity != null) {
+					Place editPlace = lastActivity.getEditButtonPlace();
+					if (editPlace != null) {
+						placeController.goTo(editPlace);
+					}
+				}
+			}
+		});
+	}
+}

@@ -1,0 +1,11 @@
+<%@ jet 
+package="org.skyway.integration.java.spring.jet.annotation" 
+class="ClassTransactionAnnotationTemplate" 
+%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+<sw:getInGroovyScript var="inGroovyScript" />
+<c:if test="string($inGroovyScript) != 'true'">
+	<swspr:transactional select="$beanDetail" />
+</c:if>

@@ -1,0 +1,14 @@
+<%@ jet 
+package="com.skyway.scaffolding.crud.templates.bundle" 
+class="ApplicationResourceBundleTemplate" 
+%>
+<%@taglib prefix="jet" id="org.eclipse.jet.controlTags"%>  
+<%@taglib prefix="f" id="org.eclipse.jet.formatTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+
+# general
+application.title=<jet:get select="$project/@name" />
+
+# navigation
+navigation.backToDashboard=Back to Dashboard
+navigation.view=View

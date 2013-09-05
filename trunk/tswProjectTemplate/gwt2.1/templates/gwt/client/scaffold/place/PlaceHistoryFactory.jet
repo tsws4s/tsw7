@@ -1,0 +1,25 @@
+<%@ jet package="com.skyway.templates" class="PlaceHistoryFactoryTemplate"%>
+
+package <sw:package select="$model" alias="PlaceHistoryFactory"var="pkg"/>;
+<java:importsLocation package="{$pkg}"/>
+
+public class <sw:javaType select="$model" alias="PlaceHistoryFactory" package="false"/> {
+	
+	private final ProxyListPlace.Tokenizer proxyList<java:import>com.google.gwt.place.shared.PlaceTokenizer</java:import>;
+    private final ProxyPlace.Tokenizer proxyPlaceTokenizer;
+
+    @<java:import>com.google.inject.Inject</java:import>
+    public <sw:javaType select="$model" alias="PlaceHistoryFactory" package="false"/>(<sw:javaType select="$model" alias="ApplicationRequestFactory" package="true"/>  requestFactory) {
+        this.proxyListPlaceTokenizer = new ProxyListPlace.Tokenizer(requestFactory);
+        this.proxyPlaceTokenizer = new ProxyPlace.Tokenizer(requestFactory);
+    }
+
+    public PlaceTokenizer<ProxyListPlace> getProxyListPlaceTokenizer() {
+        return proxyListPlaceTokenizer;
+    }
+
+    public PlaceTokenizer<ProxyPlace> getProxyPlaceTokenizer() {
+        return proxyPlaceTokenizer;
+    }
+
+}

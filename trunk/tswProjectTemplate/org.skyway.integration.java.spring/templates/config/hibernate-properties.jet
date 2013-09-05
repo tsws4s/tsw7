@@ -1,0 +1,6 @@
+<%@ jet 
+package="org.skyway.integration.java.spring.jet.config" 
+class="HibernatePropertiesTemplate" 
+%>
+hibernate.bytecode.provider=javassist
+

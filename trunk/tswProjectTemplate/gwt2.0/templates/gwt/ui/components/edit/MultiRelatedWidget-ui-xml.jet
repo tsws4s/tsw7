@@ -1,0 +1,33 @@
+<%@ jet 
+package="com.skyway.integration.google.webtoolkit.deploy.templates" 
+class="MultiRelatedWidgetUiXmlTemplate" 
+%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+<%@taglib prefix="swgwt" id="com.skyway.integration.google.webtoolkit.common.skywayGWTCodeGenTags"%>
+
+<swgwt:getGWTDataType select="$model" var="gwtDataType"/>
+
+<ui:UiBinder
+  ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
+  ui:generateKeys="com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator"
+  ui:generateLocales="default"
+  xmlns:ui='urn:ui:com.google.gwt.uibinder'
+  xmlns:<sw:getVariableName select="$model" uncapitalize="true"/>='urn:import:<sw:package select="$model" alias="gwteditwidget"/>'
+  xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+  <ui:style src='../<sw:javaType select="$model" alias="gwtcss" package="false"/>.css'/>
+
+  <g:DisclosurePanel ui:field="<sw:getVariableName select="$model" uncapitalize="true"/>sPanel">
+  <g:header><c:get select="$gwtDataType/display"/>s</g:header>
+  <g:VerticalPanel>
+  <<sw:getVariableName select="$model" uncapitalize="true"/>:<sw:javaType select="$model" alias="gwttable" package="false"/> showActions="true" ui:field="<sw:getVariableName select="$model" uncapitalize="true"/>Table" addStyleNames="{style.gwt-CrudRelatedSelectionList}"/>
+  <g:HorizontalPanel>
+  <g:Button addStyleNames="{style.gwt-CrudEditSaveButton}" ui:field="newButton"><ui:msg description="NewButton">New</ui:msg></g:Button>
+  <g:Button addStyleNames="{style.gwt-CrudEditCancelButton}" ui:field="selectButton"><ui:msg description="SelectButton">Pick <c:get select="$gwtDataType/display"/>s</ui:msg></g:Button>
+  </g:HorizontalPanel>
+  </g:VerticalPanel>
+  </g:DisclosurePanel>
+
+</ui:UiBinder>

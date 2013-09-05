@@ -1,0 +1,25 @@
+<%@ jet 
+package="com.skyway.integration.java.spring.jet.config.websphere" 
+class="WebSphereEntityDSTemplate" 
+%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="f" id="org.eclipse.jet.formatTags"%>
+<%@taglib prefix="persistence" id="org.skyway.integration.data.persistence.skywayPersistenceTags"%>
+<%@taglib prefix="swspr" id="org.skyway.integration.java.spring.skywaySpringCodeGenTags"%>
+<%@taglib prefix="swsprjee" id="com.skyway.integration.java.spring.skywaySpringJeeCodeGenTags"%>
+<swsprjee:springJeeProjectVar select="$model" var="springJeeProject" />
+	<c:setVariable select="''" var="SecurityDSName" />
+	<c:if test="$springJeeProject/securitySettings/@enabled = 'true'">
+		<c:if test="$springJeeProject/securitySettings/@useDbSecurity = 'true'">
+			<persistence:setDataSource select="$springJeeProject/securitySettings/dbSecuritySettings/@connectionName" name="connection"/>
+			<c:setVariable select="$connection/@name" var="SecurityDSName" />
+		</c:if>
+	</c:if>
+	<persistence:getAllPersistenceUnits select="$model" var="persistenceUnits" />
+	<c:iterate select="$persistenceUnits" var="puDetail">
+		<bean name="<c:get select="$puDetail/persistenceUnitName" />DS<c:if test="$puDetail/@profileName = '{$SecurityDSName}'">,springSecurityDataSource</c:if>" class="org.springframework.jndi.JndiObjectFactoryBean">
+			<property name="jndiName" value="jdbc/<c:get select="$puDetail/persistenceUnitName" />DS" />
+			<property name="lookupOnStartup" value="false" />
+			<property name="proxyInterface" value="javax.sql.DataSource" />
+		</bean>
+	</c:iterate>

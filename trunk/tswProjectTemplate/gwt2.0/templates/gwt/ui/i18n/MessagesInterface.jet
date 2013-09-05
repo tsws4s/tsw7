@@ -1,0 +1,33 @@
+<%@ jet 
+package="com.skyway.integration.google.webtoolkit.deploy.templates" 
+class="MessagesInterfaceTemplate" 
+%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+<%@taglib prefix="swgwt" id="com.skyway.integration.google.webtoolkit.common.skywayGWTCodeGenTags"%>
+
+package <sw:package select="$model" alias="gwtmessagesinterface" var="pkg"/>;
+<sw:javaType select="$model" package="true" var="fullyQualifiedClassName" emit="false"/>
+<java:importsLocation package="{$pkg}"/>
+<java:impliedImport name="{$fullyQualifiedClassName}"/>
+<sw:getVariableName select="$model" uncapitalize="true" var="domainObjName" emit="false"/> <sw:getVariableName select="$model" uncapitalize="false" var="DomainObjName" emit="false"/>
+<swgwt:getGWTDataType select="$model" var="gwtDataType"/>
+
+/**
+ * Messages and Properties for localization
+<sw:generated />
+ */
+public interface <sw:javaType select="$model" alias="gwtmessagesinterface" package="false"/> extends <java:import>com.google.gwt.i18n.client.Messages</java:import> {
+	public String newTitle();
+	public String closeTabsMessage();
+	public String deleteConfirmation();
+	public String breakRelationshipConfirmation();
+	public String invalidEditorMessage();
+	public String ellipsis();
+	<c:iterate select="$gwtDataType/properties" var="propertyselection">
+	<c:setVariable select="$propertyselection/Property" var="field"/>
+	public String <sw:getVariableName select="$field"/>();
+	</c:iterate>
+}

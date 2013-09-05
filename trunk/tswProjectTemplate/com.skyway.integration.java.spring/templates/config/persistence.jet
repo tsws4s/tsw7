@@ -1,0 +1,39 @@
+<%@ jet 
+package="com.skyway.integration.java.spring.jet.config" 
+class="PersistenceTemplate" 
+%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+<%@taglib prefix="persistence" id="org.skyway.integration.data.persistence.skywayPersistenceTags"%>
+<%@taglib prefix="swsprjee" id="com.skyway.integration.java.spring.skywaySpringJeeCodeGenTags"%>
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="1.0" xmlns="http://java.sun.com/xml/ns/persistence" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd">
+	<swsprjee:springJeeDeployables select="$model" container="containerType" persistenceManager="persistenceManager" transactionManager="transactionManager" />
+	<c:choose>
+		<c:when test="$persistenceManager = 'CONTAINER'" >
+			<c:choose>
+				<c:when test="$containerType = 'JBOSS'" >
+					<c:include template="templates/config/container/jboss/jboss-persistence.jet" />
+				</c:when>
+				<c:when test="$containerType = 'WEBSPHERE'" >
+					<c:include template="templates/config/container/websphere/websphere-persistence.jet" />
+				</c:when>
+				<c:when test="$containerType = 'WEBLOGIC'" >
+					<c:include template="templates/config/container/weblogic/weblogic-persistence.jet" />
+				</c:when>
+				<c:when test="$containerType = 'ORACLE'" >
+					<c:include template="templates/config/container/oracle/oracle-persistence.jet" />
+				</c:when>
+			</c:choose>
+		</c:when>
+		<c:otherwise>
+			<c:include template="templates/config/container/hibernate/hibernate-persistence.jet" />
+		</c:otherwise>
+	</c:choose>
+
+	
+</persistence>

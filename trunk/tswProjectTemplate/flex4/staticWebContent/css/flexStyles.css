@@ -1,0 +1,101 @@
+@namespace s "library://ns.adobe.com/flex/spark";
+@namespace mx "library://ns.adobe.com/flex/mx";
+
+s|Application
+{
+	background-color:#FFFFFF;	
+}
+
+s|Label.pageTitle
+{
+	font-size:16px;
+	font-weight:bold;
+}
+
+s|Label.tabUserMessage
+{
+	color:#146400;
+	font-weight:bold;
+	font-style:italic;
+	background-color:#BDD5EF;
+}
+
+s|Label.accordionUserMessage
+{
+	color:#146400;
+	font-weight:bold;
+	font-style:italic;
+	background-color:#ECE9D8;
+}
+
+s|BorderContainer.tabContent
+{
+	backgroundColor:#BDD5EF;
+}
+
+s|NavigatorContent.accordionContent
+{
+	backgroundColor:#ECE9D8;
+}
+
+mx|Panel
+{	
+	padding-bottom:5px;
+	padding-left:5px;
+	padding-right:5px;
+	padding-top:5px;
+}
+
+mx|Accordion
+{
+	background-color:#ECE9D8;
+}
+
+
+s|Button
+{
+	skinClass: ClassReference("assets.skins.CustomIconButtonSkin");
+}
+
+s|Button.new
+{
+	icon: Embed("../images/icons/new.png");
+	
+}
+
+s|Button.back
+{
+	icon: Embed("../images/icons/back.gif");
+}
+
+s|Button.delete
+{
+	icon: Embed("../images/icons/delete.png");
+}
+
+s|Button.save
+{
+	icon: Embed("../images/icons/save.png");
+}
+
+s|Button.edit
+{
+	icon: Embed("../images/icons/edit.png");
+}
+
+s|Button.view
+{
+	icon: Embed("../images/icons/view.png");
+}
+
+s|Button.cancel
+{
+	icon: Embed("../images/icons/cancel.png");
+}
+
+s|Button.closetab
+{
+	icon: Embed("../images/icons/close.png");
+	overSkin: Embed("../images/icons/close_hover.png");
+	downSkin: Embed("../images/icons/close_clicked.png");
+}

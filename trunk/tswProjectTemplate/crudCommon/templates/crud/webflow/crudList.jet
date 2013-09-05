@@ -1,0 +1,76 @@
+<%@ jet 
+package="com.skyway.scaffolding.crud.templates.webflow" 
+class="CrudListTemplate"
+%>
+<%@taglib prefix="jet" id="org.eclipse.jet.controlTags"%>  
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+<%@taglib prefix="gen" id="com.skyway.scaffolding.crud.common.generationTags"%>
+<\%@ page language="java" isELIgnored="false" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
+<jsp:directive.include file="/WEB-INF/sitemesh-decorators/include.jsp"/>
+<fmt:setBundle basename="bundles.<jet:get select="lower-case($dataType/@name)"/>-resources"/>
+<html>
+<head>
+<title>List <fmt:message key="<jet:get select="lower-case($currentDataType/@name)"/>.title"/>s</title>
+</head>
+<body>
+<sw:compareElements sourceElement="$currentDataType" targetElement="$dataType" var="elementsEqual" />
+<div id="contentarea" >
+	<div id="lb"><div id="rb"><div id="bb"><div id="blc">
+	<div id="brc"><div id="tb"><div id="tlc"><div id="trc">
+	<div id="content">
+		<h1>Manage <fmt:message key="<jet:get select="lower-case($currentDataType/@name)"/>.title"/>s</h1>
+		<jet:if test="not(toBoolean($elementsEqual))" >
+		<div class="navitem"><a class="button" href="${flowExecutionUrl}&_eventId=back"><span><img src="${pageContext.request.contextPath}/images/icons/back.gif" /><fmt:message key="navigation.back"/></span></a></div>
+		</jet:if>
+		<div class="navitem"><a class="button" href="${flowExecutionUrl}&_eventId=new"><span><img src="${pageContext.request.contextPath}/images/icons/new.gif" /><fmt:message key="navigation.new"/> <fmt:message key="<jet:get select="lower-case($currentDataType/@name)"/>.title"/></span></a></div>
+		<div id="tablewrapper">
+		<table id="listTable" cellpadding="0" cellspacing="0">
+			<thead>
+				<tr>
+					<th class="thead">&nbsp;</th>
+			<jet:iterate select="$currentDataType/fields" var="field">
+				<gen:displayFieldInList select="$field" var="displayable" />
+				<jet:if test="$displayable" >
+					<th class="thead"><fmt:message key="<jet:get select="lower-case($currentDataType/@name)"/>.<jet:get select="lower-case($field/@name)" />.title"/></th>
+				</jet:if>
+			</jet:iterate>
+				</tr>
+			</thead>
+			<tbody>
+				<jet:setVariable select="'current'" var="currentDataTypeName" />
+				<c:forEach items="${<jet:get select="concat($currentName,'s')" />}" var="current" varStatus="i">
+					<c:choose>
+						<c:when test="${(i.count) % 2 == 0}">
+		    				<c:set var="rowclass" value="rowtwo"/>
+						</c:when>
+						<c:otherwise>
+		    				<c:set var="rowclass" value="rowone"/>
+						</c:otherwise>
+					</c:choose>			
+				<tr class="${rowclass}">
+					<td nowrap="nowrap" class="tabletd">
+						<a title="<fmt:message key="navigation.view" />" href="${flowExecutionUrl}&_eventId=view&<jet:iterate select="$currentDataType/fields" var="field"><jet:if test="string($field/@primaryKey) = 'true'"><jet:get select="$field/@name" />Key=${current.<jet:get select="$field/@name" />}&</jet:if></jet:iterate>"><img src="images/icons/view.gif" /></a>
+						<a title="<fmt:message key="navigation.edit" />" href="${flowExecutionUrl}&_eventId=edit&<jet:iterate select="$currentDataType/fields" var="field"><jet:if test="string($field/@primaryKey) = 'true'"><jet:get select="$field/@name" />Key=${current.<jet:get select="$field/@name" />}&</jet:if></jet:iterate>"><img src="images/icons/edit.gif" /></a>
+						<a title="<fmt:message key="navigation.delete" />" href="${flowExecutionUrl}&_eventId=delete&<jet:iterate select="$currentDataType/fields" var="field"><jet:if test="string($field/@primaryKey) = 'true'"><jet:get select="$field/@name" />Key=${current.<jet:get select="$field/@name" />}&</jet:if></jet:iterate>"><img src="images/icons/delete.gif" /></a>
+					</td>
+				<jet:iterate select="$currentDataType/fields" var="field">
+					<gen:displayFieldInList select="$field" var="displayable" />
+					<gen:getDefaultFieldPattern select="$field" var="pattern" />
+					<jet:if test="$displayable">
+					<td nowrap="nowrap" class="tabletd">
+						<jet:get select="string($field/@type})" />
+						<jet:include template="templates/crud/common/crudViewField.jet" />
+					</td>
+					</jet:if>
+				</jet:iterate>
+				</tr>
+				</c:forEach>
+			</tbody>
+		</table>
+		</div>
+	</div>
+	</div></div></div></div>
+	</div></div></div></div>
+</div>
+</body>
+</html>

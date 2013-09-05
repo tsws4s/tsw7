@@ -1,0 +1,41 @@
+<%@ jet 
+package="com.skyway.integration.google.webtoolkit.deploy.templates" 
+class="EditWidgetUiXmlTemplate" 
+%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+<%@taglib prefix="swgwt" id="com.skyway.integration.google.webtoolkit.common.skywayGWTCodeGenTags"%>
+
+<swgwt:getGWTDataType select="$model" var="gwtDataType"/>
+<ui:UiBinder
+  ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
+  ui:generateKeys="com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator"
+  ui:generateLocales="default"
+  xmlns:ui='urn:ui:com.google.gwt.uibinder'
+  xmlns:dp='urn:import:com.google.gwt.user.datepicker.client'
+  xmlns:gc='urn:import:<sw:package select="$model/project" alias="gwtaction"/>'
+   <c:iterate select="$model/relationships" var="relationship">
+	<sw:relationshipCardinality select="$relationship" var="cardinality" />
+	<c:setVariable select="$relationship/targetDataType" var="dataType" />
+	xmlns:<sw:getVariableName select="$relationship" capitalize="false"/>='urn:import:<sw:package select="$dataType" alias="gwtmultirelatedwidget"/>'
+ 	</c:iterate>
+  xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+  <ui:style src='../<sw:javaType select="$model" alias="gwtcss" package="false"/>.css'/>
+
+  <g:HTMLPanel addStyleNames="{style.gwt-CrudEdit}">
+  <table cellpadding="0" cellspacing="0" id="viewTable">
+  <c:iterate select="$gwtDataType/properties" var="propertyselection">
+	<c:setVariable select="$propertyselection/Property" var="field"/>
+	<swgwt:ifPropertyHasAction select="$propertyselection" action="EDIT">
+	<tr><td class="label" valign="top"><ui:msg description="<sw:getVariableName select="$field"/>Label"><swgwt:getVariableName select="$propertyselection"/>:</ui:msg></td><td><<swgwt:editControl select="$field" xml="true"/> ui:field="<sw:getVariableName select="$field"/>Box"></<swgwt:editControl select="$field" xml="true"/>></td></tr>
+	</swgwt:ifPropertyHasAction>
+	</c:iterate>	
+  </table>
+  <g:HorizontalPanel ui:field="buttonPanel">
+  <g:Button addStyleNames="{style.gwt-CrudEditSaveButton}" ui:field="saveButton"><ui:msg description="SaveButton">Save</ui:msg></g:Button>
+  <g:Button addStyleNames="{style.gwt-CrudEditCancelButton}" ui:field="cancelButton"><ui:msg description="CancelButton">Cancel</ui:msg></g:Button>
+  </g:HorizontalPanel>
+  </g:HTMLPanel>
+</ui:UiBinder>

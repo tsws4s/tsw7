@@ -1,0 +1,6 @@
+<%@ jet 
+package="org.skyway.integration.java.spring.jet.common" 
+class="GetLoggerTemplate" 
+%>
+<%@taglib prefix="java" id="org.eclipse.jet.javaTags"%>
+<java:import>org.slf4j.LoggerFactory</java:import>.getLogger(getClass())

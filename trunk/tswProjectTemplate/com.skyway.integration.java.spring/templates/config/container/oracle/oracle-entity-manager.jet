@@ -1,0 +1,18 @@
+<%@ jet 
+package="com.skyway.integration.java.spring.jet.config.oracle" 
+class="OracleEntityManagerTemplate" 
+%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="f" id="org.eclipse.jet.formatTags"%>
+<%@taglib prefix="persistence" id="org.skyway.integration.data.persistence.skywayPersistenceTags"%>
+<%@taglib prefix="swspr" id="org.skyway.integration.java.spring.skywaySpringCodeGenTags"%>
+<%@taglib prefix="swsprjee" id="com.skyway.integration.java.spring.skywaySpringJeeCodeGenTags"%>
+	<persistence:getAllPersistenceUnits select="$model" var="persistenceUnits" />
+	<c:iterate select="$persistenceUnits" var="puDetail">
+		<bean id="<c:get select="$puDetail/persistenceUnitName" />" class="org.springframework.jndi.JndiObjectFactoryBean">
+			<property name="jndiName" value="<swsprjee:moduleName select="$model" />/<c:get select="$puDetail/persistenceUnitName" />" />
+			<property name="lookupOnStartup" value="false" />
+			<property name="proxyInterface" value="javax.persistence.EntityManagerFactory" />
+		</bean>
+	</c:iterate>
+	

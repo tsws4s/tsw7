@@ -1,0 +1,100 @@
+<%@ jet 
+package="com.skyway.integration.java.spring.jet.config.hibernate" 
+class="HibernateEntityManagerTemplate" 
+%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="f" id="org.eclipse.jet.formatTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+<%@taglib prefix="persistence" id="org.skyway.integration.data.persistence.skywayPersistenceTags"%>
+<%@taglib prefix="swspr" id="org.skyway.integration.java.spring.skywaySpringCodeGenTags"%>
+<%@taglib prefix="swsprjee" id="com.skyway.integration.java.spring.skywaySpringJeeCodeGenTags"%>
+<swsprjee:springJeeProjectVar select="$model" var="springJeeProject" />
+<swsprjee:springJeeDeployables select="$model" container="containerType" persistenceManager="persistenceManager" transactionManager="transactionManager" />
+	<sw:persistenceProviderValue var="ppValue" />
+	<persistence:getAllPersistenceUnits select="$model" var="persistenceUnits" />
+	<c:iterate select="$persistenceUnits" var="puDetail">
+		<c:choose>
+			<c:when test="$ppValue = 'DATANUCLEUS'">
+				<persistence:getAppEngineValue var="googleAppEngine" />
+				<c:choose>
+					<c:when test="toBoolean($googleAppEngine)">
+						<bean id="<c:get select="$puDetail/persistenceUnitName" />" class="org.springframework.orm.jpa.LocalEntityManagerFactoryBean">
+							<property name="persistenceUnitName" value="<c:get select="$puDetail/persistenceUnitName" />" />
+							<property name="jpaPropertyMap">
+								<map>
+									<entry key="datanucleus.NontransactionalRead" value="true"/>
+									<entry key="datanucleus.NontransactionalWrite" value="true"/>
+									<entry key="datanucleus.ConnectionURL" value="appengine" />
+								</map>
+							</property>
+						</bean>
+					</c:when>
+					<c:otherwise>
+						<bean id="<c:get select="$puDetail/persistenceUnitName" />" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+							<property name="persistenceUnitName" value="<c:get select="$puDetail/persistenceUnitName" />" />
+							<property name="jpaPropertyMap">
+								<map>
+									<entry key="datanucleus.ConnectionURL" value="${<c:get select="$puDetail/persistenceUnitName" />.connection.url}" />
+									<entry key="datanucleus.ConnectionDriverName" value="${<c:get select="$puDetail/persistenceUnitName" />.connection.driver_class}" />
+									<entry key="datanucleus.ConnectionUserName" value="${<c:get select="$puDetail/persistenceUnitName" />.connection.username}" />
+									<entry key="datanucleus.ConnectionPassword" value="${<c:get select="$puDetail/persistenceUnitName" />.connection.password}" />
+									<entry key="datanucleus.autoCreateSchema" value="true"/>
+						            <entry key="datanucleus.validateTables" value="false"/>
+						            <entry key="datanucleus.validateConstraints" value="false"/>
+	            					<entry key="datanucleus.jpa.persistenceContextType" value="transaction"/>
+						            <entry key="datanucleus.identifier.case" value="PreserveCase"/>
+						            <entry key="datanucleus.jpa.addClassTransformer" value="false"/>
+								</map>
+							</property>
+						</bean>
+					</c:otherwise>
+				</c:choose>
+			</c:when>
+			<c:otherwise>
+				<!-- Configure a JPA vendor adapter -->
+				<bean id="<c:get select="$puDetail/persistenceUnitName" />JPAVendorAdapter" class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+					<property name="showSql" value="${<c:get select="$puDetail/persistenceUnitName" />.show_sql}" />
+					<property name="generateDdl" value="${<c:get select="$puDetail/persistenceUnitName" />.generateDdl}" />
+					<property name="databasePlatform" value="${<c:get select="$puDetail/persistenceUnitName" />.dialect}" />
+				</bean>
+				<!-- EntityManager Factory that brings together the persistence unit, datasource, and JPA Vendor -->
+				<bean id="<c:get select="$puDetail/persistenceUnitName" />" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+					<property name="dataSource" ref="<c:get select="$puDetail/persistenceUnitName" />DS" />
+					<property name="persistenceUnitName" value="<c:get select="$puDetail/persistenceUnitName" />" />
+					<property name="jpaVendorAdapter" ref="<c:get select="$puDetail/persistenceUnitName" />JPAVendorAdapter" />
+					<sw:jtaValue var="jtaValue" />
+					<c:if test="toBoolean($jtaValue)">
+						<property name="jpaPropertyMap">
+							<map>
+								<c:choose>
+									<c:when test="$transactionManager = 'CONTAINER'" >
+										<c:choose>
+											<c:when test="$containerType = 'JBOSS'" >
+												<entry key="hibernate.transaction.manager_lookup_class" value="org.hibernate.transaction.JBossTransactionManagerLookup" />
+											</c:when>
+											<c:when test="$containerType = 'WEBSPHERE'" >
+												<entry key="hibernate.transaction.manager_lookup_class" value="org.hibernate.transaction.WebSphereExtendedJTATransactionLookup" />
+											</c:when>
+											<c:when test="$containerType = 'WEBLOGIC'" >
+												<entry key="hibernate.transaction.manager_lookup_class" value="org.hibernate.transaction.WeblogicTransactionManagerLookup" />
+											</c:when>
+											<c:when test="$containerType = 'ORACLE'" >
+												<entry key="hibernate.transaction.manager_lookup_class" value="org.hibernate.transaction.OrionTransactionManagerLookup" />
+											</c:when>
+										</c:choose>
+									</c:when>
+									<c:otherwise>
+										<entry key="hibernate.transaction.manager_lookup_class" value="com.atomikos.icatch.jta.hibernate3.TransactionManagerLookup" />
+										<entry key="hibernate.connection.release_mode" value="on_close" />
+									</c:otherwise>
+								</c:choose>
+							</map>
+						</property>
+					</c:if>
+				</bean>
+			</c:otherwise>
+		</c:choose>
+	
+		
+	</c:iterate>
+	

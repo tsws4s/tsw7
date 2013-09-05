@@ -1,0 +1,99 @@
+<%@ jet 
+package="org.skyway.integration.java.spring.jet.query" 
+class="SQLCallFragmentTemplate" 
+%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="f" id="org.eclipse.jet.formatTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+/**
+ * <c:get select="upper-case($namedQuery/@queryType)" /> Call - <sw:methodName select="$namedQuery"/>
+<sw:documentation select="$namedQuery" format=" * " />
+<sw:modelReference select="$namedQuery" suffix="SQLCall" />
+ */
+<sw:variableStorageReset scope="method" />
+<sw:getModelExtension select="$namedQuery" extension="namedquerybean" var="beanDetail" />
+<c:include template="templates/common/spring/MethodTransactionAnnotation.jet" />
+@SuppressWarnings("unchecked")
+public <java:import><sw:queryResultType select="$namedQuery" package="true"/></java:import> <sw:methodName select="$namedQuery" />(<c:iterate select="$namedQuery/inputs" var="input" delimiter=","><sw:declareMethodVariable select="$input"><sw:javaType select="$input" package="true" /></sw:declareMethodVariable></c:iterate>) throws <java:import>org.springframework.dao.DataAccessException</java:import>{
+	<sw:getCollectionSize collection="$namedQuery/outputs" var="outputSize" />
+	<sw:parseDatabaseCall statement="$namedQuery/@queryText" inputs="$namedQuery/inputs" outputs="$namedQuery/outputs" var="databaseCall"/>
+	<c:if test="$outputSize >= 1" >
+		<java:import><sw:queryResultType select="$namedQuery" package="true"/></java:import> result = <c:choose><c:when test="$outputSize > 1" >new <java:import><sw:queryResultType select="$namedQuery" package="true"/></java:import>()</c:when><c:otherwise>null</c:otherwise></c:choose>;
+	</c:if>
+	<c:if test="$databaseCall/@outputCount >= 1" >
+		<java:import>java.util.Map</java:import><String, Object> resultsMap = null;
+	</c:if>
+	<java:import>org.skyway.spring.util.dao.call.MetaDataJdbcCall</java:import> call = getJdbcCall();
+	
+	<c:include template="templates/common/java/UserCode.jet" />
+	call.withProcedureName("<sw:javaString select="$databaseCall/@callName" />");
+	
+	<c:if test="string($databaseCall/@hasReturnResult) = 'true'" >
+		call.addParameter(new <java:import>org.springframework.jdbc.core.SqlReturnResultSet</java:import>("<sw:getVariableName select="$databaseCall/@returnResult" />", new <java:import>org.skyway.spring.util.dao.query.SQLResultsProvider</java:import>()));
+	</c:if>
+	
+	<c:iterate select="$databaseCall/callParameters" var="callParameter" >
+		<c:choose>
+			<c:when test="string($callParameter/@inputFlag) = 'true' and string($callParameter/@outputFlag) = 'true'" >
+			</c:when>
+			<c:when test="string($callParameter/@inputFlag) = 'true'" >
+				call.addParameter(new <java:import>org.skyway.spring.util.dao.call.NamedSqlParameterValue</java:import>("<sw:getVariableName select="$callParameter/@variablePath" />", <sw:getVariable select="$callParameter/@variablePath" useMethod="false" />));
+			</c:when>
+			<c:when test="string($callParameter/@outputFlag) = 'true'" >
+				call.addParameter(new <java:import>org.skyway.spring.util.dao.call.TypedSqlOutParameter</java:import>("<sw:getVariableName select="$callParameter/@variablePath" />", <java:import><sw:javaType select="$callParameter/@variablePath" package="true" emitCollectionPolicy="omit"/></java:import>.class));
+			</c:when>
+		</c:choose>
+	</c:iterate>
+	
+	<c:if test="$databaseCall/@outputCount >= 1">resultsMap = </c:if>call.execute();
+
+	<c:choose>
+		<c:when test="$databaseCall/@outputCount = 1" >
+			<c:if test="string($databaseCall/@hasReturnResult) = 'true'" >
+				<c:choose>
+					<c:when test="string($databaseCall/returnResult/@collection) = 'true'" >
+						result = new <java:import><sw:queryResultType select="$namedQuery" emitCollectionPolicy="concrete" package="true"/></java:import>(((<java:import>org.skyway.spring.util.dao.query.SQLResultsProvider</java:import>)resultsMap.get("<sw:getVariableName select="$databaseCall/@returnResult" />")).getResultsAsSet("<sw:getVariableName select="$databaseCall/@returnResult" />", <java:import><sw:javaType select="$databaseCall/returnResult" package="true" emitCollectionPolicy="omit"/></java:import>.class));
+					</c:when>
+					<c:otherwise>
+						result = ((<java:import>org.skyway.spring.util.dao.query.SQLResultsProvider</java:import>)resultsMap.get("<sw:getVariableName select="$databaseCall/@returnResult" />")).getSingleResult("<sw:getVariableName select="$databaseCall/@returnResult" />", <java:import><sw:javaType select="$databaseCall/returnResult" package="true" emitCollectionPolicy="omit"/></java:import>.class);
+					</c:otherwise>
+				</c:choose>
+			</c:if>
+			<c:iterate select="$databaseCall/callParameters" var="callParameter" >
+				<c:if test="string($callParameter/@outputFlag) = 'true'" >
+					<c:choose>
+						<c:when test="string($callParameter/@variablePath/@collection) = 'true'" >
+							result = new <java:import><sw:queryResultType select="$namedQuery" emitCollectionPolicy="concrete" package="true"/></java:import>((<java:import><sw:queryResultType select="$namedQuery" package="true"/></java:import>)resultsMap.get("<sw:getVariableName select="$callParameter/@variablePath" />"));
+						</c:when>
+						<c:otherwise >
+							result = <java:import>org.skyway.common.util.ConversionUtils</java:import>.convert(resultsMap.get("<sw:getVariableName select="$callParameter/@variablePath" />"), <java:import><sw:queryResultType select="$namedQuery" package="true"/></java:import>.class);
+						</c:otherwise>
+					</c:choose>
+				</c:if>
+			</c:iterate>	
+		</c:when>
+		<c:when test="$databaseCall/@outputCount > 1" >
+			<c:if test="string($databaseCall/@hasReturnResult) = 'true'" >
+				result.set<sw:getVariableName select="$databaseCall/@returnResult" capitalize="true"/>((<java:import>org.skyway.spring.util.dao.query.SQLResultsProvider</java:import>)resultsMap.get("<sw:getVariableName select="$databaseCall/@returnResult" />")).getResultsAsSet("<sw:getVariableName select="$databaseCall/@returnResult" />", <java:import><sw:javaType select="$databaseCall/@returnResult" package="true" emitCollectionPolicy="omit"/></java:import>.class));
+			</c:if>
+			<c:iterate select="$databaseCall/callParameters" var="callParameter" >
+				<c:if test="string($callParameter/@outputFlag) = 'true'" >
+					<c:choose>
+						<c:when test="string($callParameter/@variablePath/@collection) = 'true'" >
+							result.set<sw:getVariableName select="$callParameter/@variablePath" capitalize="true" />((<java:import><sw:javaType select="$callParameter/@variablePath" package="true"/></java:import>)resultsMap.get("<sw:getVariableName select="$callParameter/@variablePath" />"));
+						</c:when>
+						<c:otherwise >
+							result.set<sw:getVariableName select="$callParameter/@variablePath" capitalize="true" />(<java:import>org.skyway.common.util.ConversionUtils</java:import>.convert(resultsMap.get("<sw:getVariableName select="$callParameter/@variablePath" />"), <java:import><sw:javaType select="$callParameter/@variablePath" package="true"/></java:import>.class));
+						</c:otherwise>
+					</c:choose>
+				</c:if>
+			</c:iterate>
+		</c:when>
+	</c:choose>
+	
+	<c:if test="$outputSize >= 1" >
+		return result;
+	</c:if>
+}

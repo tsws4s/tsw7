@@ -1,0 +1,68 @@
+<%@ jet package="com.skyway.deploy.jee.templates.config" class="WebXMLTemplate" %>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+<%@taglib prefix="swspr" id="org.skyway.integration.java.spring.skywaySpringCodeGenTags"%>
+<!doctype html>
+<!-- The DOCTYPE declaration above will set the    -->
+<!-- browser's rendering engine into               -->
+<!-- "Standards Mode". Replacing this declaration  -->
+<!-- with a "Quirks Mode" doctype may lead to some -->
+<!-- differences in layout.                        -->
+<html>
+	<head>
+    <!--                                                               -->
+    <!-- Consider inlining CSS to reduce the number of requested files -->
+    <!--                                                               -->
+    <link type="text/css" rel="stylesheet" href="gwt/css/scrolltable.css">
+
+    <!--                                           -->
+    <!-- Any title is fine                         -->
+    <!--                                           -->
+    <title><c:get select="$model/name"/></title>
+    
+    <!--                                           -->
+    <!-- This script loads your compiled module.   -->
+    <!-- If you add any GWT meta tags, they must   -->
+    <!-- be added before this line.                -->
+    <!--                                           -->
+    <script type="text/javascript" language="javascript" src="<sw:package select="$model" alias="gwtentrypointmodule"/>.GWTCrud/<sw:package select="$model" alias="gwtentrypointmodule"/>.GWTCrud.nocache.js"></script>
+  </head>
+	<!--                                           -->
+	<!-- The body can have arbitrary html, or      -->
+	<!-- you can leave the body empty if you want  -->
+	<!-- to create a completely dynamic UI.        -->
+	<!--                                           -->
+	<body>
+		<div id="contentarea">
+			<div id="lb">
+				<div id="rb">
+					<div id="bb">
+						<div id="blc">
+							<div id="brc">
+								<div id="tb">
+									<div id="tlc">
+										<div id="trc">
+											<div id="GWTMenuBar">&nbsp;</div>
+											<div id="GWTAppRegion">&nbsp;</div>
+											<div class="clear">&nbsp;</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		  
+    <!-- RECOMMENDED if your web app will not function without JavaScript enabled -->
+    <noscript>
+      <div style="width: 22em; position: absolute; left: 50%; margin-left: -11em; color: red; background-color: white; border: 1px solid red; padding: 4px; font-family: sans-serif">
+        Your web browser must have JavaScript enabled
+        in order for this application to display correctly.
+      </div>
+    </noscript>	
+</body>
+</html>

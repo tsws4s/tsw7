@@ -1,0 +1,41 @@
+<%@ jet 
+package="com.skyway.scaffolding.crud.templates.webflow" 
+class="CrudEditFieldTemplate" 
+%>
+<%@taglib prefix="jet" id="org.eclipse.jet.controlTags"%>  
+<%@taglib prefix="f" id="org.eclipse.jet.formatTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+<%@taglib prefix="gen" id="com.skyway.scaffolding.crud.common.generationTags"%>
+						<gen:isCalendarField select="$field" var="isCalendarField" />
+						<jet:choose>
+							<jet:when test="$field/dataType/@type = 'LARGETEXT'">
+							<form:textarea id="<jet:get select="$currentDataTypeName" />_<jet:get select="$field/@name" />" path="<jet:get select="$field/@name" />" cssStyle="width:300px; height:100px;"/>
+							<script type="text/javascript">Spring.addDecoration(new Spring.ElementDecoration({elementId : "<jet:get select="$currentDataTypeName" />_<jet:get select="$field/@name" />",widgetType : "dijit.form.SimpleTextarea",widgetAttrs : {}})); </script>
+							</jet:when>
+							<jet:when test="$field/dataType/@type = 'BOOLEAN'">
+							<form:checkbox id="<jet:get select="$currentDataTypeName" />_<jet:get select="$field/@name" />" path="<jet:get select="$field/@name" />" />
+							<script type="text/javascript">Spring.addDecoration(new Spring.ElementDecoration({elementId : "<jet:get select="$currentDataTypeName" />_<jet:get select="$field/@name" />",widgetType : "dijit.form.CheckBox",widgetAttrs : {}})); </script>
+							</jet:when>
+							<jet:when test="$field/dataType/@type = 'INTEGER'">
+							<form:input id="<jet:get select="$currentDataTypeName" />_<jet:get select="$field/@name" />" path="<jet:get select="$field/@name" />" cssStyle="width:300px;"/>
+							<script type="text/javascript">Spring.addDecoration(new Spring.ElementDecoration({elementId : "<jet:get select="$currentDataTypeName" />_<jet:get select="$field/@name" />",widgetType : "dijit.form.NumberTextBox",widgetAttrs : {promptMessage: "<fmt:message key="<jet:get select="lower-case($currentDataType/@name)"/>.<jet:get select="lower-case($field/@name)" />.help"/>", constraints : {places:0}}})); </script>
+							</jet:when>
+							<jet:when test="$field/dataType/@type = 'DECIMAL'">
+							<form:input id="<jet:get select="$currentDataTypeName" />_<jet:get select="$field/@name" />" path="<jet:get select="$field/@name" />" cssStyle="width:300px;"/>
+							<script type="text/javascript">Spring.addDecoration(new Spring.ElementDecoration({elementId : "<jet:get select="$currentDataTypeName" />_<jet:get select="$field/@name" />",widgetType : "dijit.form.NumberTextBox",widgetAttrs : {promptMessage: "<fmt:message key="<jet:get select="lower-case($currentDataType/@name)"/>.<jet:get select="lower-case($field/@name)" />.help"/>"}})); </script>
+							</jet:when>
+							<jet:when test="$field/dataType/@type = 'DATE'">
+							<input id="<jet:get select="$currentDataTypeName" />_<jet:get select="$field/@name" />" name="<jet:get select="$field/@name" />" type="text" value="<fmt:formatDate value="${<jet:get select="$currentDataTypeName" />.<jet:get select="$field/@name" /><jet:if test="$isCalendarField">.time</jet:if>}" pattern="yyyy-MM-dd"/>" dojoType="dijit.form.DateTextBox" constraints="{datePattern:'<fmt:message key="date.format"/>'}" trim="true" promptMessage="<fmt:message key="date.format" />" invalidMessage="<fmt:message key="date.format.invalid" /> <fmt:message key="date.format" />." style="width:300px;" />
+							</jet:when>
+							<jet:when test="$field/dataType/@type = 'TIME'">
+							<input id="<jet:get select="$currentDataTypeName" />_<jet:get select="$field/@name" />" name="<jet:get select="$field/@name" />" type="text" value="<fmt:formatDate value="${<jet:get select="$currentDataTypeName" />.<jet:get select="$field/@name" /><jet:if test="$isCalendarField">.time</jet:if>}" timeStyle="short" type="time" />" style="width:300px;"/>
+							</jet:when>
+							<jet:when test="$field/dataType/@type = 'DATETIME'">
+							<input id="<jet:get select="$currentDataTypeName" />_<jet:get select="$field/@name" />" name="<jet:get select="$field/@name" />" type="text" value="<fmt:formatDate value="${<jet:get select="$currentDataTypeName" />.<jet:get select="$field/@name" /><jet:if test="$isCalendarField">.time</jet:if>}" pattern="MM/dd/yyyy h:mm a"/>" style="width:300px;"/>
+							<script type="text/javascript">Spring.addDecoration(new Spring.ElementDecoration({elementId : "<jet:get select="$currentDataTypeName" />_<jet:get select="$field/@name" />",widgetType : "dijit.form.ValidationTextBox",widgetAttrs : {promptMessage: "<fmt:message key="navigation.dateTime.title"/>"}})); </script>
+							</jet:when>
+							<jet:otherwise>
+							<form:input id="<jet:get select="$currentDataTypeName" />_<jet:get select="$field/@name" />" path="<jet:get select="$field/@name" />" cssStyle="width:300px;"/>
+							<script type="text/javascript">Spring.addDecoration(new Spring.ElementDecoration({elementId : "<jet:get select="$currentDataTypeName" />_<jet:get select="$field/@name" />",widgetType : "dijit.form.ValidationTextBox",widgetAttrs : {promptMessage: "<fmt:message key="<jet:get select="lower-case($currentDataType/@name)"/>.<jet:get select="lower-case($field/@name)" />.help"/>"<jet:if test="string($field/@primaryKey) = 'true'">, required : true</jet:if>}})); </script>
+							</jet:otherwise>
+						</jet:choose>

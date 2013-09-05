@@ -1,0 +1,37 @@
+<%@ jet package="com.skyway.templates" class="FloatParserTemplate"%>
+
+package <sw:package select="$model" alias="FloatParser"var="pkg"/>;
+<java:importsLocation package="{$pkg}"/>
+
+/**
+ * Simple parser of Float that wraps {@link Float#valueOf(String)}.
+ */
+public class Float<java:import>com.google.gwt.text.shared.Parser</java:import> implements Parser<Float> {
+
+  private static <sw:javaType select="$model" alias="FloatParser" package="false"/> INSTANCE;
+
+  /**
+   * @return the instance of the no-op renderer
+   */
+  public static Parser<Float> instance() {
+    if (INSTANCE == null) {
+      INSTANCE = new <sw:javaType select="$model" alias="FloatParser" package="false"/>();
+    }
+    return INSTANCE;
+  }
+
+  protected <sw:javaType select="$model" alias="FloatParser" package="false"/>() {
+  }
+
+  public Float parse(CharSequence object) throws <java:import>java.text.ParseException</java:import> {
+    if (object == null || "".equals(object.toString())) {
+      return null;
+    }
+
+    try {
+      return Float.valueOf(object.toString());
+    } catch (NumberFormatException e) {
+      throw new ParseException(e.getMessage(), 0);
+    }
+  }
+}

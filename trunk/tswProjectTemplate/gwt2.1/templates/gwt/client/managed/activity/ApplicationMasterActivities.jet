@@ -1,0 +1,48 @@
+<%@ jet package="com.skyway.templates" class="ApplicationMasterActivitiesTemplate"%>
+<%@taglib prefix="swgwt" id="com.skyway.integration.google.webtoolkit.common.skywayGWTCodeGenTags"%>
+
+package <sw:package select="$model" alias="ApplicationMasterActivities"var="pkg"/>;
+<java:importsLocation package="{$pkg}"/>
+
+
+/**
+ * Instantiates master activities.
+ */
+public final class <sw:javaType select="$model" alias="ApplicationMasterActivities" package="false"/> implements <java:import>com.google.gwt.activity.shared.ActivityMapper</java:import> {
+	private final <sw:javaType select="$model" alias="ApplicationRequestFactory" emitIncludes="true" package="true"/> requests;
+	private final <java:import>com.google.gwt.place.shared.PlaceController</java:import> placeController;
+
+	@<java:import>com.google.inject.Inject</java:import>
+	public <sw:javaType select="$model" alias="ApplicationMasterActivities" package="false"/>(<sw:javaType select="$model" alias="ApplicationRequestFactory" emitIncludes="true" package="true"/> requests, PlaceController placeController) {
+  		this.requests = requests;
+		this.placeController = placeController;
+	}
+
+	public <java:import>com.google.gwt.activity.shared.Activity</java:import> getActivity(<java:import>com.google.gwt.place.shared.Place</java:import> place) {
+		<sw:injectJavaMethod method="getActivity">
+		
+		if (!(place instanceof <sw:javaType select="$model" alias="ProxyListPlace" package="true"/>)) {
+			return null;
+		}
+
+		<java:import><sw:javaType select="$model" alias="ProxyListPlace" package="true"/></java:import> listPlace = (ProxyListPlace) place;
+
+		return new <sw:javaType select="$model" alias="ApplicationEntityTypesProcessor" emitIncludes="true" package="true"/><Activity>() {
+		 <c:iterate select="$model/dataTypes" var="dataType">
+		  	<swgwt:isGWTDataType select="$dataType" var="isGWTDataType"/>
+			<c:if test="$isGWTDataType">
+			<sw:injectJava anchor="<Activity>() {">
+			<sw:getVariableName select="$dataType" uncapitalize="true" var="domainObjName" emit="false"/> <sw:getVariableName select="$dataType" uncapitalize="false" var="DomainObjName" emit="false"/>
+			@Override
+			public void handle<c:get select="$DomainObjName"/>(<sw:javaType select="$dataType" alias="ObjectProxy" emitIncludes="true" package="true"/> isNull) {
+				setResult(new <sw:javaType select="$dataType" alias="ObjectListActivity" emitIncludes="true" package="true"/> (requests,
+          <sw:javaType select="$model" alias="ScaffoldApp" emitIncludes="true" package="true"/>.isMobile() ? <sw:javaType select="$dataType" alias="ObjectMobileListView" emitIncludes="true" package="true"/>.instance() : <sw:javaType select="$dataType" alias="ObjectListView" emitIncludes="true" package="true"/>.instance(),
+          placeController));
+			}
+			</sw:injectJava>
+			</c:if>
+		 </c:iterate>
+		}.process(listPlace.getProxyClass());
+		</sw:injectJavaMethod>
+	}
+}

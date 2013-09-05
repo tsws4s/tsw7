@@ -1,0 +1,55 @@
+<%@ jet 
+package="com.skyway.scaffolding.crud.templates.iphone" 
+class="CrudListTemplate"
+%>
+<%@taglib prefix="jet" id="org.eclipse.jet.controlTags"%>  
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+<%@taglib prefix="gen" id="com.skyway.scaffolding.crud.common.generationTags"%>
+<\%@ page language="java" isELIgnored="false" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
+<jsp:directive.include file="/WEB-INF/sitemesh-decorators/include.jsp"/>
+<fmt:setBundle basename="bundles.<jet:get select="lower-case($dataType/@name)"/>-resources"/>
+<html>
+<head>
+<title><fmt:message key="<jet:get select="lower-case($dataType/@name)"/>.title"/>s</title>
+</head>
+<body>
+	<div id="topbar">
+		<div id="title"><fmt:message key="<jet:get select="lower-case($dataType/@name)"/>.title"/>s</div>
+		<div id="leftnav"><a href="${pageContext.request.contextPath}"><fmt:message key="navigation.back"/></a></div>
+		<div id="rightbutton"><a href="${pageContext.request.contextPath}/new<jet:get select="$dataType/@name" />"><fmt:message key="navigation.new"/></a></div>
+	</div>
+	<div id="content">
+		<ul class="pageitem">
+			<c:forEach items="${<jet:get select="concat(lower-case($dataType/@name),'s')" />}" var="current" varStatus="i">
+			<li class="menu">
+				<a href="${pageContext.request.contextPath}/select<jet:get select="$dataType/@name" />?<jet:iterate select="$dataType/fields" var="urlfield"><jet:if test="string($urlfield/@primaryKey) = 'true'"><jet:get select="$urlfield/@name" />Key=${current.<jet:get select="$urlfield/@name" />}&</jet:if></jet:iterate>">
+					<jet:iterate select="$dataType/fields" var="field">
+						<gen:displayFieldInList select="$field" var="displayable" />
+						<jet:if test="$displayable" >
+					<span class="name">					
+						<gen:isCalendarField select="$field" var="isCalendarField" />
+						<jet:choose>
+							<jet:when test="$field/dataType/@type = 'DATE'">
+						<fmt:formatDate dateStyle="medium" type="date" value="${current.<jet:get select="$field/@name" /><jet:if test="$isCalendarField">.time</jet:if>}"/>
+							</jet:when>
+							<jet:when test="$field/dataType/@type = 'DATETIME'">
+						<fmt:formatDate dateStyle="medium" timeStyle="medium" type="both" value="${current.<jet:get select="$field/@name" /><jet:if test="$isCalendarField">.time</jet:if>}"/>
+							</jet:when>
+							<jet:when test="$field/dataType/@type = 'TIME'">
+						<fmt:formatDate timeStyle="medium" type="time" value="${current.<jet:get select="$field/@name" /><jet:if test="$isCalendarField">.time</jet:if>}"/>
+							</jet:when>
+							<jet:otherwise>
+						${current.<jet:get select="$field/@name" />}
+							</jet:otherwise>
+						</jet:choose>
+					</span>					
+					<span class="arrow"></span>
+						</jet:if>
+					</jet:iterate>
+				</a>
+			</li>
+			</c:forEach>
+		</ul>
+	</div>
+</body>
+</html>

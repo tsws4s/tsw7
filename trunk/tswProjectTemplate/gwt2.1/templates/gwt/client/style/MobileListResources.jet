@@ -1,0 +1,27 @@
+<%@ jet package="com.skyway.templates" class="MobileListResourcesTemplate"%>
+
+package <sw:package select="$model" alias="MobileListResources"var="pkg"/>;
+<java:importsLocation package="{$pkg}"/>
+
+/**
+ * The styles and resources used by the mobile Scaffold.
+ */
+public interface <sw:javaType select="$model" alias="MobileListResources" package="false"/> extends <java:import>com.google.gwt.user.cellview.client.CellList</java:import>.Resources {
+
+	interface MobileStyle extends CellList.Style {
+		/**
+		 * Applied to the date property in a cell.
+		 */
+		String dateProp();
+
+		/**
+		 * Applied to the secondary property in a cell.
+		 */
+		String secondaryProp();
+	}
+
+	@<java:import>com.google.gwt.resources.client.CssResource.NotStrict</java:import>
+	@Source("mobile.css")
+	MobileStyle cellListStyle();
+}
+

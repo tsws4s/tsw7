@@ -1,0 +1,24 @@
+<%@ jet package="com.skyway.integration.google.webtoolkit.deploy.templates" class="ApplicationRequestFactoryTemplate"%>
+<%@taglib prefix="swgwt" id="com.skyway.integration.google.webtoolkit.common.skywayGWTCodeGenTags"%>
+
+package <sw:package select="$model" alias="ApplicationRequestFactory"var="pkg"/>;
+
+<java:importsLocation package="{$pkg}"/>
+
+/**
+<sw:documentation select="$model" format=" * " />
+<sw:modelCoreReference select="$model" />
+<sw:generated />
+<sw:auxiliaryModelComponent />
+ */
+public interface <sw:javaType select="$model" alias="ApplicationRequestFactory" package="false"/> extends <java:import><swgwt:getRequestFactoryPackage/>.shared.RequestFactory</java:import> {
+     <c:iterate select="$model/dataTypes" var="dataType">
+     <swgwt:isGWTDataType select="$dataType" var="isGWTDataType"/>
+	 <c:if test="$isGWTDataType">
+     <sw:getVariableName select="$dataType" uncapitalize="true" var="domainObjName" emit="false"/> <sw:getVariableName select="$dataType" uncapitalize="false" var="DomainObjName" emit="false"/>
+     <sw:javaType select="$dataType" alias="ObjectRequest" package="false"/> <c:get select="$domainObjName"/>Request();
+	 </c:if>
+	</c:iterate>
+	<java:import><swgwt:getRequestFactoryPackage/>.shared.LoggingRequest</java:import> loggingRequest();
+}
+  

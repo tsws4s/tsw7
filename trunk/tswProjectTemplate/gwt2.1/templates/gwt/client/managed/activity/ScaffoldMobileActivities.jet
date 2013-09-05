@@ -1,0 +1,31 @@
+<%@ jet package="com.skyway.templates" class="ScaffoldMobileActivitiesTemplate"%>
+
+package <sw:package select="$model" alias="ScaffoldMobileActivities"var="pkg"/>;
+<java:importsLocation package="{$pkg}"/>
+
+/**
+ * Finds the activity to run for a particular {@link ScaffoldPlace}.
+ */
+public final class <sw:javaType select="$model" alias="ScaffoldMobileActivities" package="false"/> implements <java:import>com.google.gwt.activity.shared.ActivityMapper</java:import> {
+	private final ApplicationMasterActivities listActivityBuilder;
+	private final ApplicationDetailsActivities detailsActivityBuilder;
+	private Activity rootActivity;
+	
+	@<java:import>com.google.inject.Inject</java:import>
+	public ScaffoldMobileActivities(ApplicationMasterActivities listActivitiesBuilder, ApplicationDetailsActivities detailsActivityBuilder) {
+		this.listActivityBuilder = listActivitiesBuilder;
+		this.detailsActivityBuilder = detailsActivityBuilder;
+	}
+
+	public <java:import>com.google.gwt.activity.shared.Activity</java:import> getActivity(<java:import>com.google.gwt.place.shared.Place</java:import> place) {
+		Activity rtn = listActivityBuilder.getActivity(place);
+		if (rtn == null) {
+			rtn = detailsActivityBuilder.getActivity(place);
+		}
+		return rtn;
+	}
+	
+	public void setRootActivity(<java:import>com.google.gwt.activity.shared.Activity</java:import> activity) {
+		this.rootActivity = activity;
+	}
+}

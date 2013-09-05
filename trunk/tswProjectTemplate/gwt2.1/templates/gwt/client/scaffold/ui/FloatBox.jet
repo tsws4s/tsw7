@@ -1,0 +1,15 @@
+<%@ jet package="com.skyway.templates" class="FloatBoxTemplate"%>
+
+package <sw:package select="$model" alias="FloatBox"var="pkg"/>;
+<java:importsLocation package="{$pkg}"/>
+
+/**
+ * A <java:import>com.google.gwt.user.client.ui.ValueBox</java:import> that uses {@link FloatParser} and {@link FloatRenderer}.
+ */
+public class <sw:javaType select="$model" alias="FloatBox" package="false"/> extends ValueBox<Float> {
+
+  public <sw:javaType select="$model" alias="FloatBox" package="false"/>() {
+    super(<java:import>com.google.gwt.dom.client.Document</java:import>.get().createTextInputElement(), FloatRenderer.instance(),
+        FloatParser.instance());
+  }
+}

@@ -1,0 +1,47 @@
+<%@ jet 
+package="com.skyway.integration.service.flex.jet.build" 
+class="FlexBuildTemplate" 
+%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="persistence" id="org.skyway.integration.data.persistence.skywayPersistenceTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+<%@taglib prefix="swspr" id="org.skyway.integration.java.spring.skywaySpringCodeGenTags"%>
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="buildFlex" default="compile">
+    <property name="SDK_HOME" value="<c:get select="$flexSdkLocation" />"/>
+    <property name="MXMLC_JAR" value="${SDK_HOME}/lib/mxmlc.jar"/>
+    <property name="DEBUG" value="false"/>
+    <property name="MAIN_SOURCE_FILE" value="../flex_src/Manage<c:get select="$dataType/@name" />.mxml"/>
+    <property name="SERVICES_FILE" value="../<sw:webRootFolder select="$project" />/WEB-INF/flex/services-config.xml"/>
+    <property name="SOURCE_PATH" value="../flex_src"/>
+	<persistence:getAppEngineValue var="googleAppEngine" />
+	<c:choose>
+		<c:when test="toBoolean($googleAppEngine)">
+    <property name="CONTEXT_ROOT" value="/"/>
+    	</c:when>
+    	<c:otherwise>
+    <property name="CONTEXT_ROOT" value="<sw:webContextRoot select="$project" ensureLeadingSlash="true"/>"/>
+    	</c:otherwise>
+    </c:choose>
+    <property name="OUTPUT" value="../<sw:webRootFolder select="$project" />/flexweb/<c:get select="lower-case($dataType/@name)" />/Manage<c:get select="$dataType/@name" />.swf"/>
+	<property file="build.properties" />
+
+	<target name="compile">
+	    <java jar="${MXMLC_JAR}" fork="true" failonerror="true">
+	        <jvmarg value="-Xms128m"/>
+	        <jvmarg value="-Xmx512m"/>
+	        <arg value="-debug=${DEBUG}"/>
+	        <arg value="+flexlib=${SDK_HOME}/frameworks"/>
+	        <arg value="-compiler.source-path=${SOURCE_PATH}"/>
+	        <arg value="-file-specs=${MAIN_SOURCE_FILE}"/>
+	        <arg value="-services=${SERVICES_FILE}"/>
+	        <arg value="-o=${OUTPUT}"/>
+	        <arg value="-context-root=${CONTEXT_ROOT}"/>
+	    </java>
+	</target>
+</project>
+
+
+

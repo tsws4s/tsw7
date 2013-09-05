@@ -1,0 +1,41 @@
+<%@ jet 
+package="com.skyway.integration.google.webtoolkit.deploy.templates" 
+class="CrudExceptionEventTemplate" 
+%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+
+
+package <sw:package select="$model/project" alias="gwtcrudexceptionevent" var="pkg"/>;
+<java:importsLocation package="{$pkg}"/>
+
+/**
+ * An event for notifying listeners that an CrudException was generated
+<sw:generated />
+ */
+public class <sw:javaType select="$model/project" alias="gwtcrudexceptionevent" package="false"/> extends <java:import>com.google.gwt.event.shared.GwtEvent</java:import><<sw:javaType select="$model/project" alias="gwtcrudexceptionhandler" package="false"/>>{
+	private <java:import><sw:javaType select="$model/project" alias="gwtcrudexception" package="true"/></java:import> exception;
+
+	public static final Type<<sw:javaType select="$model" alias="gwtcrudexceptionhandler" package="false"/>> TYPE = new Type<<sw:javaType select="$model" alias="gwtcrudexceptionhandler" package="false"/>>();
+
+	
+	public <sw:javaType select="$model" alias="gwtcrudexceptionevent" package="false"/> (<sw:javaType select="$model" alias="gwtcrudexception" package="false"/> exception) {
+		this.exception = exception;
+	}
+	
+	public <sw:javaType select="$model" alias="gwtcrudexception" package="false"/> getException () {
+		return exception;
+	}
+
+	@Override
+	protected void dispatch (<sw:javaType select="$model" alias="gwtcrudexceptionhandler" package="false"/> handler) {
+		handler.onException(this);
+	}
+
+	@Override
+	public com.google.gwt.event.shared.GwtEvent.Type<<sw:javaType select="$model" alias="gwtcrudexceptionhandler" package="false"/>> getAssociatedType() {
+		return TYPE;
+	}
+}

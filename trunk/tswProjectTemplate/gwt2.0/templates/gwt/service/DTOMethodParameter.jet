@@ -1,0 +1,12 @@
+<%@ jet 
+package="com.skyway.integration.google.webtoolkit.deploy.templates" 
+class="DTOMethodParameterTemplate" 
+%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+<%@taglib prefix="persistence" id="org.skyway.integration.data.persistence.skywayPersistenceTags"%>
+<%@taglib prefix="swspr" id="org.skyway.integration.java.spring.skywaySpringCodeGenTags"%>
+<%@taglib prefix="swgwt" id="com.skyway.integration.google.webtoolkit.common.skywayGWTCodeGenTags"%>
+<swgwt:convertToCalendar select="$field" var="shouldConvert"/><swgwt:javaType select="$field" package="true" emitCollectionPolicy="concrete" emitIncludes="true" emit="false" var="javaType"/><c:choose><c:when test="$shouldConvert = 'true'"><java:import><sw:javaType select="$dataType" alias="gwtdataconversion" package="true"/></java:import>.toCalendar(<c:get select="$dataTypeName"/>.get<sw:getVariableName select="$field" capitalize="true"/>())</c:when><c:otherwise><c:get select="$dataTypeName"/>.get<sw:getVariableName select="$field" capitalize="true"/>()</c:otherwise></c:choose>

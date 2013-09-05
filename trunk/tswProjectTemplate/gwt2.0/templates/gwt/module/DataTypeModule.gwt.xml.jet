@@ -1,0 +1,22 @@
+<%@ jet package="com.skyway.integration.google.webtoolkit.deploy.templates" class="DataTypeModuleModuleGWTXML" %>
+
+<sw:getVariableName select="$model" uncapitalize="true" var="domainObjName" emit="false"/> <sw:getVariableName select="$model" uncapitalize="false" var="DomainObjName" emit="false"/>
+
+<module>
+	<inherits name="com.google.gwt.user.User"/>
+	
+	<!-- gwt-incubator -->
+  	<inherits name='com.google.gwt.gen2.Gen2' /> 
+  	
+  	<!-- Crud Modules -->
+ 
+	<!-- End Crud Modules -->
+  	
+  	<!-- generated common module -->
+  	<inherits name='<sw:package select="$model/project" alias="gwtcommonmodule"/>.Common'/>
+  		
+	<servlet path="/<sw:javaType select="$model" alias="gwtdatatype" package="false"/>" class="<sw:javaType select="$model" alias="gwtserviceimpl" package="true"/>"/>
+	
+	<source path='client'/>
+		
+</module>

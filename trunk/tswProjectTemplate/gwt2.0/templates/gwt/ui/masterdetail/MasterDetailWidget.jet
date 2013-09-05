@@ -1,0 +1,64 @@
+<%@ jet 
+package="com.skyway.integration.google.webtoolkit.deploy.templates" 
+class="MasterDetailWidgetTemplate" 
+%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+<%@taglib prefix="swgwt" id="com.skyway.integration.google.webtoolkit.common.skywayGWTCodeGenTags"%>
+
+
+package <sw:package select="$model" alias="gwtmasterdetail" var="pkg"/>;
+<sw:javaType select="$model" package="true" var="fullyQualifiedClassName" emit="false"/>
+<java:importsLocation package="{$pkg}"/>
+<java:impliedImport name="{$fullyQualifiedClassName}"/>
+
+<sw:getVariableName select="$model" uncapitalize="true" var="domainObjName" emit="false"/> <sw:getVariableName select="$model" uncapitalize="false" var="DomainObjName" emit="false"/>
+<swgwt:getGWTDataType select="$model" var="gwtDataType"/>
+
+/**
+ *
+<sw:generated />
+ */
+public class <sw:javaType select="$model" alias="gwtmasterdetailwidget" package="false"/> extends <java:import>com.google.gwt.user.client.ui.Composite</java:import> implements <sw:javaType select="$model" alias="gwtmasterdetail" package="false"/>.Display {
+	@<java:import>com.google.gwt.uibinder.client.UiTemplate</java:import>("<sw:javaType select="$model" alias="gwtmasterdetailwidgetuixml" package="false"/>.xml")
+	interface MasterDetailBinder extends <java:import>com.google.gwt.uibinder.client.UiBinder</java:import><<java:import>com.google.gwt.user.client.ui.Widget</java:import>, <sw:javaType select="$model" alias="gwtmasterdetailwidget" package="false"/>>{}
+	private static MasterDetailBinder binder = <java:import>com.google.gwt.core.client.GWT</java:import>.create(MasterDetailBinder.class);
+	
+	@<java:import>com.google.gwt.uibinder.client.UiField</java:import>
+	<java:import><sw:javaType select="$model" alias="gwttable" package="true"/></java:import> <c:get select="$domainObjName"/>Table;
+	
+	@UiField
+	<java:import>com.google.gwt.user.client.ui.TabLayoutPanel</java:import> editingTabs;
+	
+	@UiField
+	<java:import>com.google.gwt.user.client.ui.Button</java:import> newButton;
+	
+	@UiField
+	<java:import>com.google.gwt.user.client.ui.Label</java:import> titleLabel;
+	
+	/**
+<sw:generated />
+	 */
+	public <sw:javaType select="$model" alias="gwtmasterdetailwidget" package="false"/>() {
+		initWidget(binder.createAndBindUi(this));
+	}
+	
+	public <sw:javaType select="$model" alias="gwttable" package="false"/> get<sw:javaType select="$model" alias="gwttable" package="false"/>() {
+		return <c:get select="$domainObjName"/>Table;
+	}
+	
+	public TabLayoutPanel getEditingTabs() {
+		return editingTabs;
+	}
+	
+	public <java:import>com.google.gwt.event.dom.client.HasClickHandlers</java:import> getNewButton() {
+		return newButton;
+	}
+	
+	public String getTitle() {
+		return titleLabel.getText();
+	}
+}
+

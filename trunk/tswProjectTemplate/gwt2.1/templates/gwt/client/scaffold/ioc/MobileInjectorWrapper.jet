@@ -1,0 +1,11 @@
+<%@ jet package="com.skyway.templates" class="MobileInjectorWrapperTemplate"%>
+
+package <sw:package select="$model" alias="MobileInjectorWrapper"var="pkg"/>;
+<java:importsLocation package="{$pkg}"/>
+
+public class <sw:javaType select="$model" alias="MobileInjectorWrapper" package="false"/> implements InjectorWrapper{
+
+    public ScaffoldInjector getInjector() {
+        return <java:import>com.google.gwt.core.client.GWT</java:import>.create(MobileInjector.class);
+    }
+}

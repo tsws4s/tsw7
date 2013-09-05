@@ -1,0 +1,10 @@
+<%@ jet 
+package="org.skyway.integration.java.spring.jet.operation" 
+class="OperationNestedMethodParametersTemplate"
+%>
+<%@taglib prefix="java" id="org.eclipse.jet.javaTags" %>
+<%@taglib prefix="ws"   id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c"    id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="f"    id="org.eclipse.jet.formatTags"%>
+<%@taglib prefix="sw"   id="org.skyway.integration.java.skywayCodeGenTags"%>
+<c:iterate select="$currentOperation/inputs" var="input" delimiter=","><sw:getVariableName select="$input"/></c:iterate><c:if test="$currentOperation/@inputsSize > 0 and $currentOperation/@variablesSize > 0">,</c:if><c:iterate select="$currentOperation/variables" var="variable" delimiter=","><sw:getVariableName select="$variable"/></c:iterate><c:if test="($currentOperation/@inputsSize > 0 or $currentOperation/@variablesSize > 0) and $currentOperation/@constantsSize > 0">,</c:if><c:iterate select="$currentOperation/constants" var="constant" delimiter=","><sw:getVariableName select="$constant"/></c:iterate>

@@ -1,0 +1,27 @@
+<%@ jet package="com.skyway.templates" class="ScaffoldAppTemplate"%>
+<%@taglib prefix="swgwt" id="com.skyway.integration.google.webtoolkit.common.skywayGWTCodeGenTags"%>
+
+package <sw:package select="$model" alias="ScaffoldApp"var="pkg"/>;
+<java:importsLocation package="{$pkg}"/>
+
+public class <sw:javaType select="$model" alias="ScaffoldApp" package="false"/> {
+
+    static boolean isMobile = false;
+
+    public static boolean isMobile() {
+      return isMobile; 
+    }
+
+    public void run() {}
+
+    protected <java:import>java.util.Hash<java:import>java.util.Set</java:import></java:import><ProxyListPlace> getTopPlaces() {
+        Set<Class<? extends <java:import><swgwt:getRequestFactoryPackage/>.shared.EntityProxy</java:import>>> types = <sw:javaType select="$model" alias="ApplicationEntityTypesProcessor" package="true" emitIncludes="true"/>.getAll();
+        <java:import>java.util.HashSet</java:import><<sw:javaType select="$model" alias="ProxyListPlace" emitIncludes="true" package="true"/>> rtn = new HashSet<ProxyListPlace>(types.size());
+
+        for (Class<? extends EntityProxy> type : types) {
+            rtn.add(new ProxyListPlace(type));
+        }
+
+        return rtn;
+    }
+}

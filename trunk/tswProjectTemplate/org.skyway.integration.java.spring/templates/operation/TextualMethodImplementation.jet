@@ -1,0 +1,5 @@
+<%@ jet 
+package="org.skyway.integration.java.spring.jet.operation" 
+class="TextualMethodImplementationTemplate"
+%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%><sw:getMethodBodyText select="$currentOperation" />

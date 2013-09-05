@@ -1,0 +1,11 @@
+<%@ jet package="com.skyway.templates" class="DesktopInjectorWrapperTemplate"%>
+
+package <sw:package select="$model" alias="DesktopInjectorWrapper"var="pkg"/>;
+<java:importsLocation package="{$pkg}"/>
+
+public class <sw:javaType select="$model" alias="DesktopInjectorWrapper" package="false"/> implements InjectorWrapper{
+
+    public ScaffoldInjector getInjector() {
+        return <java:import>com.google.gwt.core.client.GWT</java:import>.create(DesktopInjector.class);
+    }
+}

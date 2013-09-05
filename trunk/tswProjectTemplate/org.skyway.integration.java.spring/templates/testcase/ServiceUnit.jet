@@ -1,0 +1,126 @@
+<%@ jet 
+package="org.skyway.integration.java.spring.jet.test"
+class="ServiceUnitTemplate" 
+%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+<%@taglib prefix="swspr" id="org.skyway.integration.java.spring.skywaySpringCodeGenTags"%>
+
+package <sw:package alias="test" select="$model" var="pkg"/>;
+<sw:javaType alias="test" select="$model" package="true" var="fullyQualifiedClassName" emit="false"/>
+<java:importsLocation package="{$pkg}"/>
+<java:impliedImport name="{$fullyQualifiedClassName}"/>
+
+/**
+ * Class to run the service as a JUnit test. Each operation in the service is a separate test.
+ *
+<sw:generated />
+<sw:auxiliaryModelComponent />
+ */
+<sw:variableStorageReset scope="class" />
+<swspr:springContexts select="$model" var="springContexts" contextTypes="all" />
+
+@<java:import>org.junit.runner.RunWith</java:import>(<java:import>org.springframework.test.context.junit4.SpringJUnit4ClassRunner</java:import>.class)
+@<java:import>org.springframework.test.context.TestExecutionListeners</java:import>({ <java:import>org.springframework.test.context.support.DependencyInjectionTestExecutionListener</java:import>.class, <java:import>org.springframework.test.context.support.DirtiesContextTestExecutionListener</java:import>.class, <java:import>org.springframework.test.context.transaction.TransactionalTestExecutionListener</java:import>.class })
+@<java:import>org.springframework.test.context.ContextConfiguration</java:import>(locations={ 
+			<c:iterate select="$springContexts" var="springContext" delimiter=",">"<swspr:springContextPath select="$springContext" pathFormat="fileProjectRelative" />"
+			</c:iterate>})
+<c:if test="$model/project/dataStores">
+@<java:import>org.springframework.transaction.annotation.Transactional</java:import>
+</c:if>
+public class <sw:javaType alias="test" select="$model" /> {
+ 	
+ 	/**
+	 * The Spring application context.
+	 *
+	 <sw:generated />
+	 */
+	@SuppressWarnings("unused")
+	private <java:import>org.springframework.context.ApplicationContext</java:import> context;
+ 	
+ 	
+	/**
+	 * The service being tested, injected by Spring.
+	 *
+	 <sw:generated />
+	 */
+	@<java:import>org.springframework.beans.factory.annotation.Autowired</java:import>
+ 	protected <java:import><sw:javaType select="$model" alias="interface" package="true"/></java:import> service;
+ 	
+ 	/**
+	 * Instantiates a new <sw:javaType alias="test" select="$model" />.
+	 *
+	 <sw:generated />
+	 */
+	public <sw:javaType alias="test" select="$model" />() {
+		setupRequestContext();
+	}
+	
+	<c:setVariable select="0" var="usedNames" />
+ 	<c:iterate select="$model/operations" var="currentOperation">	
+ 		<sw:hasModifiers select="$currentOperation" modifiers="public">
+ 		<c:if test="$currentOperation/@api = 'true'" >
+ 		
+		/**
+		 * Operation Unit Test
+		 <sw:documentation select="$currentOperation" format=" * " />
+		 <sw:generated />
+		 <sw:ifDSLEnabled>
+		 * TO AVOID LOSING MANUAL CHANGES, turn generation off for this file or method.
+		 * Generation of the entire file can be disabled on the Code Generation tab of the Spring DSL editor.
+		 * Alternately, you can add the NOT keyword after the @generated annotation above the class declaration.
+		 * Add the NOT keyword after the @generated annotation on this method to preserve changes to this method only.
+ 	 	 </sw:ifDSLEnabled>
+ 	 	 */
+ 	 	 @<java:import>org.junit.Test</java:import>
+		public void <sw:methodName select="$currentOperation" usedNamesVar="usedNames" /> () <sw:throwsList select="$currentOperation" /> {	
+ 			<c:if test="$currentOperation/inputs"> 			
+ 			// TODO: JUnit - Populate test inputs for operation: <sw:methodName select="$currentOperation" /> 
+ 			</c:if>
+ 			<c:iterate select="$currentOperation/inputs" var="input">
+ 				<sw:declareMethodVariable select="$input"><java:import><sw:javaType select="$input" package="true"/></java:import></sw:declareMethodVariable> = <sw:initialValue select="$input" emitDefault="true" />;
+ 			</c:iterate>
+ 			<sw:getCollectionSize collection="$currentOperation/outputs" var="outputsSize" />
+			<c:choose>
+				<c:when test="$outputsSize = '0'" >
+		   		     service.<sw:methodName select="$currentOperation" />(<c:iterate select="$currentOperation/inputs" var="input" delimiter=","><sw:getVariableName select="$input"/></c:iterate>);
+				</c:when>
+				<c:otherwise>
+					<java:import><sw:operationReturnType select="$currentOperation" package="true"/></java:import> response = null;
+					response = service.<sw:methodName select="$currentOperation" />(<c:iterate select="$currentOperation/inputs" var="input" delimiter=","><sw:getVariableName select="$input"/></c:iterate>);
+ 					// TODO: JUnit - Add assertions to test outputs of operation: <sw:methodName select="$currentOperation" />
+				</c:otherwise>
+			</c:choose>
+		}
+		</c:if>
+		</sw:hasModifiers>
+		
+	</c:iterate>
+	
+	/**
+	 * Autowired to set the Spring application context.
+	 *
+	 <sw:generated />
+	 */
+	@<java:import>org.springframework.beans.factory.annotation.Autowired</java:import>
+	public void setContext(<java:import>org.springframework.context.ApplicationContext</java:import> context) {
+		this.context = context;
+		((<java:import>org.springframework.beans.factory.support.DefaultListableBeanFactory</java:import>)context.getAutowireCapableBeanFactory()).registerScope("session", new <java:import>org.springframework.web.context.request.SessionScope</java:import>());
+		((<java:import>org.springframework.beans.factory.support.DefaultListableBeanFactory</java:import>)context.getAutowireCapableBeanFactory()).registerScope("request", new <java:import>org.springframework.web.context.request.RequestScope</java:import>());
+	}	
+	
+	/**
+	 * Sets Up the Request context
+	 *
+	 <sw:generated />
+	 */
+	private void setupRequestContext() {
+		<java:import>org.springframework.mock.web.MockHttpServletRequest</java:import> request = new MockHttpServletRequest();
+		<java:import>org.springframework.web.context.request.ServletRequestAttributes</java:import> attributes = new ServletRequestAttributes(request);
+		<java:import>org.springframework.web.context.request.RequestContextHolder</java:import>.setRequestAttributes(attributes);
+	}
+}
+
+

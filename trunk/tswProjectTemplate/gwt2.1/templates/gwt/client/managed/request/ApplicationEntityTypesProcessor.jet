@@ -1,0 +1,162 @@
+<%@ jet package="com.skyway.templates" class="ApplicationEntityTypesProcessorTemplate"%>
+<%@taglib prefix="swgwt" id="com.skyway.integration.google.webtoolkit.common.skywayGWTCodeGenTags"%>
+
+package <sw:package select="$model" alias="ApplicationEntityTypesProcessor"var="pkg"/>;
+<java:importsLocation package="{$pkg}"/>
+
+/**
+ * A helper class for dealing with proxy types. Subclass it and override the
+ * various handle methods for type specific handling of proxy objects or
+ * classes, then call {@link #process(Class)} or {@link #process(Object)}.
+ * Optionally use {#setResult} to set the return value of the {@link #process}
+ * call.
+ 
+ * <p>
+ * Use {@link #getAll} for a set of all proxy types.
+ * 
+ * @param <T> the type to filter to
+ */
+public abstract class <sw:javaType select="$model" alias="ApplicationEntityTypesProcessor" package="false"/><T> {
+
+	/**
+	 * Return a set of all proxy types available to this application.
+	 */
+	public static <java:import>java.util.Set</java:import><Class<? extends <java:import><swgwt:getRequestFactoryPackage/>.shared.EntityProxy</java:import>>> getAll() {
+	<sw:injectJavaMethod method="getAll">
+	
+		Set<Class<? extends EntityProxy>> rtn = new <java:import>java.util.HashSet</java:import><Class<? extends EntityProxy>>();
+
+ 	 <c:iterate select="$model/dataTypes" var="dataType">
+ 	 <swgwt:isGWTDataType select="$dataType" var="isGWTDataType"/>
+	 <c:if test="$isGWTDataType">	
+ 	 <sw:injectJava anchor="EntityProxy>>();">
+			
+     <sw:getVariableName select="$dataType" uncapitalize="true" var="domainObjName" emit="false"/> <sw:getVariableName select="$dataType" uncapitalize="false" var="DomainObjName" emit="false"/>
+		rtn.add(<sw:javaType select="$dataType" alias="ObjectProxy" package="true"/>.class);
+	 
+	 </sw:injectJava>	
+	 </c:if>
+	 </c:iterate>
+	 
+		return <java:import>java.util.Collections</java:import>.unmodifiableSet(rtn);
+	</sw:injectJavaMethod>
+	}
+
+	private static void process(<sw:javaType select="$model" alias="ApplicationEntityTypesProcessor" package="false"/><?> processor, Class<?> clazz) {
+	<sw:injectJavaMethod method="process">
+	
+	 <c:iterate select="$model/dataTypes" var="dataType">
+	 <swgwt:isGWTDataType select="$dataType" var="isGWTDataType"/>
+	 <c:if test="$isGWTDataType">
+	 <sw:injectJava anchor="Class<?> clazz) {">
+
+     <sw:getVariableName select="$dataType" uncapitalize="true" var="domainObjName" emit="false"/> <sw:getVariableName select="$dataType" uncapitalize="false" var="DomainObjName" emit="false"/>
+		if (<sw:javaType select="$dataType" alias="ObjectProxy" package="true"/>.class.equals(clazz)) {
+			processor.handle<c:get select="$DomainObjName"/>((<sw:javaType select="$dataType" alias="ObjectProxy" package="true"/>) null);
+			return;
+		}
+	
+	 </sw:injectJava>	
+	 </c:if>
+	</c:iterate>
+	
+		processor.handleNonProxy(null);
+	</sw:injectJavaMethod>
+	}
+
+	private static void processProxy(<sw:javaType select="$model" alias="ApplicationEntityTypesProcessor" package="false"/><?> processor, Object proxy) {
+	<sw:injectJavaMethod method="processProxy">
+	
+	 <c:iterate select="$model/dataTypes" var="dataType">
+	 <swgwt:isGWTDataType select="$dataType" var="isGWTDataType"/>
+	 <c:if test="$isGWTDataType">
+	 <sw:injectJava anchor="Object proxy) {">
+	 
+     <sw:getVariableName select="$dataType" uncapitalize="true" var="domainObjName" emit="false"/> <sw:getVariableName select="$dataType" uncapitalize="false" var="DomainObjName" emit="false"/>
+		if (proxy instanceof <sw:javaType select="$dataType" alias="ObjectProxy" package="true"/>) {
+			processor.handle<c:get select="$DomainObjName"/>((<sw:javaType select="$dataType" alias="ObjectProxy" package="true"/>) proxy);
+			return;
+		}
+	</sw:injectJava>	
+	</c:if>
+	</c:iterate>
+		
+		processor.handleNonProxy(proxy);
+	</sw:injectJavaMethod>
+	}
+
+	private final T defaultValue;
+	private T result;
+
+	/**
+	 * Create an instance with a null default value.
+	 */
+	public <sw:javaType select="$model" alias="ApplicationEntityTypesProcessor" package="false"/>() {
+		defaultValue = null;
+	}
+
+	/**
+	 * Create an instance with the given default value.
+	 * 
+	 * @param the value that will be returned by {@link #process} if {@link #setResult} is not called.
+	 */
+	public <sw:javaType select="$model" alias="ApplicationEntityTypesProcessor" package="false"/>(T defaultValue) {
+		this.defaultValue = defaultValue;
+	}
+
+	/**
+	 * Called if {@link #process} is called with a non-proxy object. This default
+	 * implementation does nothing.
+	 */
+	public void handleNonProxy(Object object) {
+	}
+	
+	<c:iterate select="$model/dataTypes" var="dataType">
+	<swgwt:isGWTDataType select="$dataType" var="isGWTDataType"/>
+	<c:if test="$isGWTDataType">
+     <sw:getVariableName select="$dataType" uncapitalize="true" var="domainObjName" emit="false"/> <sw:getVariableName select="$dataType" uncapitalize="false" var="DomainObjName" emit="false"/>
+		public abstract void handle<c:get select="$DomainObjName"/>(<sw:javaType select="$dataType" alias="ObjectProxy" package="true"/> proxy);		
+	</c:if>
+	</c:iterate>
+
+   	/**
+	 * Call the handle method of the appropriate type, with a null argument. Note
+	 * that this will not work as expected on the class objects returned by the
+	 * {@link #getClass()} method of a proxy object, due to limitations of GWT's
+	 * metadata. It will only work with against class objects in the set returned
+	 * by {@link #getAll()}, or returned by
+	 * {@link <swgwt:getRequestFactoryPackage/>.shared.RequestFactory#getClass(Proxy)}
+	 * or
+	 * {@link <swgwt:getRequestFactoryPackage/>.shared.RequestFactory#getClass(String)}.
+ 	 * 
+	 * @param clazz the proxy type to resolve
+	 * @return the value provided via {@link #setResult}, or the default value
+	 */
+	public T process(Class<?> clazz) {
+		setResult(defaultValue);
+		<sw:javaType select="$model" alias="ApplicationEntityTypesProcessor" package="false"/>.process(this, clazz);
+		return result;
+	}
+
+	/**
+	 * Process a proxy object
+	 * 
+	 * @param proxy the proxy to process
+	 * @return the value provided via {@link #setResult}, or the default value
+	 */
+	public T process(Object proxy) {
+		setResult(defaultValue);
+		<sw:javaType select="$model" alias="ApplicationEntityTypesProcessor" package="false"/>.processProxy(this, proxy);
+		return result;
+	}
+
+	/**
+	 * Set the value to return from a call to {@link #process(Class)} or
+	 * {@link #process(Object)}.
+	 * 
+	 * @param result the value to return
+	 */
+	protected void setResult(T result) {
+		this.result = result;
+	}
+}

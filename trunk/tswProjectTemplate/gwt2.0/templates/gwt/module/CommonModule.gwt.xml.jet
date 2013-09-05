@@ -1,0 +1,6 @@
+<%@ jet package="com.skyway.integration.google.webtoolkit.deploy.templates" class="CommonEntryPointModuleGWTXML" %>
+<?xml version="1.0" encoding="UTF-8"?>
+<module>
+  <inherits name='com.google.gwt.core.Core'/>
+  <source path='client'/>
+</module>

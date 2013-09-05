@@ -1,0 +1,23 @@
+<%@ jet package="com.skyway.integration.google.webtoolkit.deploy.templates" class="ObjectProxyTemplate"%>
+
+package <sw:package select="$model" alias="ObjectProxy"var="pkg"/>;
+
+<java:importsLocation package="{$pkg}"/>
+
+<%@taglib prefix="swgwt" id="com.skyway.integration.google.webtoolkit.common.skywayGWTCodeGenTags"%>
+
+@<java:import><swgwt:getRequestFactoryPackage/>.shared.ProxyFor</java:import>(value=<java:import><sw:javaType select="$model" package="true"/></java:import>.class, locator=<sw:javaType select="$model" alias="ObjectGWTAdapter" emitIncludes="true"/>.class)
+public interface <sw:javaType select="$model" alias="ObjectProxy" package="false"/> extends <java:import><swgwt:getRequestFactoryPackage/>.shared.EntityProxy</java:import> {
+   <c:iterate select="$model/fields" var="field">
+    <c:if test="$field/dataType/@type != 'MAP'">
+	 abstract <c:choose><c:when test="$field/@collection = 'true'"><swgwt:javaType select="$field" package="true" emitCollectionPolicy="concrete" emitIncludes="true"/></c:when><c:otherwise><swgwt:javaType select="$field" package="true" emitIncludes="true"/></c:otherwise></c:choose> get<sw:getVariableName select="$field" capitalize="true"/>();
+	 abstract void set<sw:getVariableName select="$field" capitalize="true"/>(<c:choose><c:when test="$field/@collection = 'true'"><swgwt:javaType select="$field" package="true" emitCollectionPolicy="concrete" emitIncludes="true"/></c:when><c:otherwise><swgwt:javaType select="$field" package="true" emitIncludes="true"/></c:otherwise></c:choose> <sw:getVariableName select="$field" capitalize="false"/>);
+	</c:if>
+   </c:iterate>
+	
+	<c:iterate select="$model/relationships" var="relationship">
+		abstract void set<sw:getVariableName select="$relationship" capitalize="true"/>(<sw:javaType select="$relationship" alias="ObjectProxy" package="false" emitIncludes="true"/> <sw:getVariableName select="$relationship"/>);
+		
+		abstract <sw:javaType select="$relationship" package="false" alias="ObjectProxy" emitIncludes="true"/> get<sw:getVariableName select="$relationship" capitalize="true"/>();
+	</c:iterate>
+}

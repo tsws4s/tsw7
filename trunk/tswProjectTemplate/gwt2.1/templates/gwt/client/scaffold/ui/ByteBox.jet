@@ -1,0 +1,15 @@
+<%@ jet package="com.skyway.templates" class="ByteBoxTemplate"%>
+
+package <sw:package select="$model" alias="ByteBox"var="pkg"/>;
+<java:importsLocation package="{$pkg}"/>
+
+/**
+ * A <java:import>com.google.gwt.user.client.ui.ValueBox</java:import> that uses {@link ByteParser} and {@link ByteRenderer}.
+ */
+public class <sw:javaType select="$model" alias="ByteBox" package="false"/> extends ValueBox<Byte> {
+
+  public <sw:javaType select="$model" alias="ByteBox" package="false"/>() {
+    super(<java:import>com.google.gwt.dom.client.Document</java:import>.get().createTextInputElement(), ByteRenderer.instance(),
+        ByteParser.instance());
+  }
+}

@@ -1,0 +1,28 @@
+<%@ jet 
+package="com.skyway.integration.google.webtoolkit.deploy.templates" 
+class="CrudSectionTemplate" 
+%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+
+package <sw:package select="$model" alias="gwtcrudsection" var="pkg"/>;
+
+/**
+* An interface for Sections that may be loaded into a UI and lazy loaded when selected in a menu or toolbar
+<sw:generated />
+*/
+public interface <sw:javaType select="$model" alias="gwtcrudsection" package="false"/> {
+	/**
+	* Returns the title to be use to represent the section on the UI 
+	<sw:generated />
+	*/
+	public String getTitle();
+	
+	/**
+	* Called to Lazy Load the contents of the Section prior to the section being displayed 
+	<sw:generated />
+	*/
+	public void load();
+}

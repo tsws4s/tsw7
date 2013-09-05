@@ -1,0 +1,30 @@
+<%@ jet 
+package="com.skyway.scaffolding.crud.templates.springmvc" 
+class="GWTCrudMenuSegmentTemplate" 
+%>
+<%@taglib prefix="jet" id="org.eclipse.jet.controlTags"%>  
+<%@taglib prefix="f" id="org.eclipse.jet.formatTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+<\%@page language="java" isELIgnored="false" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
+<jsp:directive.include file="/WEB-INF/sitemesh-decorators/include.jsp"/>
+<fmt:setBundle basename="bundles.application-resources"/>
+	<div id="contentarea">				
+		<!--- contentarea border -->
+		<div id="lb">
+		<div id="rb">
+		<div id="bb"><div id="blc"><div id="brc">
+		<div id="tb"><div id="tlc"><div id="trc">
+		<!--  -->
+			
+		<div id="content">
+			<h1>Google WebToolkit</h1>
+			<p class="line">&nbsp;</p>
+			<a class="button" href="${pageContext.request.contextPath}/ApplicationScaffold.html"><span><img src="images/icons/view.gif" /><fmt:message key="navigation.view"/> GWT Scaffolding</span></a>
+			<div class="clear">&nbsp;</div>
+		</div>
+		
+		<!--- end of contentarea border -->
+		</div></div></div></div>
+		</div></div></div></div>
+		<!-- -->
+	</div>

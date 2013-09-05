@@ -1,0 +1,176 @@
+<%@ jet 
+package="com.skyway.integration.google.webtoolkit.deploy.templates" 
+class="DataConversionUtils" 
+%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+<%@taglib prefix="swgwt" id="com.skyway.integration.google.webtoolkit.common.skywayGWTCodeGenTags"%>
+
+package <sw:package select="$model" alias="gwtdataconversion" var="pkg"/>;
+<sw:javaType select="$model" package="true" var="fullyQualifiedClassName" emit="false"/>
+<java:importsLocation package="{$pkg}"/>
+<swgwt:getGWTDataType select="$model" var="gwtDataType"/>
+<sw:getVariableName select="$model" var="domainObjName" emit="false"/>
+<sw:getVariableName select="$model" uncapitalize="true" var="lowerDomainObjName" emit="false"/>
+
+/**
+ * A Utility to convert from the lightweight POJO's that are sent back and forth to the GWT layer, and the potentially heavier
+ * persisted objects from the server side.
+ <sw:generated />
+ */
+public class <sw:javaType select="$model" alias="gwtdataconversion" package="false"/> {
+	
+<c:choose>
+<c:when test="$gwtDataType/dao">
+	/**
+	* A reference to the DAO for <sw:javaType select="$model" package="false"/>
+	<sw:generated />
+	*/
+	private <java:import><sw:javaType select="$gwtDataType/dao" alias="interface" package="true"/></java:import> dao;
+
+
+	/**
+	* Constructor requires a DAO for <sw:javaType select="$model" package="false"/>
+	<sw:generated />
+	*/
+	public <sw:javaType select="$model" alias="gwtdataconversion" package="false"/>(<sw:javaType select="$gwtDataType/dao" alias="interface" package="false"/> dao) {
+		this.dao = dao;
+	}
+
+	/**
+	* Returns the DAO for <sw:javaType select="$model" package="false"/>
+	<sw:generated />
+	*/
+	private <sw:javaType select="$gwtDataType/dao" alias="interface" package="false"/> getDAO() {
+		return dao;
+	}
+</c:when>
+<c:otherwise>
+	/**
+	* Constructor 
+	<sw:generated />
+	*/
+	public <sw:javaType select="$model" alias="gwtdataconversion" package="false"/>() {
+		
+	}
+</c:otherwise>
+</c:choose>
+
+	/**
+	* Converts an Object to its GWT DTO equivalent
+	<sw:generated />
+	*/
+	public <java:import><sw:javaType select="$model" alias="gwtdatatype" package="true"/></java:import> toGWT (<java:import><sw:javaType select="$model" alias="primary" package="true"/></java:import> persistedVar) {
+		<sw:javaType select="$model" alias="gwtdatatype" package="false"/> gwtVar = null;
+		
+		if (persistedVar == null)
+			return null;
+		
+		try {
+			gwtVar = new <sw:javaType select="$model" alias="gwtdatatype" package="false"/>();
+			<java:import>org.apache.commons.beanutils.BeanUtils</java:import>.copyProperties(gwtVar, persistedVar);
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return gwtVar;
+	}
+
+	/**
+	* Converts a GWT DTO to its Persisted equivalent
+	<sw:generated />
+	*/
+	public <java:import><sw:javaType select="$model" package="true"/></java:import> toPersisted (<java:import><sw:javaType select="$model" alias="gwtdatatype" package="true"/></java:import> gwtVar) {
+		<sw:javaType select="$model" package="true"/> persistedVar = null;
+		<sw:getPrimaryKeyFields select="$model" var="primaryKeyFields"/>
+		try {
+			persistedVar = loadPersisted (gwtVar);
+		
+			BeanUtils.copyProperties(persistedVar, gwtVar);
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (<java:import>java.lang.reflect.InvocationTargetException</java:import> e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return persistedVar;
+	}
+	
+	/**
+	* Convenience method to convert a collection of Objects to their GWT DTO equivalents
+	<sw:generated />
+	*/
+	public <java:import>java.util.Set</java:import><<sw:javaType select="$model" alias="gwtdatatype" package="false"/>> toGWT (<java:import>java.util.Collection</java:import><<sw:javaType select="$model" package="true"/>> persistedVars) {
+		Set<<sw:javaType select="$model" alias="gwtdatatype" package="false"/>> gwtVars = new <java:import>java.util.HashSet</java:import><<sw:javaType select="$model" alias="gwtdatatype" package="false"/>>();
+		
+		if (persistedVars != null) {
+			for (<sw:javaType select="$model" package="true"/> persistedVar: persistedVars) {
+				gwtVars.add((<sw:javaType select="$model" alias="gwtdatatype" package="false"/>)toGWT(persistedVar));
+			}
+		}
+		
+		return gwtVars;
+	}
+	
+	/**
+	* Convenience method to convert a collection of GWT DTOs to their persisted equivalents
+	<sw:generated />
+	*/
+	public Set<<sw:javaType select="$model" package="true"/>> toPersisted (Collection<<sw:javaType select="$model" alias="gwtdatatype" package="false"/>> gwtVars) {
+		Set<<sw:javaType select="$model" package="true"/>> persistedVars = new HashSet<<sw:javaType select="$model" package="true"/>>();
+		
+		if (gwtVars != null) {
+			for (<sw:javaType select="$model" alias="gwtdatatype" package="false"/> gwtVar: gwtVars) {
+				persistedVars.add((<sw:javaType select="$model" alias="primary" package="false"/>)toPersisted(gwtVar));
+			}
+		}
+		
+		return persistedVars;
+	}
+	
+	/**
+	* Find existing backend Object, default implementation returns a new Object if none exists as a convenience
+	<sw:generated />
+	*/
+	private <java:import><sw:javaType select="$model" package="true"/></java:import> loadPersisted (<java:import><sw:javaType select="$model" alias="gwtdatatype" package="true"/></java:import> gwtVar) {
+	<c:choose>
+	<c:when test="$gwtDataType/dao">
+		<sw:javaType select="$model" package="false" /> persisted = getDAO().find<c:get select="$domainObjName"/>ByPrimaryKey(<c:iterate select="$primaryKeyFields" var="field" delimiter=","><c:include template="templates/gwt/data/ConvertKey.jet" /></c:iterate>);
+		if (persisted == null)
+			persisted = new <sw:javaType select="$model" package="false" />();
+			
+		return persisted;
+	</c:when>
+	<c:otherwise>
+		// TODO No DAO layer for <c:get select="$DomainObjName"/>, implement this method to load persisted data
+		return new <sw:javaType select="$model" package="false" />();
+	</c:otherwise>
+	</c:choose>	
+	}
+	
+	/**
+	* Convenience method to convert from Date to Calendar since GWT does not support Calendar
+	<sw:generated />
+	*/
+	public static <java:import>java.util.Calendar</java:import> toCalendar (Date d) {
+		Calendar c = Calendar.getInstance();
+		c.setTime (d);
+		return c;
+	}
+	
+	/**
+	* Convenience method to convert from Calendar to Date since GWT does not support Calendar
+	<sw:generated />
+	*/
+	public static <java:import>java.util.Date</java:import> toDate (Calendar c) {
+		return c.getTime();
+	}
+}

@@ -1,0 +1,51 @@
+<%@ jet 
+package="com.skyway.integration.google.webtoolkit.deploy.templates" 
+class="CommonPagingOptionsImagesTemplate" 
+%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+
+package <sw:package select="$model" alias="gwtcommonpagingoptionsimages" var="pkg"/>;
+<java:importsLocation package="{$pkg}"/>
+
+
+/**
+ * Override Pagination Images for Tables
+<sw:generated />
+ */
+public interface <sw:javaType select="$model" alias="gwtcommonpagingoptionsimages" package="false"/> extends <java:import>com.google.gwt.gen2.table.client.PagingOptions.PagingOptionsImages</java:import>{
+	 
+	 /**
+     * An image used to navigate to the first page.
+     * 
+     * @return a prototype of this image
+	 <sw:generated />
+     */
+    <java:import>com.google.gwt.user.client.ui.AbstractImagePrototype</java:import> pagingOptionsFirstPage();
+
+    /**
+     * An image used to navigate to the last page.
+     * 
+     * @return a prototype of this image
+	 <sw:generated />
+     */
+    AbstractImagePrototype pagingOptionsLastPage();
+
+    /**
+     * An image used to navigate to the next page.
+     * 
+     * @return a prototype of this image
+	 <sw:generated />
+     */
+    AbstractImagePrototype pagingOptionsNextPage();
+
+    /**
+     * An image used to navigate to the previous page.
+     * 
+     * @return a prototype of this image
+	 <sw:generated />
+     */
+    AbstractImagePrototype pagingOptionsPrevPage();
+}

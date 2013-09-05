@@ -1,0 +1,99 @@
+<%@ jet 
+package="com.skyway.scaffolding.crud.templates.iphone" 
+class="CrudViewTemplate" 
+%>
+<%@taglib prefix="jet" id="org.eclipse.jet.controlTags"%>  
+<%@taglib prefix="f" id="org.eclipse.jet.formatTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+<%@taglib prefix="gen" id="com.skyway.scaffolding.crud.common.generationTags"%>
+<\%@page language="java" isELIgnored="false" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
+<jsp:directive.include file="/WEB-INF/sitemesh-decorators/include.jsp"/>
+<fmt:setBundle basename="bundles.<jet:get select="lower-case($dataType/@name)"/>-resources"/>
+<html>
+<head>
+<title>View <fmt:message key="<jet:get select="lower-case($dataType/@name)"/>.title"/></title>
+</head>
+<body>
+<div id="topbar">
+	<div id="title"><fmt:message key="<jet:get select="lower-case($dataType/@name)"/>.title"/> Details</div>
+	<div id="leftnav"><a href="${pageContext.request.contextPath}/index<jet:get select="$dataType/@name" />"><fmt:message key="navigation.back"/></a></div>
+	<div id="rightnav"><a href="${pageContext.request.contextPath}/edit<jet:get select="$dataType/@name" />?<jet:iterate select="$dataType/fields" var="field"><jet:if test="$field/@primaryKey = 'true'"><jet:get select="$field/@name" />Key=${<jet:get select="lower-case($dataType/@name)"/>.<jet:get select="$field/@name" />}&</jet:if></jet:iterate>"><fmt:message key="navigation.edit"/></a></div>
+</div>
+<div id="content">
+	<jet:iterate select="$dataType/fields" var="field">
+		<gen:isFieldDisplayable select="$field" var="displayable" />
+		<jet:if test="$field/@primaryKey = 'true' and $displayable" >
+	<span class="graytitle"><fmt:message key="<jet:get select="lower-case($dataType/@name)"/>.<jet:get select="lower-case($field/@name)" />.title"/>: ${<jet:get select="lower-case($dataType/@name)"/>.<jet:get select="$field/@name" />}</span>
+		</jet:if>
+	</jet:iterate>
+	<ul class="pageitem">
+		<% context.setVariable("lastField", null); %>
+		<jet:iterate select="$dataType/fields" var="field">
+			<gen:isFieldDisplayable select="$field" var="displayable" />
+			<gen:getDefaultFieldPattern select="$field" var="pattern" />
+			<gen:isTypeBreak select="$field" var="isTypeBreak" />
+		<jet:if test="not($field/@primaryKey = 'true') and $displayable" >
+			<jet:if test="$isTypeBreak = 'true'">
+	</ul>
+	<ul class="pageitem">	
+			</jet:if>
+		<li class="textbox">
+			<span class="header"><fmt:message key="<jet:get select="lower-case($dataType/@name)"/>.<jet:get select="lower-case($field/@name)" />.title"/></span>
+			<gen:isCalendarField select="$field" var="isCalendarField" />
+			<p>
+				<jet:choose>
+					<jet:when test="$field/dataType/@type = 'DATE'">
+				<fmt:formatDate dateStyle="short" type="date" value="${<jet:get select="lower-case($dataType/@name)"/>.<jet:get select="$field/@name" /><jet:if test="$isCalendarField">.time</jet:if>}"/>
+					</jet:when>
+					<jet:when test="$field/dataType/@type = 'DATETIME'">
+				<fmt:formatDate dateStyle="short" type="both" value="${<jet:get select="lower-case($dataType/@name)"/>.<jet:get select="$field/@name" /><jet:if test="$isCalendarField">.time</jet:if>}"/>
+					</jet:when>
+					<jet:when test="$field/dataType/@type = 'TIME'">
+				<fmt:formatDate timeStyle="short" type="time" value="${<jet:get select="lower-case($dataType/@name)"/>.<jet:get select="$field/@name" /><jet:if test="$isCalendarField">.time</jet:if>}"/>
+					</jet:when>
+					<jet:otherwise>
+				${<jet:get select="lower-case($dataType/@name)"/>.<jet:get select="$field/@name" />}
+					</jet:otherwise>
+				</jet:choose>
+			</p>
+		</li>
+		<% context.setVariable("lastField", context.getVariable("field")); %>
+		</jet:if>
+		</jet:iterate>
+	</ul>
+	<jet:if test="$dataType/relationships">
+	<ul class="pageitem">
+		<jet:iterate select="$dataType/relationships" var="relationship">
+			<jet:setVariable select="$relationship/targetDataType" var="relatedType" />
+		<li class="menu">
+			<sw:relationshipCardinality select="$relationship" var="cardinality" />
+			<jet:choose>
+			<jet:when test="$cardinality = 'ONE'">
+			<c:if test='${<jet:get select="lower-case($dataType/@name)"/>.<jet:get select="$relationship/@name"/> == null}'>
+			<a href="${pageContext.request.contextPath}/new<jet:get select="$dataType/@name" /><jet:get select="uppercaseFirst($relationship/@name)" />?<jet:iterate select="$dataType/fields" var="field"><jet:if test="$field/@primaryKey = 'true'"><jet:get select="lower-case($dataType/@name)"/>_<jet:get select="$field/@name" />=${<jet:get select="lower-case($dataType/@name)"/>.<jet:get select="$field/@name" />}&</jet:if></jet:iterate>">
+				<span class="name"><fmt:message key="navigation.new"/> <fmt:message key="<jet:get select="lower-case($relatedType/@name)"/>.title"/></span>
+				<span class="arrow"></span>
+			</a>
+			</c:if>
+			<c:if test='${<jet:get select="lower-case($dataType/@name)"/>.<jet:get select="$relationship/@name"/> != null}'>
+			<a href="${pageContext.request.contextPath}/select<jet:get select="$dataType/@name" /><jet:get select="uppercaseFirst($relationship/@name)" />?<jet:iterate select="$dataType/fields" var="field"><jet:if test="$field/@primaryKey = 'true'"><jet:get select="lower-case($dataType/@name)"/>_<jet:get select="$field/@name" />=${<jet:get select="lower-case($dataType/@name)"/>.<jet:get select="$field/@name" />}&</jet:if></jet:iterate><jet:iterate select="$relatedType/fields" var="field"><jet:if test="$field/@primaryKey = 'true'"><jet:get select="lower-case($relationship/@name)"/>_<jet:get select="$field/@name" />=${<jet:get select="lower-case($dataType/@name)"/>.<jet:get select="$relationship/@name"/>.<jet:get select="$field/@name" />}&</jet:if></jet:iterate>">
+				<span class="name"><fmt:message key="<jet:get select="lower-case($relatedType/@name)"/>.title"/></span>
+				<span class="arrow"></span>
+			</a>
+			</c:if>
+			</jet:when>
+			<jet:otherwise>			
+			<a href="${pageContext.request.contextPath}/list<jet:get select="$dataType/@name" /><jet:get select="uppercaseFirst($relationship/@name)" />?<jet:iterate select="$dataType/fields" var="field"><jet:if test="$field/@primaryKey = 'true'"><jet:get select="$field/@name" />Key=${<jet:get select="lower-case($dataType/@name)"/>.<jet:get select="$field/@name" />}&</jet:if></jet:iterate>">
+				<span class="name"><fmt:message key="<jet:get select="lower-case($relatedType/@name)"/>.title"/>s</span>
+				<span class="arrow"></span>
+			</a>
+			</jet:otherwise>
+			</jet:choose>
+		</li>
+		</jet:iterate>
+	</ul>
+	</jet:if>
+	<a href="${pageContext.request.contextPath}/delete<jet:get select="$dataType/@name" />?<jet:iterate select="$dataType/fields" var="field"><jet:if test="$field/@primaryKey = 'true'"><jet:get select="$field/@name" />Key=${<jet:get select="lower-case($dataType/@name)"/>.<jet:get select="$field/@name" />}&</jet:if></jet:iterate>" class="bigButton red"><fmt:message key="navigation.delete"/></a>
+</div>
+</body>
+</html>

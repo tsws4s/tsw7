@@ -1,0 +1,5 @@
+<%@ jet 
+package="org.skyway.integration.java.spring.jet.java" 
+class="UserCodeCommentBlock"
+%>
+<c:setVariable select="true()" var="declareVar_toSearch" />

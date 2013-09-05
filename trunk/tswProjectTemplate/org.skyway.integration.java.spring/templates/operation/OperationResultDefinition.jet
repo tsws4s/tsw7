@@ -1,0 +1,62 @@
+<%@ jet 
+package="org.skyway.integration.java.spring.jet.operation" 
+class="OperationResultTemplate"
+%>
+<%@taglib prefix="java" id="org.eclipse.jet.javaTags" %>
+<%@taglib prefix="ws"   id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c"    id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="f"    id="org.eclipse.jet.formatTags"%>
+<c:choose>
+	<c:when test="not(toBoolean($currentOperation/hasRequestMapping))" >
+		<c:choose>
+			<c:when test="$currentOperation/@outputsSize = '0'" >
+			</c:when>
+			<c:when test="$currentOperation/@outputsSize = '1'" >
+				<c:iterate select="$currentOperation/outputs" var="output">
+					<c:choose>
+						<c:when test="$output/variablePath">
+							<c:if test="isReturnRequired($action)">
+								if (<c:get select="getReturnResultName($action)" /> != null)
+									return <c:get select="getReturnResultName($action)" />;
+								else
+							</c:if>
+							return <sw:getVariable select="$output/variablePath" useMethod="false" />;
+						</c:when>
+						<c:otherwise>
+							return null;
+						</c:otherwise>
+					</c:choose>
+				</c:iterate>
+			</c:when>
+		</c:choose>
+	</c:when>
+	<c:otherwise>
+		<c:if test="isReturnRequired($action) and (not($currentOperation) or toBoolean($currentOperation/@singleMappingOperation) or $currentOperation/outputs)">
+			if (<c:get select="getReturnResultName($action)" /> != null){
+				return <c:get select="getReturnResultName($action)" />;
+			}else{
+		</c:if>
+		<c:if test="isVariableDefined('statusField')">
+			<c:if test="$requestMapping/@variableErrorView or $requestMapping/staticErrorView">
+				<c:setVariable select="'true'" var="complexOutputs" />
+			</c:if>
+		</c:if>
+		<c:choose>
+		<c:when test="$currentOperation/@outputsSize = '1'" >
+				<c:iterate select="$currentOperation/outputs" var="output">
+					<c:choose>
+						<c:when test="$output/variablePath">
+							return <sw:getVariable select="$output/variablePath" useMethod="false" />;
+						</c:when>
+						<c:otherwise>
+							return null;
+						</c:otherwise>
+					</c:choose>
+				</c:iterate>
+			</c:when>
+		</c:choose>
+		<c:if test="isReturnRequired($action) and (not($currentOperation) or toBoolean($currentOperation/@singleMappingOperation) or $currentOperation/outputs)">
+			}
+		</c:if>
+	</c:otherwise>
+</c:choose>

@@ -1,0 +1,12 @@
+<%@ jet 
+package="com.skyway.integration.service.webservice.jet.jaxws" 
+class="CopyWSDLFilesTemplate" 
+%>
+
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+<%@taglib prefix="jaxws" id="com.skyway.integration.service.webservice.skywayJAXWSTags"%>
+
+<jaxws:copyWSDLFiles/>
+

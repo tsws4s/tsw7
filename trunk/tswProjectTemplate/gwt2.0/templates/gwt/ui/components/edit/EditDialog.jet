@@ -1,0 +1,128 @@
+<%@ jet 
+package="com.skyway.integration.google.webtoolkit.deploy.templates" 
+class="EditDialogTemplate" 
+%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+
+package <sw:package select="$model" alias="gwteditdialog" var="pkg"/>;
+<sw:javaType select="$model" package="true" var="fullyQualifiedClassName" emit="false"/>
+<java:importsLocation package="{$pkg}"/>
+<java:impliedImport name="{$fullyQualifiedClassName}"/>
+
+<sw:getVariableName select="$model" uncapitalize="true" var="domainObjName" emit="false"/> <sw:getVariableName select="$model" uncapitalize="false" var="DomainObjName" emit="false"/>
+
+/**
+ * An Dialog that wraps the Editing of a <sw:javaType select="$model" alias="gwtdatatype" package="false"/>.
+ * This dialog loads the <sw:javaType select="$model" alias="gwteditor" package="false"/> and <sw:javaType select="$model" alias="gwteditwidget" package="false"/> and adds listeners
+ * to the buttons from the EditWidget to control closing the dialog, etc.
+ *
+ * Callers can get the <sw:javaType select="$model" alias="gwtdatatype" package="false"/> that was edited or null if the user cancels
+<sw:generated />
+ */
+public class <sw:javaType select="$model" alias="gwteditdialog" package="false"/> extends <java:import>com.google.gwt.user.client.ui.DialogBox</java:import>{
+	
+	/**
+	 * Editor 
+<sw:generated />
+	 */
+	<java:import><sw:javaType select="$model" alias="gwteditor" package="true"/></java:import> editor;
+	
+	/**
+	 * I18n Messages 
+<sw:generated />
+	 */
+	private final static <java:import><sw:javaType select="$model" alias="gwtmessagesinterface" package="true"/></java:import> messages = (<sw:javaType select="$model" alias="gwtmessagesinterface" package="false"/>)<java:import>com.google.gwt.core.client.GWT</java:import>.create (<sw:javaType select="$model" alias="gwtmessagesinterface" package="false"/>.class);
+	
+	
+	/**
+	 * Creates a new Edit Dialog with the default Title for creating a new <sw:javaType select="$model" alias="gwtdatatype" package="false"/> as defined in <sw:javaType select="$model" alias="gwtmessagesinterface" package="false"/>
+<sw:generated />
+	 */
+	public <sw:javaType select="$model" alias="gwteditdialog" package="false"/>(<java:import><sw:javaType select="$model" alias="gwtdatatype" package="true"/></java:import> <c:get select="$domainObjName"/>) {
+		this (<c:get select="$domainObjName"/>, messages.newTitle());
+	}
+	
+	/**
+	 * Creates a new Edit Dialog with the default Title for creating a new <sw:javaType select="$model" alias="gwtdatatype" package="false"/> as defined in <sw:javaType select="$model" alias="gwtmessagesinterface" package="false"/>
+	 * If perform save is false, this dialog will simply generate events from its buttons, but not persist any data
+	 * This allows callers to pass the data through to other Handler which may create a new Object and persist it in a relationship in a single call
+	 * 
+<sw:generated />
+	 */
+	public <sw:javaType select="$model" alias="gwteditdialog" package="false"/>(<java:import><sw:javaType select="$model" alias="gwtdatatype" package="true"/></java:import> <c:get select="$domainObjName"/>, boolean performSave) {
+		this (<c:get select="$domainObjName"/>, messages.newTitle(), performSave);
+	}
+	
+	/**
+	 * Creates a new Edit Dialog with the the title passed
+<sw:generated />
+	 */
+	public <sw:javaType select="$model" alias="gwteditdialog" package="false"/>(<java:import><sw:javaType select="$model" alias="gwtdatatype" package="true"/></java:import> <c:get select="$domainObjName"/>, String title) {
+		this (<c:get select="$domainObjName"/>, title, true);
+	}
+	
+	/**
+	 * Creates a new Edit Dialog with the the title passed, and control over whether or not to save or just pass events along
+<sw:generated />
+	 */
+	public <sw:javaType select="$model" alias="gwteditdialog" package="false"/>(<java:import><sw:javaType select="$model" alias="gwtdatatype" package="true"/></java:import> <c:get select="$domainObjName"/>, String title, boolean performSave) {
+		setText(title);
+		
+	    // Create a table to layout the content
+	    <java:import>com.google.gwt.user.client.ui.VerticalPanel</java:import> dialogContents = new VerticalPanel();
+	    dialogContents.setSpacing(4);
+	    setWidget(dialogContents);
+
+	    final <java:import><sw:javaType select="$model" alias="gwteditwidget" package="true"/></java:import> editWidget = new <sw:javaType select="$model" alias="gwteditwidget" package="false"/>();  
+	    editor = new <sw:javaType select="$model" alias="gwteditor" package="false"/>(editWidget, performSave);
+	    
+	    dialogContents.add(editWidget); 
+	    
+	    // Listen on the Display buttons to hide the Dialog 
+	    editWidget.getSaveButton().addClickHandler(new <java:import>com.google.gwt.event.dom.client.ClickHandler</java:import>() {
+			public void onClick(<java:import>com.google.gwt.event.dom.client.ClickEvent</java:import> event) {
+				if (editWidget.isValid())
+					hide();
+			}
+	    });
+	    
+	    editWidget.getCancelButton().addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				hide();
+			}
+	    });
+	    
+	    editWidget.setIsNew(true);
+	    
+		editor.edit(<c:get select="$domainObjName"/>);
+	}
+	
+	/**
+	 * Returns the <sw:javaType select="$model" alias="gwtdatatype"/> as edited or null of the user canceled
+<sw:generated />
+	 */
+	public <sw:javaType select="$model" alias="gwtdatatype"/> get<c:get select="$DomainObjName"/>() {
+		return editor.get<c:get select="$DomainObjName"/>();
+	}	
+	
+	/**
+	 * Clean up the editor
+	 <sw:generated />
+	 */
+	protected void dispose() {
+		editor.dispose();
+	}
+	
+	/**
+	 * Calls dispose to free up the editor
+	 <sw:generated />
+	 */
+	public void hide(boolean b) {
+		super.hide(b);
+		dispose();
+	}
+}
+

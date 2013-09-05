@@ -1,0 +1,75 @@
+<%@ jet 
+package="com.skyway.integration.google.webtoolkit.deploy.templates" 
+class="GwtCssTemplate" 
+%>
+@CHARSET "UTF-8";
+.gwt-CrudEdit{
+	margin-top:15px;
+	margin-bottom:15px;
+	margin-left:15px;
+	margin-right:15px;
+	width:100%;
+}
+.gwt-Crud-Type-Title {
+	font-size:18px;
+    font-weight: bold;
+	font-style:italic;
+}
+.gwt-CrudEditSaveButton{
+	margin-top:15px;
+	horizontal-align:right;
+}
+.gwt-CrudEditCancelButton{
+	margin-top:15px;
+	margin-left:5px;
+	horizontal-align:right;
+}
+.gwt-CrudEditNewButton{
+	margin-top:15px;
+	margin-left:5px;
+	horizontal-align:right;
+}
+.gwt-CrudEditSelectButton{
+	margin-top:15px;
+	margin-left:5px;
+	horizontal-align:right;
+}
+.gwt-CrudEditRemoveButton{
+	margin-top:15px;
+	margin-left:5px;
+	horizontal-align:right;
+}
+
+.gwt-CrudSectionNewButton {
+	margin-bottom:10px;
+	margin-top:10px;
+}
+
+.gwt-CrudEditSelectionList{
+	width:850px;
+	height:300px;
+	border-right:1px solid #ccc;
+}
+
+.gwt-CrudRelatedSection{
+	width:400px;
+	margin-left:20px;
+	margin-right:10px;
+}
+
+.gwt-CrudRelatedSelectionList{
+	width:375px;
+	height:150px;
+	border-right:1px solid #ccc;
+}
+
+
+.gwt-CrudEditTabs{
+	margin-left:5px;
+	margin-right:5px;
+	margin-bottom:10px;
+	width:100%;
+	height:585px;
+}
+
+input[type="text"]{padding:3px 1px; width:200px;}

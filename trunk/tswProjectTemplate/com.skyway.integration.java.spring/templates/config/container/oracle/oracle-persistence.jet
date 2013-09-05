@@ -1,0 +1,31 @@
+<%@ jet 
+package="com.skyway.integration.java.spring.jet.config.oracle" 
+class="OraclePersistenceTemplate" 
+%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+<%@taglib prefix="persistence" id="org.skyway.integration.data.persistence.skywayPersistenceTags"%>
+<%@taglib prefix="swsprjee" id="com.skyway.integration.java.spring.skywaySpringJeeCodeGenTags"%>
+
+<persistence:getAllPersistenceUnits select="$model" var="persistenceUnits" />
+<c:iterate select="$persistenceUnits" var="puDetail">
+	<persistence-unit name="<c:get select="$puDetail/persistenceUnitName" />" transaction-type="JTA" >
+		<jta-data-source>jdbc/<c:get select="$puDetail/persistenceUnitName" />DS</jta-data-source>
+  		<c:iterate select="$puDetail/dataTypes" var="dataType">
+  			<class><sw:javaType select="$dataType" package="true"/></class>
+  		</c:iterate>
+   		<exclude-unlisted-classes>true</exclude-unlisted-classes>
+		<properties>
+			<c:if test="$puDetail/showSQL = 'true'">
+				<property name="toplink.logging.level" value="FINEST" />
+			</c:if>
+			<c:if test="$puDetail/allowTableMods = 'true'">
+				<property name="toplink.ddl-generation" value="create-tables" />
+				<property name="toplink.ddl-generation.output-mode" value="database"/> 
+			</c:if>
+		</properties>
+	</persistence-unit>
+</c:iterate>
+	

@@ -1,0 +1,58 @@
+<%@ jet 
+package="org.skyway.integration.java.spring.jet.query" 
+class="NamedQueryResultTemplate" 
+%>
+
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="f" id="org.eclipse.jet.formatTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+
+package <sw:package select="$model" var="pkg"/>;
+<sw:queryResultType select="$model" package="true" var="fullyQualifiedClassName" emit="false"/>
+<java:importsLocation package="{$pkg}"/>
+<java:impliedImport name="{$fullyQualifiedClassName}"/>
+
+/**
+ * Automatically generated wrapper class that holds the result of the Named Query: <sw:methodName select="$model"/>
+<sw:generated />
+ */
+<sw:variableStorageReset scope="class" />
+public class <sw:javaType select="$model" /> {
+ 	/**
+ 	 <sw:generated />  
+ 	 */
+	private static final long serialVersionUID = 1L;
+ 	 
+	<c:iterate select="$model/outputs" var="output">
+		/**
+		 <sw:generated />  
+		 */
+		private <sw:declareClassVariable select="$output"><java:import><sw:javaType select="$output" package="true"/></java:import></sw:declareClassVariable>;
+
+	</c:iterate>
+	
+	/**
+	 <sw:generated />  
+	 */
+	public <sw:queryResultType select="$model" /> ()	{
+	}
+	
+	<c:setVariable var="position" select="0" />
+	<c:iterate select="$model/outputs" var="output">
+		/**
+		 <sw:generated />
+ 	 	 */
+		public <java:import><sw:javaType select="$output" package="true"/></java:import> get<sw:getVariableName select="$output" capitalize="true"/>() {
+			return <sw:getVariableName select="$output"/>;
+		}
+
+		/**
+		 <sw:generated />
+ 	 	 */
+		public void set<sw:getVariableName select="$output" capitalize="true" />(<java:import><sw:javaType select="$output" package="true"/></java:import> <sw:getVariableName select="$output"/>) {
+			this.<sw:getVariableName select="$output"/> = <sw:getVariableName select="$output"/>;
+		}
+	</c:iterate>
+}

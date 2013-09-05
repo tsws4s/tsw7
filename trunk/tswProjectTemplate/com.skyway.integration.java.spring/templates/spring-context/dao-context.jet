@@ -1,0 +1,180 @@
+<%@ jet 
+package="com.skyway.integration.java.spring.jet.config" 
+class="DAOContextTemplate" 
+%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="f" id="org.eclipse.jet.formatTags"%>
+<%@taglib prefix="persistence" id="org.skyway.integration.data.persistence.skywayPersistenceTags"%>
+<%@taglib prefix="swspr" id="org.skyway.integration.java.spring.skywaySpringCodeGenTags"%>
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:tx="http://www.springframework.org/schema/tx" 
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:jee="http://www.springframework.org/schema/jee" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:lang="http://www.springframework.org/schema/lang"
+	xmlns:security="http://www.springframework.org/schema/security"
+	<swspr:compareSpringVersion select="$model" version="3" compareType="<" var="spring2" />
+	<swspr:compareSpringVersion select="$model" version="3.1" compareType=">=" var="spring31" />	
+	<c:choose>
+	<c:when test="toBoolean($spring2)" >
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+      http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+      http://www.springframework.org/schema/aop
+      http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+      http://www.springframework.org/schema/tx
+      http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
+      http://www.springframework.org/schema/context 
+      http://www.springframework.org/schema/context/spring-context-2.5.xsd
+      http://www.springframework.org/schema/jee
+      http://www.springframework.org/schema/jee/spring-jee-2.5.xsd
+      http://www.springframework.org/schema/lang
+	   http://www.springframework.org/schema/lang/spring-lang-2.5.xsd
+      http://www.springframework.org/schema/security 
+      http://www.springframework.org/schema/security/spring-security-2.0.1.xsd">
+    </c:when>
+    <c:when test="toBoolean($spring31)" >
+    xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	   http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+       http://www.springframework.org/schema/aop 
+       http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
+	   http://www.springframework.org/schema/tx 
+	   http://www.springframework.org/schema/tx/spring-tx-3.1.xsd   
+	   http://www.springframework.org/schema/context 
+	   http://www.springframework.org/schema/context/spring-context-3.1.xsd   
+	   http://www.springframework.org/schema/jee 
+	   http://www.springframework.org/schema/jee/spring-jee-3.1.xsd	   
+	   http://www.springframework.org/schema/lang
+	   http://www.springframework.org/schema/lang/spring-lang-3.1.xsd
+	   http://www.springframework.org/schema/security 
+	   http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+	</c:when>
+	<c:otherwise >
+    xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	   http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+       http://www.springframework.org/schema/aop 
+       http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+	   http://www.springframework.org/schema/tx 
+	   http://www.springframework.org/schema/tx/spring-tx-3.0.xsd   
+	   http://www.springframework.org/schema/context 
+	   http://www.springframework.org/schema/context/spring-context-3.0.xsd   
+	   http://www.springframework.org/schema/jee 
+	   http://www.springframework.org/schema/jee/spring-jee-3.0.xsd	   
+	   http://www.springframework.org/schema/lang
+	   http://www.springframework.org/schema/lang/spring-lang-3.0.xsd
+	   http://www.springframework.org/schema/security 
+	   http://www.springframework.org/schema/security/spring-security-3.0.xsd">
+	</c:otherwise>
+	</c:choose>
+<swspr:springProjectVar select="$model" var="springProject" />
+<swsprjee:springJeeProjectVar select="$model" var="springJeeProject" />
+<swsprjee:springJeeDeployables select="$model" container="containerType" persistenceManager="persistenceManager" transactionManager="transactionManager" />
+
+	<!-- ******************************************************************** -->
+	<!-- Scan for dao layer annotated beans -->
+	<!-- ******************************************************************** -->
+	<swspr:componentScanPackages select="$model" var="packagesToScan" types="dao" />
+	<c:iterate select="$packagesToScan" var="packageToScan">
+	<context:component-scan base-package="<c:get select="$packageToScan" />" scoped-proxy="interfaces" />
+	</c:iterate>
+	
+	<!-- ******************************************************************** -->
+	<!-- Mark bean transactions as annotation driven -->
+	<!-- ******************************************************************** -->
+	<tx:annotation-driven transaction-manager="transactionManager" />
+	
+	<!-- ******************************************************************** -->
+	<!-- PropertyConfigurer for the DAO -->
+	<!-- ******************************************************************** -->
+	<context:property-placeholder location="classpath:<sw:configFile select="$model/project" classPathRelative="true" alias="dao-properties"/>"  />		
+	
+	<!-- ******************************************************************** -->
+	<!-- Setup the transaction manager -->
+	<!-- ******************************************************************** -->
+	<c:choose>
+		<c:when test="$transactionManager = 'CONTAINER'" >
+			<c:choose>
+				<c:when test="$containerType = 'JBOSS'" >
+					<!-- Using JBoss Transaction Manager -->
+					<c:include template="templates/config/container/jboss/jboss-transactions.jet" />
+				</c:when>
+				<c:when test="$containerType = 'WEBSPHERE'" >
+					<!-- Using WebSphere Transaction Manager -->
+					<c:include template="templates/config/container/websphere/websphere-transactions.jet" />
+				</c:when>
+				<c:when test="$containerType = 'WEBLOGIC'" >
+					<!-- Using WebLogic Transaction Manager -->
+					<c:include template="templates/config/container/weblogic/weblogic-transactions.jet" />
+				</c:when>
+				<c:when test="$containerType = 'ORACLE'" >
+					<!-- Using OC4J Transaction Manager -->
+					<c:include template="templates/config/container/oracle/oracle-transactions.jet" />
+				</c:when>
+			</c:choose>
+		</c:when>
+		<c:otherwise>
+			<c:include template="templates/spring-context/atomikos-transactions.jet" />
+		</c:otherwise>
+	</c:choose>
+	
+	<c:choose>
+		<c:when test="$containerType = 'JBOSS'" >
+			<!-- Using JBoss Data Sources -->
+			<c:include template="templates/config/container/jboss/jboss-entity-datasource.jet" />
+		</c:when>
+		<c:when test="$containerType = 'WEBSPHERE'" >
+			<!-- Using WebSphere Data Sources -->
+			<c:include template="templates/config/container/websphere/websphere-entity-datasource.jet" />
+		</c:when>
+		<c:when test="$containerType = 'WEBLOGIC'" >
+			<!-- Using WebLogic Data Sources -->
+			<c:include template="templates/config/container/weblogic/weblogic-entity-datasource.jet" />
+		</c:when>
+		<c:when test="$containerType = 'ORACLE'" >
+			<!-- Using OC4J Data Sources -->
+			<c:include template="templates/config/container/oracle/oracle-entity-datasource.jet" />
+		</c:when>
+		<c:otherwise>
+			<sw:persistenceProviderValue var="ppValue" />
+			<c:choose>
+				<c:when test="$ppValue = 'DATANUCLEUS'">
+				</c:when>
+				<c:otherwise>
+					<c:include template="templates/config/container/hibernate/hibernate-entity-datasource.jet" />
+				</c:otherwise>
+			</c:choose>
+		</c:otherwise>
+	</c:choose>
+	
+	
+	<!-- ******************************************************************** -->
+	<!-- Setup each persistence unit -->
+	<!-- ******************************************************************** -->
+	<c:choose>
+		<c:when test="$persistenceManager = 'CONTAINER'" >
+			<c:choose>
+				<c:when test="$containerType = 'JBOSS'" >
+					<!-- Using JBoss Persistence Units -->
+					<c:include template="templates/config/container/jboss/jboss-entity-manager.jet" />
+				</c:when>
+				<c:when test="$containerType = 'WEBSPHERE'" >
+					<!-- Using WebSphere Persistence Units -->
+					<c:include template="templates/config/container/websphere/websphere-entity-manager.jet" />
+				</c:when>
+				<c:when test="$containerType = 'WEBLOGIC'" >
+					<!-- Using WebLogic Persistence Units -->
+					<c:include template="templates/config/container/weblogic/weblogic-entity-manager.jet" />
+				</c:when>
+				<c:when test="$containerType = 'ORACLE'" >
+					<!-- Using OC4J Persistence Units -->
+					<c:include template="templates/config/container/oracle/oracle-entity-manager.jet" />
+				</c:when>
+			</c:choose>
+		</c:when>
+		<c:otherwise>
+			<c:include template="templates/config/container/hibernate/hibernate-entity-manager.jet" />
+		</c:otherwise>
+	</c:choose>
+	
+</beans>

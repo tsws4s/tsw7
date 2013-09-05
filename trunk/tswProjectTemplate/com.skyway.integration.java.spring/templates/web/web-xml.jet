@@ -1,0 +1,107 @@
+<%@ jet package="com.skyway.integration.java.spring.jet.config" class="WebXMLTemplate"%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+<%@taglib prefix="swspr" id="org.skyway.integration.java.spring.skywaySpringCodeGenTags"%>
+<%@taglib prefix="swsprjee" id="com.skyway.integration.java.spring.skywaySpringJeeCodeGenTags"%>
+<%@taglib prefix="swjaxws" id="com.skyway.integration.service.webservice.skywayJAXWSTags"%>
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.4" 
+	xmlns="http://java.sun.com/xml/ns/j2ee" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"> 
+
+	<swsprjee:springJeeDeployables select="$model" container="containerType" persistenceManager="persistenceManager" transactionManager="transactionManager" />
+	
+	<display-name><c:get select="$model/name"/></display-name>
+	
+	<sw:contextParameters select="$model" var="contextParameters" />
+	<c:iterate select="$contextParameters" var="contextParameter" >
+	<context-param>
+		<param-name><c:get select="$contextParameter/@paramName" /></param-name>
+		<param-value><c:get select="$contextParameter/@paramValue" /></param-value>
+	</context-param>
+	</c:iterate>
+	
+	<sw:servletListeners select="$model" var="servletListeners" />
+	<c:iterate select="$servletListeners" var="servletListener" >
+	<listener>
+		<listener-class><c:get select="$servletListener/@listenerClassName" /></listener-class>
+	</listener>
+	</c:iterate>
+
+	
+	<sw:filterDefinitions select="$model" var="filterDefinitions" />
+	<c:iterate select="$filterDefinitions" var="filterDefinition" >
+	<filter>
+		<description><c:get select="$filterDefinition/@description" /></description>
+		<filter-name><c:get select="$filterDefinition/@name" /></filter-name>
+		<filter-class><c:get select="$filterDefinition/@implementationClass" /></filter-class>
+		<c:iterate select="$filterDefinition/initParams" var="initParam" >
+		<init-param>
+			<param-name><c:get select="$initParam/@paramName" /></param-name>
+			<param-value><c:get select="$initParam/@paramValue" /></param-value>
+		</init-param>
+		</c:iterate>
+	</filter>
+	
+	</c:iterate>
+	<sw:filterMappings select="$model" var="filterMappings" />
+	<c:iterate select="$filterMappings" var="filterMapping" >
+	<filter-mapping>
+		<filter-name><c:get select="$filterMapping/@name" /></filter-name>
+		<url-pattern><c:get select="$filterMapping/@urlPattern" /></url-pattern>
+	</filter-mapping>
+	
+	</c:iterate>
+	<sw:servletDefinitions select="$model" var="servletDefinitions" />
+	<c:iterate select="$servletDefinitions" var="servletDefinition" >
+	<servlet>
+		<description><c:get select="$servletDefinition/@description" /></description>
+		<servlet-name><c:get select="$servletDefinition/@name" /></servlet-name>
+		<c:choose><c:when test="$servletDefinition/@jspFile != ''" ><jsp-file><c:get select="$servletDefinition/@jspFile" /></jsp-file></c:when><c:otherwise><servlet-class><c:get select="$servletDefinition/@implementationClass" /></servlet-class></c:otherwise></c:choose>
+		<c:iterate select="$servletDefinition/initParams" var="initParam" >
+		<init-param>
+			<param-name><c:get select="$initParam/@paramName" /></param-name>
+			<param-value><c:get select="$initParam/@paramValue" /></param-value>
+		</init-param>
+		</c:iterate>
+		<load-on-startup><c:get select="$servletDefinition/@loadOnStartup" /></load-on-startup>
+	</servlet>
+	
+	</c:iterate>
+	<sw:servletMappings select="$model" var="servletMappings" />
+	<c:iterate select="$servletMappings" var="servletMapping" >
+	<servlet-mapping>
+		<servlet-name><c:get select="$servletMapping/@name" /></servlet-name>
+		<url-pattern><c:get select="$servletMapping/@urlPattern" /></url-pattern>
+	</servlet-mapping>
+	
+	</c:iterate>
+
+	<c:choose>
+		<c:when test="$persistenceManager = 'CONTAINER'" >
+			<c:choose>
+				<c:when test="$containerType = 'WEBLOGIC'" >
+					<persistence:getAllPersistenceUnits select="$model" var="persistenceUnits" />
+					<c:iterate select="$persistenceUnits" var="puDetail">
+						<persistence-unit-ref>
+							<persistence-unit-ref-name>persistence/<c:get select="$puDetail/persistenceUnitName" /></persistence-unit-ref-name>
+							<persistence-unit-name><c:get select="$puDetail/persistenceUnitName" /></persistence-unit-name>
+						</persistence-unit-ref>
+						
+					</c:iterate>
+				</c:when>
+			</c:choose>
+		</c:when>
+	</c:choose>
+	<welcome-file-list>
+		<welcome-file>index.html</welcome-file>
+		<welcome-file>index.htm</welcome-file>
+		<welcome-file>index.jsp</welcome-file>
+		<welcome-file>default.html</welcome-file>
+		<welcome-file>default.htm</welcome-file>
+		<welcome-file>default.jsp</welcome-file>
+	</welcome-file-list>
+</web-app>

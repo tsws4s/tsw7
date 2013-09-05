@@ -1,0 +1,467 @@
+<%@ jet 
+package="com.skyway.integration.google.webtoolkit.deploy.templates" 
+class="SelectionTableTemplate" 
+%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+<%@taglib prefix="swgwt" id="com.skyway.integration.google.webtoolkit.common.skywayGWTCodeGenTags"%>
+package <sw:package select="$model" alias="gwttable" var="pkg"/>;
+<sw:javaType select="$model" package="true" var="fullyQualifiedClassName" emit="false"/>
+<java:importsLocation package="{$pkg}"/>
+<java:impliedImport name="{$fullyQualifiedClassName}"/>
+<sw:getVariableName select="$model" uncapitalize="true" var="domainObjName" emit="false"/> <sw:getVariableName select="$model" uncapitalize="false" var="DomainObjName" emit="false"/>
+<swgwt:getGWTDataType select="$model" var="gwtDataType"/>
+
+/**
+ * A Table designed to provide rendering and selection of <sw:javaType select="$model" alias="gwtdatatype" package="false"/>s.  Provides the default setup of columns for each of the fields, integration with generated Sorters for each field, etc.
+ * This instance of the table is configured specifically to provide a minimal set of columns for the purpose of selecting <sw:javaType select="$model" alias="gwtdatatype" package="false"/>s in a smaller UI like a "Picker" dialog, etc.
+ * 
+ * This table also provides optional controls for edit and remove actions.  Action Handlers can be passed in to receive events when the user selections either action.
+ * By default this Table will listen on the event bus for adds or removals of <sw:javaType select="$model" alias="gwtdatatype" package="false"/>s and update the table accordingly.
+ <sw:generated />
+ */
+public class <sw:javaType select="$model" alias="gwtselectiontable" package="false"/> extends <java:import>com.google.gwt.user.client.ui.Composite</java:import> implements <java:import>com.google.gwt.user.client.ui.HasValue</java:import><<java:import>java.util.Set</java:import><<java:import><sw:javaType select="$model" alias="gwtdatatype" package="true"/></java:import>>>, <java:import><sw:javaType select="$model" alias="gwtchangedhandler" package="true"/></java:import>, <java:import><sw:javaType select="$model" alias="gwtdeletedhandler" package="true"/></java:import>, <java:import><sw:javaType select="$model" alias="gwtstoredhandler" package="true"/></java:import> {
+	
+	/**
+	 * The cached table model for this table
+	<sw:generated />
+	 */
+	private <java:import>com.google.gwt.gen2.table.client.CachedTableModel</java:import><<sw:javaType select="$model" alias="gwtdatatype" package="false"/>> cachedTableModel = null;
+	
+	/**
+	 * The DataSourceTableModel that backs the CachedTableModel
+	<sw:generated />
+	 */
+	private <java:import>com.google.gwt.gen2.table.client. DefaultTableDefinition</java:import><<sw:javaType select="$model" alias="gwtdatatype" package="false"/>> tableDefinition = null;
+	
+	/**
+	 * The actual instance of PagingScrollTable that is being rendered
+	<sw:generated />
+	 */
+	private <java:import>com.google.gwt.gen2.table.client.PagingScrollTable</java:import><<sw:javaType select="$model" alias="gwtdatatype" package="false"/>> pagingScrollTable = null;
+	
+	/**
+	 * The table definition
+	<sw:generated />
+	 */
+	private DataSourceTableModel tableModel = null;
+	
+	/**
+	 * I18N Messages
+	<sw:generated />
+	 */
+	private final static <java:import><sw:javaType select="$model" alias="gwtmessagesinterface" package="true"/></java:import> messages = (<sw:javaType select="$model" alias="gwtmessagesinterface" package="false"/>)<java:import>com.google.gwt.core.client.GWT</java:import>.create (<sw:javaType select="$model" alias="gwtmessagesinterface" package="false"/>.class);
+	
+	/**
+	 * HandlerRegistration for later removing the Deleted handler 
+	<sw:generated />
+	 */
+	private <java:import>com.google.gwt.event.shared.HandlerRegistration</java:import> deletedHandlerRegistration;
+	
+	/**
+	 * HandlerRegistration for later removing the Stored handler 
+	<sw:generated />
+	 */
+	private <java:import>com.google.gwt.event.shared.HandlerRegistration</java:import> storedHandlerRegistration;
+	
+	/**
+	 * HandlerRegistration for later removing the Changed handler 
+	<sw:generated />
+	 */
+	private <java:import>com.google.gwt.event.shared.HandlerRegistration</java:import> changedHandlerRegistration;
+	
+	
+	/**
+	 * Default Constructor
+	<sw:generated />
+	 */	
+	public <sw:javaType select="$model" alias="gwtselectiontable" package="false"/> () {
+		pagingScrollTable = createScrollTable();
+		pagingScrollTable.addStyleName("gwt-CrudPickerList");
+			
+		<java:import>com.google.gwt.gen2.table.client.PagingOptions</java:import> pagingOptions = new PagingOptions (pagingScrollTable, GWT.<<java:import><sw:javaType select="$model/project" alias="gwtcommonpagingoptionsimages" package="true"/></java:import>> create(<sw:javaType select="$model/project" alias="gwtcommonpagingoptionsimages" package="false"/>.class));
+		
+		<java:import>com.google.gwt.user.client.ui.VerticalPanel</java:import> vPanel = new VerticalPanel();	
+		
+		
+		vPanel.add(pagingScrollTable);
+		vPanel.add(pagingOptions);
+		
+		vPanel.setCellHorizontalAlignment(pagingOptions,  <java:import>com.google.gwt.user.client.ui.HasHorizontalAlignment</java:import>.ALIGN_RIGHT);
+			
+		initWidget(vPanel);
+	}
+	
+	/**
+	 * Initialize the ScrollTable
+	<sw:generated />
+	 */	
+	private PagingScrollTable<<sw:javaType select="$model" alias="gwtdatatype" package="false"/>> createScrollTable() {
+		// create our own table model
+		tableModel = new DataSourceTableModel();
+		// add it to cached table model
+		cachedTableModel = createCachedTableModel(tableModel);
+		
+		// create the table definition
+		<java:import>com.google.gwt.gen2.table.client.TableDefinition</java:import><<sw:javaType select="$model" alias="gwtdatatype" package="false"/>> tableDef = createTableDefinition();
+		
+		// create the paging scroll table
+		PagingScrollTable<<sw:javaType select="$model" alias="gwtdatatype" package="false"/>> pagingScrollTable = new PagingScrollTable<<sw:javaType select="$model" alias="gwtdatatype" package="false"/>>(cachedTableModel, tableDef);
+		pagingScrollTable.setPageSize(50);
+		pagingScrollTable.getDataTable().setSelectionPolicy(<java:import>com.google.gwt.gen2.table.client.SelectionGrid.SelectionPolicy</java:import>.MULTI_ROW);
+		
+		// setup the bulk renderer
+		<java:import>com.google.gwt.gen2.table.client.FixedWidthGridBulkRenderer</java:import><<sw:javaType select="$model" alias="gwtdatatype" package="false"/>> bulkRenderer = new FixedWidthGridBulkRenderer<<sw:javaType select="$model" alias="gwtdatatype" package="false"/>>(pagingScrollTable.getDataTable(), pagingScrollTable);
+		pagingScrollTable.setBulkRenderer(bulkRenderer);
+		
+		// setup the formatting
+		pagingScrollTable.setCellPadding(3);
+		pagingScrollTable.setCellSpacing(0);
+		pagingScrollTable.setResizePolicy(<java:import>com.google.gwt.gen2.table.client.ScrollTable</java:import>.ResizePolicy.FILL_WIDTH);
+		pagingScrollTable.setSortPolicy(<java:import>com.google.gwt.gen2.table.client.AbstractScrollTable.SortPolicy</java:import>.SINGLE_CELL);
+		return pagingScrollTable;
+	}
+	
+	/**
+	 * Create the {@link CachedTableModel}
+	 * @param tableModel 
+	 * @return
+	<sw:generated />
+	 */
+	private CachedTableModel<<sw:javaType select="$model" alias="gwtdatatype" package="false"/>> createCachedTableModel(DataSourceTableModel tableModel) {
+		<java:import>com.google.gwt.gen2.table.client.CachedTableModel</java:import><<sw:javaType select="$model" alias="gwtdatatype" package="false"/>> tm = new CachedTableModel<<sw:javaType select="$model" alias="gwtdatatype" package="false"/>>(tableModel);
+		tm.setPreCachedRowCount(50);
+		tm.setPostCachedRowCount(50);
+		tm.setRowCount(1000);
+		return tm;
+	}
+	
+	/**
+	 * Creates the definition of the Table including the creation and management of the column definitions
+	<sw:generated />
+	 */	
+	private <java:import>com.google.gwt.gen2.table.client.DefaultTableDefinition</java:import><<sw:javaType select="$model" alias="gwtdatatype" package="false"/>> createTableDefinition() {
+		tableDefinition = new DefaultTableDefinition<<sw:javaType select="$model" alias="gwtdatatype" package="false"/>>();
+		
+		// set the row renderer
+		final String[] rowColors = new String[] { "#FFFFDD", "EEEEEE" };
+		tableDefinition.setRowRenderer(new <java:import>com.google.gwt.gen2.table.client.DefaultRowRenderer</java:import><<sw:javaType select="$model" alias="gwtdatatype" package="false"/>>(rowColors));
+		
+	<swgwt:getPropertiesWithAction select="$model" var="pickerFields" action="PICKER" defaultToPrimaryKeys="true"/>	
+	<c:iterate select="$pickerFields" var="propertyselection">
+		<c:setVariable select="$propertyselection/Property" var="field"/>
+		<sw:getVariableName select="$field" capitalize="true"/>ColumnDefinition <sw:getVariableName select="$field" capitalize="true"/>ColumnDef = new <sw:getVariableName select="$field" capitalize="true"/>ColumnDefinition();
+		<sw:getVariableName select="$field" capitalize="true"/>ColumnDef.setColumnSortable(true);
+		<sw:getVariableName select="$field" capitalize="true"/>ColumnDef.setColumnTruncatable(false);
+		<sw:getVariableName select="$field" capitalize="true"/>ColumnDef.setPreferredColumnWidth(35);
+		<sw:getVariableName select="$field" capitalize="true"/>ColumnDef.setHeader(0, messages.<sw:getVariableName select="$field"/>());
+		<sw:getVariableName select="$field" capitalize="true"/>ColumnDef.setHeaderCount(1);
+		<sw:getVariableName select="$field" capitalize="true"/>ColumnDef.setHeaderTruncatable(false);
+		tableDefinition.addColumnDefinition(<sw:getVariableName select="$field" capitalize="true"/>ColumnDef);
+	</c:iterate>	
+		
+		return tableDefinition;
+	}
+	
+	/**
+	 * Handles updating the backing model for the Table when a <sw:javaType select="$model" alias="gwtchangedevent" package="fale"/> is received
+	<sw:generated />
+	 */	
+	public void <c:get select="$domainObjName"/>Modified(<java:import><sw:javaType select="$model" alias="gwtchangedevent" package="true"/></java:import> evt) {
+		<sw:javaType select="$model" alias="gwtdatatype" package="false"/> stored = tableModel.get<c:get select="$DomainObjName"/>ById(new <sw:javaType select="$model" alias="gwtdatatypeid" package="false"/>(evt.get<c:get select="$DomainObjName"/>()));
+		stored.copy(evt.get<c:get select="$DomainObjName"/>());
+		int size = cachedTableModel.getRowCount();
+		cachedTableModel.clearCache();
+		cachedTableModel.setRowCount(size);
+		pagingScrollTable.gotoPage(0, true);
+		
+	}
+
+
+	/**
+	 * Returns a Set of the <sw:javaType select="$model" alias="gwtdatatype" package="false"/>s stored in this Table
+	<sw:generated />
+	 */	
+	public Set<<sw:javaType select="$model" alias="gwtdatatype" package="false"/>> get<c:get select="$DomainObjName"/>s() {
+		return new <java:import>java.util.HashSet</java:import><<sw:javaType select="$model" alias="gwtdatatype" package="false"/>>(tableModel.getAll<c:get select="$domainObjName"/>s());
+	}
+
+
+	/**
+	 * Populates the table with the Set of <sw:javaType select="$model" alias="gwtdatatype" package="false"/>s passed
+	<sw:generated />
+	 */	
+	public void set<c:get select="$DomainObjName"/>s(Set<<sw:javaType select="$model" alias="gwtdatatype" package="false"/>> <c:get select="$domainObjName"/>s) {
+		tableModel.setData(new ArrayList<<sw:javaType select="$model" alias="gwtdatatype" package="false"/>>(<c:get select="$domainObjName"/>s));
+		tableModel.setRowCount(<c:get select="$domainObjName"/>s.size());
+		cachedTableModel.clearCache();
+		cachedTableModel.setRowCount(<c:get select="$domainObjName"/>s.size());
+		pagingScrollTable.gotoPage(0, true);
+	}
+	
+	/**
+	 * Passes the style name addition through to the underlying PagingScrollTable instance
+	<sw:generated />
+	 */	
+	@Override
+	public void addStyleName(String style) {
+		pagingScrollTable.addStyleName(style);
+	}
+	
+	/**
+	 * Extension of {@link MutableTableModel} for our own {@link <sw:javaType select="$model" alias="gwtdatatype" package="false"/>} type.
+	<sw:generated />
+	 */
+	private class DataSourceTableModel extends <java:import>com.google.gwt.gen2.table.client.MutableTableModel</java:import><<sw:javaType select="$model" alias="gwtdatatype" package="false"/>> {
+		
+		// knows how to sort <c:get select="$domainObjName"/>s
+		private <java:import><sw:javaType select="$model" alias="gwtsorter" package="true"/></java:import> sorter = new <sw:javaType select="$model" alias="gwtsorter" package="false"/>();
+		
+		// we keep a map so we can index by id
+		private <java:import>java.util.Map</java:import><<java:import><sw:javaType select="$model" alias="gwtdatatypeid" package="true"/></java:import>, <sw:javaType select="$model" alias="gwtdatatype" package="false"/>> map;
+		
+		/**
+		 * Set the data on the model.  Overwrites prior data.
+		 * @param list
+		 */
+		public void setData(<java:import>java.util.ArrayList</java:import><<sw:javaType select="$model" alias="gwtdatatype" package="false"/>> list) {
+			// toss the list, index by id in a map.
+			map = new <java:import>java.util.HashMap</java:import><<sw:javaType select="$model" alias="gwtdatatypeid" package="false"/>, <sw:javaType select="$model" alias="gwtdatatype" package="false"/>>(list.size());
+			for(<java:import><sw:javaType select="$model" alias="gwtdatatype" package="true"/></java:import> m : list) {
+				map.put(new <sw:javaType select="$model" alias="gwtdatatypeid" package="false"/>(m), m);
+			}
+		}
+		
+		/**
+		 * Fetch a {@link <sw:javaType select="$model" alias="gwtdatatype" package="false"/>} by its id.
+		 * @param id
+		 * @return
+		 */
+		public <sw:javaType select="$model" alias="gwtdatatype" package="false"/> get<c:get select="$DomainObjName"/>ById(<sw:javaType select="$model" alias="gwtdatatypeid" package="false"/> id) {
+			return (map != null) ? map.get(id) : null;
+		}
+		
+		/**
+		 * Remove a {@link <sw:javaType select="$model" alias="gwtdatatype" package="false"/>} by its id.
+		 * @param id
+		 * @return
+		 */
+		public <sw:javaType select="$model" alias="gwtdatatype" package="false"/> remove<c:get select="$DomainObjName"/>ById(<sw:javaType select="$model" alias="gwtdatatypeid" package="false"/> id) {
+			return (map != null) ? map.remove(id) : null;
+		}
+		
+		/**
+		 * 
+		 * @return
+		 */
+		public <java:import>java.util.Collection</java:import><<sw:javaType select="$model" alias="gwtdatatype" package="false"/>> getAll<c:get select="$domainObjName"/>s() {
+			return map.values();
+		}
+		
+		protected boolean onRowInserted(int beforeRow) {
+			return true;
+		}
+
+		protected boolean onRowRemoved(int row) {
+			return true;
+		}
+
+		protected boolean onSetRowValue(int row, <sw:javaType select="$model" alias="gwtdatatype" package="false"/> rowValue) {
+			return true;
+		}
+
+		public void requestRows(
+				final <java:import>com.google.gwt.gen2.table.client.TableModelHelper.Request</java:import> request,
+				<java:import>com.google.gwt.gen2.table.client.TableModel</java:import>.Callback<<sw:javaType select="$model" alias="gwtdatatype" package="false"/>> callback) {
+			
+			callback.onRowsReady(request, new <java:import>com.google.gwt.gen2.table.client.TableModelHelper.Response</java:import><<sw:javaType select="$model" alias="gwtdatatype" package="false"/>>(){
+
+				public <java:import>java.util.Iterator</java:import><<sw:javaType select="$model" alias="gwtdatatype" package="false"/>> getRowValues() {
+					final int col = request.getColumnSortList().getPrimaryColumn();
+					final boolean ascending = request.getColumnSortList().isPrimaryAscending();
+					
+				<c:setVariable var="cnt" select="0"/>
+				<swgwt:getPropertiesWithAction select="$model" var="pickerFields" action="PICKER" defaultToPrimaryKeys="true"/>	
+				<c:iterate select="$pickerFields" var="propertyselection">
+				<c:setVariable select="$propertyselection/Property" var="field"/>
+				<c:if test="$cnt = 0">
+					if(col < 0) {
+						map = sorter.sort(map, new <java:import><sw:javaType select="$model" alias="gwtsorter" package="true"/></java:import>.<sw:getVariableName select="$field" capitalize="true"/>Comparator(ascending));
+					} else {
+						switch(col) {
+					</c:if>
+						case <c:get select="$cnt"/>:
+							map = sorter.sort(map, new <java:import><sw:javaType select="$model" alias="gwtsorter" package="true"/></java:import>.<sw:getVariableName select="$field" capitalize="true"/>Comparator(ascending));
+							break;
+					<c:setVariable var="cnt" select="$cnt + 1"/>
+				</c:iterate>
+				<c:if test="$cnt > 0">
+						}
+					}	
+				</c:if>
+				return map.values().iterator();
+			}});
+		}
+	}
+	
+	<swgwt:getPropertiesWithAction select="$model" var="pickerFields" action="PICKER" defaultToPrimaryKeys="true"/>	
+	<c:iterate select="$pickerFields" var="propertyselection">
+	<c:setVariable select="$propertyselection/Property" var="field"/>
+	private final class <sw:getVariableName select="$field" capitalize="true"/>ColumnDefinition extends <java:import>com.google.gwt.gen2.table.client.AbstractColumnDefinition</java:import><<sw:javaType select="$model" alias="gwtdatatype" package="false"/>, String> {
+		@Override
+		public String getCellValue(<sw:javaType select="$model" alias="gwtdatatype" package="false"/> rowValue) {
+		<swgwt:javaType select="$field" package="true" emitCollectionPolicy="concrete" emitIncludes="true" emit="false" var="javaType"/>
+		<c:choose>
+			<c:when test="$field/dataType/@type = 'DATE'">		return rowValue.get<sw:getVariableName select="$field" capitalize="true"/>() == null ? "" : <java:import>com.google.gwt.i18n.client.DateTimeFormat</java:import>.getShortDateFormat().format(rowValue.get<sw:getVariableName select="$field" capitalize="true"/>());</c:when>
+			<c:when test="$field/dataType/@type = 'TIME'">		return rowValue.get<sw:getVariableName select="$field" capitalize="true"/>() == null ? "" : DateTimeFormat.getShortTimeFormat().format(rowValue.get<sw:getVariableName select="$field" capitalize="true"/>());</c:when>
+			<c:when test="$field/dataType/@type = 'DATETIME'">		return rowValue.get<sw:getVariableName select="$field" capitalize="true"/>() == null ? "" : DateTimeFormat.getMediumDateTimeFormat().format(rowValue.get<sw:getVariableName select="$field" capitalize="true"/>());</c:when>
+			<c:when test="$field/dataType/@type = 'DECIMAL'">		return rowValue.get<sw:getVariableName select="$field" capitalize="true"/>() == null ? "" : <java:import>com.google.gwt.i18n.client.NumberFormat</java:import>.getDecimalFormat().format(rowValue.get<sw:getVariableName select="$field" capitalize="true"/>());</c:when>
+			<c:when test="$field/dataType/@type = 'INTEGER'">		return "" + rowValue.get<sw:getVariableName select="$field" capitalize="true"/>();</c:when>
+			<c:when test="$field/dataType/@type = 'BOOLEAN'">		return "" + rowValue.get<sw:getVariableName select="$field" capitalize="true"/>();</c:when>
+			<c:otherwise>		return rowValue.get<sw:getVariableName select="$field" capitalize="true"/>();</c:otherwise>
+		</c:choose>
+		}
+		@Override
+		public void setCellValue(<sw:javaType select="$model" alias="gwtdatatype" package="false"/> rowValue, String cellValue) { 
+		<c:choose>
+			<c:when test="$field/dataType/@type = 'DATE'">		rowValue.set<sw:getVariableName select="$field" capitalize="true"/>(<java:import>com.google.gwt.i18n.client.DateTimeFormat</java:import>.getShortDateFormat().parse(cellValue));</c:when>
+			<c:when test="$field/dataType/@type = 'TIME'">		rowValue.set<sw:getVariableName select="$field" capitalize="true"/>(<java:import>com.google.gwt.i18n.client.DateTimeFormat</java:import>.getShortTimeFormat().parse(cellValue));</c:when>
+			<c:when test="$field/dataType/@type = 'DATETIME'">		rowValue.set<sw:getVariableName select="$field" capitalize="true"/>(<java:import>com.google.gwt.i18n.client.DateTimeFormat</java:import>.getMediumDateTimeFormat().parse(cellValue));</c:when>
+			<c:when test="$field/dataType/@type = 'DECIMAL'"><c:choose><c:when test="$javaType = 'Float'">rowValue.set<sw:getVariableName select="$field" capitalize="true"/>(new Float(<java:import>com.google.gwt.i18n.client.NumberFormat</java:import>.getDecimalFormat().parse(cellValue)));</c:when><c:otherwise>rowValue.set<sw:getVariableName select="$field" capitalize="true"/>(<java:import>com.google.gwt.i18n.client.NumberFormat</java:import>.getDecimalFormat().parse(cellValue));</c:otherwise></c:choose></c:when>
+			<c:when test="$field/dataType/@type = 'INTEGER'"><c:choose><c:when test="$javaType = 'Long'">rowValue.set<sw:getVariableName select="$field" capitalize="true"/>(Long.parseLong(cellValue));</c:when><c:otherwise>rowValue.set<sw:getVariableName select="$field" capitalize="true"/>(Integer.parseInt(cellValue));</c:otherwise></c:choose></c:when>
+			<c:when test="$field/dataType/@type = 'BOOLEAN'">		rowValue.set<sw:getVariableName select="$field" capitalize="true"/>(Boolean.parseBoolean(cellValue));</c:when>
+			<c:otherwise>		rowValue.set<sw:getVariableName select="$field" capitalize="true"/>(cellValue);</c:otherwise>
+		</c:choose>
+		}
+	}
+	</c:iterate>
+	
+	
+	/**
+	 * Returns the first selected <sw:javaType select="$model" alias="gwtdatatype" package="false"/>
+	<sw:generated />
+	 */
+	public <sw:javaType select="$model" alias="gwtdatatype" package="false"/> get<c:get select="$DomainObjName"/>() {
+		Set<<sw:javaType select="$model" alias="gwtdatatype" package="false"/>> selected = getSelected<c:get select="$domainObjName"/>s();
+		return selected.size() > 0 ? selected.iterator().next() : null;
+	}
+	
+	
+	/**
+	 * Returns a set of all of the selected  <sw:javaType select="$model" alias="gwtdatatype" package="false"/>s
+	<sw:generated />
+	 */
+	public Set<<sw:javaType select="$model" alias="gwtdatatype" package="false"/>> getSelected<c:get select="$domainObjName"/>s() {
+		return pagingScrollTable.getSelectedRowValues();
+	}
+
+	/**
+	 * Returns a set of all of the selected  <sw:javaType select="$model" alias="gwtdatatype" package="false"/>s
+	<sw:generated />
+	 */
+	public Set<<sw:javaType select="$model" alias="gwtdatatype" package="false"/>> getValue() {
+		return get<c:get select="$DomainObjName"/>s();
+	}
+
+	/**
+	 * Sets the content of the Table to be the set of <sw:javaType select="$model" alias="gwtdatatype" package="false"/> passed
+	<sw:generated />
+	 */
+	public void setValue(Set<<sw:javaType select="$model" alias="gwtdatatype" package="false"/>> value) {
+		set<c:get select="$DomainObjName"/>s (value);
+	}
+
+	/**
+	 * Sets the content of the Table to be the set of <sw:javaType select="$model" alias="gwtdatatype" package="false"/> passed
+	<sw:generated />
+	 */
+	public void setValue(Set<<sw:javaType select="$model" alias="gwtdatatype" package="false"/>> value, boolean fireEvents) {
+		set<c:get select="$DomainObjName"/>s(value);
+	}
+
+	/**
+	* Handler registration
+	<sw:generated />
+	*/
+	public <java:import>com.google.gwt.event.shared.HandlerRegistration</java:import> addValueChangeHandler(<java:import>com.google.gwt.event.logical.shared.ValueChangeHandler</java:import><Set<<sw:javaType select="$model" alias="gwtdatatype" package="false"/>>> handler) {
+		return addHandler(handler, <java:import>com.google.gwt.event.logical.shared.ValueChangeEvent</java:import>.getType());
+	}
+	
+	/**
+	* Update the table when a <c:get select="$DomainObjName"/> is deleted
+	<sw:generated />
+	*/
+	public void on<c:get select="$DomainObjName"/>Deleted (<sw:javaType select="$model" alias="gwtdeletedevent" package="false"/> event) {
+		for (<sw:javaType select="$model" alias="gwtdatatype" package="false"/> <c:get select="$domainObjName"/>: event.get<c:get select="$DomainObjName"/>s()) {
+			tableModel.remove<c:get select="$DomainObjName"/>ById(new <sw:javaType select="$model" alias="gwtdatatypeid" package="false"/>(<c:get select="$domainObjName"/>));
+		}
+		int size = cachedTableModel.getRowCount();
+		cachedTableModel.clearCache();
+		cachedTableModel.setRowCount(size);
+		pagingScrollTable.gotoPage(0, true);
+	}
+
+	/**
+	* Update the table when a <c:get select="$DomainObjName"/> is changed
+	<sw:generated />
+	*/
+	public void on<c:get select="$DomainObjName"/>Changed(<sw:javaType select="$model" alias="gwtchangedevent" package="false"/> event) {
+		update<c:get select="$DomainObjName"/>(event.get<c:get select="$DomainObjName"/>());		
+	}
+	
+	/**
+	* Update the table when a <c:get select="$DomainObjName"/> is stored
+	<sw:generated />
+	*/
+	public void on<c:get select="$DomainObjName"/>Stored(<sw:javaType select="$model" alias="gwtstoredevent" package="false"/> event) {
+		update<c:get select="$DomainObjName"/>(event.get<c:get select="$DomainObjName"/>());
+	}
+	
+	/**
+	* Update a <c:get select="$DomainObjName"/> if it is stored in the table
+<	sw:generated />
+	*/
+	private void update<c:get select="$DomainObjName"/> (<sw:javaType select="$model" alias="gwtdatatype" package="false"/> <c:get select="$domainObjName"/>) {
+		if (<c:get select="$domainObjName"/> == null)
+			return;
+		
+		<sw:javaType select="$model" alias="gwtdatatype" package="false"/> stored = tableModel.get<c:get select="$DomainObjName"/>ById(new <sw:javaType select="$model" alias="gwtdatatypeid" package="false"/>(<c:get select="$domainObjName"/>));
+		
+		if (stored == null) {
+			return;
+		}
+		
+		stored.copy(<c:get select="$domainObjName"/>);
+	
+		cachedTableModel.clearCache();
+		cachedTableModel.setRowCount(cachedTableModel.getRowCount());
+		pagingScrollTable.gotoPage(0, true);
+	}
+	
+	/**
+	* Register to listen for Events on the EventBus that could change the data in the Table
+	<sw:generated />
+	*/
+	@Override
+	protected void onLoad() {
+		deletedHandlerRegistration = <java:import><sw:javaType select="$model/project" alias="gwteventbus" package="true"/></java:import>.get().addHandler(<java:import><sw:javaType select="$model" alias="gwtdeletedevent" package="true"/></java:import>.TYPE, this);
+		storedHandlerRegistration = <sw:javaType select="$model/project" alias="gwteventbus" package="false"/>.get().addHandler(<java:import><sw:javaType select="$model" alias="gwtstoredevent" package="true"/></java:import>.TYPE, this);
+		changedHandlerRegistration = <sw:javaType select="$model/project" alias="gwteventbus" package="false"/>.get().addHandler(<java:import><sw:javaType select="$model" alias="gwtchangedevent" package="true"/></java:import>.TYPE, this);
+	}
+	
+	/**
+	* Unregister the Events from the EventBus
+	<sw:generated />
+	*/
+	protected void onUnload() {
+		deletedHandlerRegistration.removeHandler();
+		storedHandlerRegistration.removeHandler();
+		changedHandlerRegistration.removeHandler();
+		
+		deletedHandlerRegistration = null;
+		storedHandlerRegistration = null;
+		changedHandlerRegistration = null;
+	}
+}

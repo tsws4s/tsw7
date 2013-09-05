@@ -1,0 +1,32 @@
+<%@ jet package="com.skyway.templates" class="FloatRendererTemplate"%>
+
+package <sw:package select="$model" alias="FloatRenderer"var="pkg"/>;
+<java:importsLocation package="{$pkg}"/>
+
+/**
+ * A simple renderer of Float values.
+ */
+public class Float<java:import>com.google.gwt.text.shared.Renderer</java:import> extends <java:import>com.google.gwt.text.shared.AbstractRenderer</java:import><Float> {
+  private static <sw:javaType select="$model" alias="FloatRenderer" package="false"/> INSTANCE;
+
+  /**
+   * @return the instance
+   */
+  public static Renderer<Float> instance() {
+    if (INSTANCE == null) {
+      INSTANCE = new <sw:javaType select="$model" alias="FloatRenderer" package="false"/>();
+    }
+    return INSTANCE;
+  }
+
+  protected <sw:javaType select="$model" alias="FloatRenderer" package="false"/>() {
+  }
+
+  public String render(Float object) {
+    if (object == null) {
+      return "";
+    }
+
+    return <java:import>com.google.gwt.i18n.client.NumberFormat</java:import>.getDecimalFormat().format(object);
+  }
+}

@@ -1,0 +1,87 @@
+<%@ jet 
+package="com.skyway.integration.google.webtoolkit.deploy.templates" 
+class="LoadRelatedTemplate" 
+%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+
+
+package <sw:package select="$model" alias="gwtloadrelatedresponse" var="pkg"/>;
+<sw:javaType select="$model" package="true" var="fullyQualifiedClassName" emit="false"/>
+<java:importsLocation package="{$pkg}"/>
+<java:impliedImport name="{$fullyQualifiedClassName}"/>
+
+<sw:getVariableName select="$model" uncapitalize="true" var="domainObjName" emit="false"/> <sw:getVariableName select="$model" uncapitalize="false" var="DomainObjName" emit="false"/>
+
+/**
+ * <sw:javaType select="$model" alias="gwtloadrelated" package="false"/> Action which is used to load <sw:javaType select="$model" package="false"/>s that are related to another object.
+ * This command can be passed to the Remote Crud Service which has the command handlers for managing the relationships on the back end.
+<sw:generated />
+ */
+public class <sw:javaType select="$model" alias="gwtloadrelated" package="false"/><T extends <java:import><sw:javaType select="$model/project" alias="gwtid" package="true"/></java:import>> implements <java:import><sw:javaType select="$model/project" alias="gwtaction" package="true"/></java:import><<java:import><sw:javaType select="$model" alias="gwtloadrelatedresponse" package="true"/></java:import>>, <java:import>java.io.Serializable</java:import> {
+	private static final long serialVersionUID = 1L;
+
+	/**
+	* The name of the relationship to modify in the owning object
+	<sw:generated />
+	*/
+	private String relationshipName;
+	
+	/**
+	* The ID of the owning object
+	<sw:generated />
+	*/
+	private T id;
+
+
+	/**
+	* Constructor
+	<sw:generated />
+	*/
+	public <sw:javaType select="$model" alias="gwtloadrelated" package="false"/>() {
+	
+	}
+
+	/**
+	* Constructor
+	<sw:generated />
+	*/
+	public <sw:javaType select="$model" alias="gwtloadrelated" package="false"/> (String relationshipName, T id) {
+		this.relationshipName = relationshipName;
+		this.id = id;
+	}
+	
+	/**
+	* Returns the ID of the owning object for the relationship
+	<sw:generated />
+	*/
+	public T getId() {
+		return id;	
+	}
+	
+	/**
+	* The ID of the object to be modified
+	<sw:generated />
+	*/
+	public void setId(T id) {
+		this.id = id;
+	}
+	
+	/**
+	* Returns the name of the relationship in the owning object to modify
+	<sw:generated />
+	*/
+	public String getRelationshipName() {
+		return relationshipName;
+	}
+	
+	/**
+	* Sets the name of the relationship in the owning object which should be modified
+	<sw:generated />
+	*/
+	public void setRelationshipName(String relationshipName) {
+		this.relationshipName = relationshipName;
+	}
+}

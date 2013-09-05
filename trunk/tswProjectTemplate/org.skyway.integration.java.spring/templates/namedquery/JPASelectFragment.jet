@@ -1,0 +1,104 @@
+<%@ jet 
+package="org.skyway.integration.java.spring.jet.query" 
+class="JPASelectFragmentTemplate" 
+%> 
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="f" id="org.eclipse.jet.formatTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+/**
+ * <c:get select="upper-case($namedQuery/@queryType)" /> Query - <sw:methodName select="$namedQuery"/>
+ *
+<sw:documentation select="$namedQuery" format=" * " />
+<sw:modelReference select="$namedQuery" suffix="JPASelect" />
+ */
+<sw:variableStorageReset scope="method" />
+<sw:getCollectionSize collection="$namedQuery/outputs" var="outputSize" />
+<sw:getModelExtension select="$namedQuery" extension="namedquerybean" var="beanDetail" />
+<c:include template="templates/common/spring/MethodTransactionAnnotation.jet" />
+public <java:import><sw:queryResultType select="$namedQuery" package="true"/></java:import> <sw:methodName select="$namedQuery" />(<c:iterate select="$namedQuery/inputs" var="input" delimiter=","><sw:declareMethodVariable select="$input"><sw:javaType select="$input" package="true" /></sw:declareMethodVariable></c:iterate>) throws <java:import>org.springframework.dao.DataAccessException</java:import>{
+	<c:include template="templates/common/java/UserCode.jet" />
+	
+	<c:if test="$outputSize >= 1" >return </c:if><sw:methodName select="$namedQuery" />(<c:iterate select="$namedQuery/inputs" var="input" delimiter=","><sw:getVariableName select="$input" /></c:iterate><c:if test="$namedQuery/inputs" >, </c:if>-1, -1);
+}
+
+/**
+ * <c:get select="upper-case($namedQuery/@queryType)" /> Query - <sw:methodName select="$namedQuery"/>
+ *
+<sw:documentation select="$namedQuery" format=" * " />
+<sw:modelReference select="$namedQuery" suffix="JPASelectWithPagination" />
+ */
+<sw:variableStorageReset scope="method" />
+
+<c:if test="$outputSize = 1" >
+	<c:iterate select="$namedQuery/outputs" var="output" >
+		<c:if test="$output/@collection = 'true'" >
+			@SuppressWarnings("unchecked")
+		</c:if>
+	</c:iterate>
+</c:if>
+<c:include template="templates/common/spring/MethodTransactionAnnotation.jet" />
+public <java:import><sw:queryResultType select="$namedQuery" package="true"/></java:import> <sw:methodName select="$namedQuery" />(<c:iterate select="$namedQuery/inputs" var="input" delimiter=","><sw:declareMethodVariable select="$input"><sw:javaType select="$input" package="true" /></sw:declareMethodVariable></c:iterate><c:if test="$namedQuery/inputs" >, </c:if>int startResult, int maxRows) throws <java:import>org.springframework.dao.DataAccessException</java:import>{
+	<c:include template="templates/common/java/UserCode.jet" />
+	<c:choose>
+		<c:when test="$outputSize = 1" >
+			<c:iterate select="$namedQuery/outputs" var="output" >
+				<c:choose>
+					<c:when test="$output/@collection = 'true'" >
+						<java:import>javax.persistence.Query</java:import> query  = createNamedQuery ("<c:get select="$namedQuery/@name" />", startResult, maxRows
+							<c:if test="$namedQuery/inputs and $namedQuery/queryText/variablePaths" >
+								<c:iterate select="$namedQuery/queryText/variablePaths" var="inputVariable" >
+									, <sw:getVariable select="$inputVariable" useMethod="false" />
+								</c:iterate>
+							</c:if>);
+						return new <java:import><sw:javaType select="$output" package="true" emitCollectionPolicy="concrete"/></java:import>(query.getResultList());
+					</c:when>
+					<c:otherwise>
+						try	{
+							<java:import> javax.persistence.Query</java:import> query = createNamedQuery("<c:get select="$namedQuery/@name" />", startResult, maxRows
+								<c:if test="$namedQuery/inputs and $namedQuery/queryText/variablePaths" >
+									<c:iterate select="$namedQuery/queryText/variablePaths" var="inputVariable" >
+										, <sw:getVariable select="$inputVariable" useMethod="false" />
+									</c:iterate>
+								</c:if>);
+							return (<sw:queryResultType select="$namedQuery" package="true"/>) query.getSingleResult(); 
+						}
+						catch (<java:import>javax.persistence.NoResultException</java:import> nre)	{
+							return null;
+						}
+					</c:otherwise>
+				</c:choose>
+			</c:iterate>	
+		</c:when>
+		<c:when test="$outputSize > 1" >
+			<c:setVariable var="parameterPosition" select="0" />
+			<java:import>org.skyway.spring.util.dao.query.JPQLResultsProvider</java:import> resultsProvider;
+			<java:import><sw:queryResultType select="$namedQuery" package="true"/></java:import> result = null;
+			<java:import>javax.persistence.Query</java:import> query  = createNamedQuery ("<c:get select="$namedQuery/@name" />", startResult, maxRows
+				<c:if test="$namedQuery/inputs and $namedQuery/queryText/variablePaths" >
+					<c:iterate select="$namedQuery/queryText/variablePaths" var="inputVariable" >
+						, <sw:getVariable select="$inputVariable" useMethod="false" />
+					</c:iterate>
+				</c:if>);
+			resultsProvider = new <java:import>org.skyway.spring.util.dao.query.JPQLResultsProvider</java:import>(query.getResultList());
+			<c:iterate select="$namedQuery/outputs" var="output" >
+				<c:choose>
+					<c:when test="$output/@collection = 'true'" >
+						result.set<sw:getVariableName select="$output" capitalize="true"/>(resultsProvider.getResultsAsSet(<c:get select="$parameterPosition" />, <java:import><sw:javaType select="$output" package="true" emitCollectionPolicy="omit"/></java:import>.class));
+					</c:when>
+					<c:otherwise >
+						try{
+							result.set<sw:getVariableName select="$output" capitalize="true" />(resultsProvider.getSingleResult(<c:get select="$parameterPosition" />, <java:import><sw:javaType select="$output" package="true" emitCollectionPolicy="omit"/></java:import>.class));
+						}catch(<java:import>javax.persistence.NoResultException</java:import> x){
+							result.set<sw:getVariableName select="$output" capitalize="true" />(null);
+						}
+					</c:otherwise>
+				</c:choose>
+				<c:setVariable var="parameterPosition" select="$parameterPosition + 1" />
+			</c:iterate>	
+	
+			return result;
+		</c:when>
+	</c:choose>
+}

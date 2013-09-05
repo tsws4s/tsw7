@@ -1,0 +1,21 @@
+<%@ jet 
+package="com.skyway.integration.java.spring.jet.config.oracle" 
+class="OracleOrionApplicationTemplate" 
+%>
+<%@taglib prefix="swjaxws" id="com.skyway.integration.service.webservice.skywayJAXWSTags"%>
+<swjaxws:getWebServiceCount select="$model" var="wsCount" />
+<orion-application>
+	<data-sources path="./data-sources.xml"/>
+	<imported-shared-libraries>
+		<c:if test="$wsCount > 0" ><import-shared-library name="cxf.foundation"/></c:if>
+		<remove-inherited name="org.jgroups"/>
+		<remove-inherited name="apache.commons.logging"/>
+		<remove-inherited name="oracle.jwsdl"/>
+		<remove-inherited name="oracle.ws.core"/>
+		<remove-inherited name="oracle.ws.client"/>
+		<remove-inherited name="oracle.ws.reliability"/>
+		<remove-inherited name="oracle.ws.security"/>
+		<remove-inherited name="oracle.xml"/>
+		<remove-inherited name="oracle.xml.security"/>
+	</imported-shared-libraries> 
+</orion-application>

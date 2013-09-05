@@ -1,0 +1,68 @@
+<%@ jet 
+package="com.skyway.integration.google.webtoolkit.deploy.templates" 
+class="TimeBoxTemplate" 
+%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+
+package <sw:package select="$model" alias="gwtdateboxformat" var="pkg"/>;
+
+<java:importsLocation package="{$pkg}"/>
+
+/**
+ * Subclass of TimePicker that implements HasValue<Date> for convenience to data binding
+ <sw:generated />
+ */
+public class <sw:javaType select="$model" alias="gwttimebox" package="false"/> extends <java:import>com.google.gwt.gen2.picker.client.TimePicker</java:import> implements <java:import>com.google.gwt.user.client.ui.HasValue</java:import><Date> {
+	
+	/**
+	 * Default Constructor
+	 <sw:generated />
+	 */
+	public TimeBox() {
+		this(false);
+	}
+	
+	/**
+	 <sw:generated />
+	 * @param use24Hours
+	 */
+	public TimeBox(boolean use24Hours) {
+		super(use24Hours);
+	}
+	
+	 /**
+	  <sw:generated />
+	  * @param date
+	  * @param use24Hours
+	  */
+	public TimeBox(<java:import>java.util.Date</java:import> date, boolean use24Hours) {
+		super (date, use24Hours);
+	}
+
+	/**
+	 * Returns the value of the Picker as Date
+	 <sw:generated />
+	 */
+	public Date getValue() {
+		return getDateTime();
+	}
+
+	/**
+	 * Sets the value to the Date / Time passed
+	 <sw:generated />
+	 */
+	public void setValue(Date value) {
+		setDate(value);
+	}
+
+	/**
+	 * Sets the value to the Date / Time passed
+	 <sw:generated />
+	 */
+	public void setValue(Date value, boolean fireEvents) {
+		setDate(value);
+	}
+}

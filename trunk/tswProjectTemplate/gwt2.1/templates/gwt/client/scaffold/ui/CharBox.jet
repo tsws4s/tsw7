@@ -1,0 +1,15 @@
+<%@ jet package="com.skyway.templates" class="CharBoxTemplate"%>
+
+package <sw:package select="$model" alias="CharBox"var="pkg"/>;
+<java:importsLocation package="{$pkg}"/>
+
+/**
+ * A <java:import>com.google.gwt.user.client.ui.ValueBox</java:import> that uses {@link CharParser} and {@link CharRenderer}.
+ */
+public class <sw:javaType select="$model" alias="CharBox" package="false"/> extends ValueBox<Character> {
+
+  public <sw:javaType select="$model" alias="CharBox" package="false"/>() {
+    super(<java:import>com.google.gwt.dom.client.Document</java:import>.get().createTextInputElement(), CharRenderer.instance(),
+        CharParser.instance());
+  }
+}

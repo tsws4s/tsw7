@@ -1,0 +1,55 @@
+<%@ jet 
+package="com.skyway.scaffolding.crud.templates.webflow" 
+class="CrudFlowTemplate" 
+%>
+<%@taglib prefix="jet" id="org.eclipse.jet.controlTags"%>  
+<%@taglib prefix="f" id="org.eclipse.jet.formatTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/webflow" xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+  <var class="<sw:javaType select="$currentDataType" package="true" var="fullyQualifiedClassName" emit="true"/>" name="<jet:get select="$currentName"/>"/>
+  <view-state id="list<jet:get select="uppercaseFirst($currentDataType/@name)"/>s">
+    <on-render>
+      <evaluate expression="<jet:get select="$currentDataType/@name"/>Service.load<jet:get select="$currentDataType/@name"/>s()" result="viewScope.<jet:get select="$currentName"/>s" result-type=""/>
+    </on-render>
+    <transition on="view" to="view<jet:get select="uppercaseFirst($currentDataType/@name)"/>">
+      <evaluate expression="<jet:get select="$currentDataType/dataStore/@name"/>.find<jet:get select="$currentDataType/@name"/>ByPrimaryKey(<jet:setVariable select="0" var="keyCount" /><jet:iterate select="$currentDataType/fields" var="field" ><jet:if test="$field/@primaryKey = 'true'"><jet:if test="$keyCount > 0">, </jet:if>requestParameters.<jet:get select="$field/@name" />Key<jet:setVariable select="$keyCount+1" var="keyCount" /></jet:if></jet:iterate>)" result="flowScope.<jet:get select="$currentName"/>" result-type=""/>
+    </transition>
+    <transition on="new" to="edit<jet:get select="uppercaseFirst($currentDataType/@name)"/>">
+      <evaluate expression="new <sw:javaType select="$currentDataType" package="true" var="fullyQualifiedClassName" emit="true"/>()" result="<jet:get select="$currentName"/>" result-type=""/>
+      <set name="flashScope.newFlag" type="boolean" value="true"/>
+    </transition>
+    <transition on="edit" to="edit<jet:get select="uppercaseFirst($currentDataType/@name)"/>">
+      <evaluate expression="<jet:get select="$currentDataType/dataStore/@name"/>.find<jet:get select="$currentDataType/@name"/>ByPrimaryKey(<jet:setVariable select="0" var="keyCount" /><jet:iterate select="$currentDataType/fields" var="field" ><jet:if test="$field/@primaryKey = 'true'"><jet:if test="$keyCount > 0">, </jet:if>requestParameters.<jet:get select="$field/@name" />Key<jet:setVariable select="$keyCount+1" var="keyCount" /></jet:if></jet:iterate>)" result="flowScope.<jet:get select="$currentName"/>" result-type=""/>
+    </transition>
+    <transition on="delete" to="delete<jet:get select="uppercaseFirst($currentDataType/@name)"/>">
+      <evaluate expression="<jet:get select="$currentDataType/dataStore/@name"/>.find<jet:get select="$currentDataType/@name"/>ByPrimaryKey(<jet:setVariable select="0" var="keyCount" /><jet:iterate select="$currentDataType/fields" var="field" ><jet:if test="$field/@primaryKey = 'true'"><jet:if test="$keyCount > 0">, </jet:if>requestParameters.<jet:get select="$field/@name" />Key<jet:setVariable select="$keyCount+1" var="keyCount" /></jet:if></jet:iterate>)" result="flowScope.<jet:get select="$currentName"/>" result-type=""/>
+    </transition>
+  </view-state>
+  <view-state id="view<jet:get select="uppercaseFirst($currentDataType/@name)"/>" model="<jet:get select="$currentName"/>">
+    <transition on="back" to="list<jet:get select="uppercaseFirst($currentDataType/@name)"/>s"/>
+   	<jet:iterate select="$currentDataType/relationships" var="relationship">
+    <transition on="<jet:get select="lower-case($relationship/@name)" />s" to="manage<jet:get select="$relationship/@name" />s"/>
+   	</jet:iterate>
+  </view-state>
+  <view-state id="edit<jet:get select="uppercaseFirst($currentDataType/@name)"/>" model="<jet:get select="$currentName"/>">
+    <transition on="back" to="list<jet:get select="uppercaseFirst($currentDataType/@name)"/>s"/>
+    <transition on="save" to="list<jet:get select="uppercaseFirst($currentDataType/@name)"/>s">
+      <evaluate expression="<jet:get select="$currentDataType/@name"/>Service.save<jet:get select="$currentDataType/@name"/>(<jet:get select="$currentName"/>)" result="" result-type=""/>
+    </transition>
+  </view-state>
+  <view-state id="delete<jet:get select="uppercaseFirst($currentDataType/@name)"/>" model="<jet:get select="$currentName"/>">
+    <transition on="delete" to="list<jet:get select="uppercaseFirst($currentDataType/@name)"/>s">
+      <evaluate expression="<jet:get select="$currentDataType/@name"/>Service.delete<jet:get select="$currentDataType/@name"/>(<jet:get select="$currentName"/>)" result="" result-type=""/>
+    </transition>
+    <transition on="back" to="list<jet:get select="uppercaseFirst($currentDataType/@name)"/>s"/>
+  </view-state>
+  <jet:iterate select="$currentDataType/relationships" var="relationship">
+  <subflow-state id="manage<jet:get select="$relationship/@name" />s" subflow="manage<jet:get select="lower-case($currentDataType/@name)" /><jet:get select="lower-case($relationship/@name)" />s">
+   	<input name="<jet:get select="lower-case($currentDataType/@name)"/>" type="" value="<jet:get select="$currentName"/>"/>
+   	<transition on="back" to="view<jet:get select="$currentDataType/@name"/>">
+   	  <evaluate expression="<jet:get select="$currentDataType/dataStore/@name"/>.find<jet:get select="$currentDataType/@name"/>ByPrimaryKey(<jet:setVariable select="0" var="keyCount" /><jet:iterate select="$currentDataType/fields" var="field" ><jet:if test="$field/@primaryKey = 'true'"><jet:if test="$keyCount > 0">, </jet:if><jet:get select="$currentName"/>.<jet:get select="$field/@name" /><jet:setVariable select="$keyCount+1" var="keyCount" /></jet:if></jet:iterate>)" result="flowScope.<jet:get select="$currentName"/>" result-type=""/>
+    </transition>
+  </subflow-state>
+  </jet:iterate>
+</flow>

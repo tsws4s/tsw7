@@ -1,0 +1,72 @@
+<%@ jet package="com.skyway.templates" class="ProxyListPlaceTemplate"%>
+<%@taglib prefix="swgwt" id="com.skyway.integration.google.webtoolkit.common.skywayGWTCodeGenTags"%>
+
+package <sw:package select="$model" alias="ProxyListPlace"var="pkg"/>;
+<java:importsLocation package="{$pkg}"/>
+
+/**
+ * A place in the app that deals with lists of {@link <java:import><swgwt:getRequestFactoryPackage/>.shared.EntityProxy</java:import>}.
+ */
+public class <sw:javaType select="$model" alias="ProxyListPlace" package="false"/> extends <java:import>com.google.gwt.place.shared.Place</java:import> {
+
+  /**
+   * Tokenizer.
+   */
+  @<java:import>com.google.gwt.place.shared.Prefix</java:import>("l")
+  public static class Tokenizer implements <java:import>com.google.gwt.place.shared.PlaceTokenizer</java:import><<sw:javaType select="$model" alias="ProxyListPlace" package="false"/>> {
+    private final <java:import><swgwt:getRequestFactoryPackage/>.shared.RequestFactory</java:import> requests;
+
+    public Tokenizer(RequestFactory requests) {
+      this.requests = requests;
+    }
+
+    public <sw:javaType select="$model" alias="ProxyListPlace" package="false"/> getPlace(String token) {
+      return new <sw:javaType select="$model" alias="ProxyListPlace" package="false"/>(requests.getProxyClass(token));
+    }
+
+    public String getToken(<sw:javaType select="$model" alias="ProxyListPlace" package="false"/> place) {
+      return requests.getHistoryToken(place.getProxyClass());
+    }
+  }
+
+  private final Class<? extends EntityProxy> proxyType;
+
+  public <sw:javaType select="$model" alias="ProxyListPlace" package="false"/>(Class<? extends EntityProxy> proxyType) {
+    this.proxyType = proxyType;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (obj == null) {
+      return false;
+    }
+    if (getClass() != obj.getClass()) {
+      return false;
+    }
+    <sw:javaType select="$model" alias="ProxyListPlace" package="false"/> other = (<sw:javaType select="$model" alias="ProxyListPlace" package="false"/>) obj;
+    if (!proxyType.equals(other.proxyType)) {
+      return false;
+    }
+    return true;
+  }
+
+  public Class<? extends EntityProxy> getProxyClass() {
+    return proxyType;
+  }
+
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + proxyType.hashCode();
+    return result;
+  }
+
+  @Override
+  public String toString() {
+    return "<sw:javaType select="$model" alias="ProxyListPlace" package="false"/> [proxyType=" + proxyType + "]";
+  }
+}

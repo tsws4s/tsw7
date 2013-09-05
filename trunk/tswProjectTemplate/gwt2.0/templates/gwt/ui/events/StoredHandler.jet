@@ -1,0 +1,24 @@
+<%@ jet 
+package="com.skyway.integration.google.webtoolkit.deploy.templates" 
+class="StoredHandlerTemplate" 
+%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+
+
+package <sw:package select="$model" alias="gwtstoredhandler" var="pkg"/>;
+<sw:javaType select="$model" package="true" var="fullyQualifiedClassName" emit="false"/>
+<java:importsLocation package="{$pkg}"/>
+<java:impliedImport name="{$fullyQualifiedClassName}"/>
+
+<sw:getVariableName select="$model" uncapitalize="true" var="domainObjName" emit="false"/> <sw:getVariableName select="$model" uncapitalize="false" var="DomainObjName" emit="false"/>
+
+/**
+ * Interface for Event Handler
+<sw:generated />
+ */
+public interface <sw:javaType select="$model" alias="gwtstoredhandler" package="false"/> extends <java:import>com.google.gwt.event.shared.EventHandler</java:import> {
+	void on<c:get select="$DomainObjName"/>Stored (<sw:javaType select="$model" alias="gwtstoredevent" package="false"/> event);
+}

@@ -1,0 +1,73 @@
+<%@ jet package="com.skyway.templates" class="ScaffoldMobileShellTemplate"%>
+
+package <sw:package select="$model" alias="ScaffoldMobileShell"var="pkg"/>;
+<java:importsLocation package="{$pkg}"/>
+
+/**
+ * Top level UI for the mobile version of the application.
+ */
+public class <sw:javaType select="$model" alias="ScaffoldMobileShell" package="false"/> extends <java:import>com.google.gwt.user.client.ui.Composite</java:import> {
+
+	interface Binder extends <java:import>com.google.gwt.uibinder.client.UiBinder</java:import><<java:import>com.google.gwt.user.client.ui.Widget</java:import>, <sw:javaType select="$model" alias="ScaffoldMobileShell" package="false"/>> {
+	}
+
+	private static final Binder BINDER = <java:import>com.google.gwt.core.client.GWT</java:import>.create(Binder.class);
+
+	@<java:import>com.google.gwt.uibinder.client.UiField</java:import> <java:import>com.google.gwt.user.client.ui.Button</java:import> backButton;
+	@UiField <java:import>com.google.gwt.dom.client.Element</java:import> backButtonWrapper;	
+	@UiField <java:import>com.google.gwt.user.client.ui.SimplePanel</java:import> body;
+	@UiField Button editButton;
+	@UiField Element title;
+
+	public <sw:javaType select="$model" alias="ScaffoldMobileShell" package="false"/>() {
+		initWidget(BINDER.createAndBindUi(this));
+	}
+
+	/**
+	 * @return the back button
+	 */
+	public Button getBackButton() {
+		return backButton;
+	}
+
+	/**
+	 * @return the body
+	 */
+	public SimplePanel getBody() {
+		return body;
+	}
+
+	/**
+	 * @return the edit button
+	 */
+	public Button getEditButton() {
+		return editButton;
+	}
+
+	/**
+	 * Show or hide the back button.
+	 * 
+	 * @param visible true to show the button, false to hide
+	 */
+	public void setBackButtonVisible(boolean visible) {
+		setVisible(backButtonWrapper, visible);
+	}
+
+	/**
+	 * Show or hide the edit button.
+	 * 
+	 * @param visible true to show the button, false to hide
+	 */
+	public void setEditButtonVisible(boolean visible) {
+		editButton.setVisible(visible);
+	}
+
+	/**
+	 * Set the title of the app.
+	 * 
+	 * @param text the title to display at the top of the app
+	 */
+	public void setTitleText(String text) {
+	  title.setInnerText(text);
+}
+}

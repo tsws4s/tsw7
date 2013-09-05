@@ -1,0 +1,54 @@
+<%@ jet 
+package="com.skyway.integration.google.webtoolkit.deploy.templates" 
+class="LoadedRelatedTemplate" 
+%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+
+
+package <sw:package select="$model" alias="gwtloadedrelated" var="pkg"/>;
+<sw:javaType select="$model" package="true" var="fullyQualifiedClassName" emit="false"/>
+<java:importsLocation package="{$pkg}"/>
+<java:impliedImport name="{$fullyQualifiedClassName}"/>
+
+<sw:getVariableName select="$model" uncapitalize="true" var="domainObjName" emit="false"/> <sw:getVariableName select="$model" uncapitalize="false" var="DomainObjName" emit="false"/>
+
+
+/**
+ * Callback handler for the <sw:javaType select="$model" alias="gwtloadrelated" package="false"/> Action which is used to load <sw:javaType select="$model" package="false"/> that are related to another object.
+ * This command can be passed to the Remote Crud Service which has the command handlers for managing the relationships on the back end.
+<sw:generated />
+ */
+public abstract class <sw:javaType select="$model" alias="gwtloadedrelated" package="false"/> implements <java:import>com.google.gwt.user.client.rpc.AsyncCallback</java:import><<java:import><sw:javaType select="$model" alias="gwtloadrelatedresponse" package="true"/></java:import>> {
+	
+	/**
+	* Handles Exceptions from the remote call, this method will push any exception on the the EventBus
+<sw:generated />
+	*/
+	public void onFailure (Throwable failure) {
+		try {
+			throw failure;
+		}
+		catch (<java:import><sw:javaType select="$model/project" alias="gwtcrudexception" package="true"/></java:import> ae) {
+			<java:import><sw:javaType select="$model/project" alias="gwteventbus" package="true"/></java:import>.get().fireEvent(new <java:import><sw:javaType select="$model/project" alias="gwtcrudexceptionevent" package="true"/></java:import>(ae));
+		} catch (Throwable e) {
+			<java:import><sw:javaType select="$model/project" alias="gwteventbus" package="true"/></java:import>.get().fireEvent(new <java:import><sw:javaType select="$model/project" alias="gwtcrudexceptionevent" package="true"/></java:import>(new <sw:javaType select="$model/project" alias="gwtcrudexception" package="false"/>(e)));
+		}
+	}
+	
+	/**
+	* Async Callback Handler passes through to abstract override method
+<sw:generated />
+	*/
+	public void onSuccess (<java:import><sw:javaType select="$model" alias="gwtloadrelatedresponse" package="true"/></java:import> result) {
+		loaded (result.getRelated());
+	}
+	
+	/**
+	* Extensions should override this method to handle results of the remote call
+<sw:generated />
+	*/
+	public abstract void loaded (<java:import>java.util.Set</java:import><<java:import><sw:javaType select="$model" alias="gwtdatatype" package="true"/></java:import>> related);
+}

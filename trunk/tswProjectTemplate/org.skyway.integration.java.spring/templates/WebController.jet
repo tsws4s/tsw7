@@ -1,0 +1,48 @@
+<%@ jet 
+package="org.skyway.integration.java.spring.jet.core" 
+class="WebControllerTemplate" 
+%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="f" id="org.eclipse.jet.formatTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+<%@taglib prefix="swspr" id="org.skyway.integration.java.spring.skywaySpringCodeGenTags"%>
+<c:setVariable select="'false'" var="useMethodOnAccess" />
+package <sw:package select="$model" var="pkg"/>;
+<sw:javaType select="$model" package="true" var="fullyQualifiedClassName" emit="false"/>
+<java:importsLocation package="{$pkg}"/>
+<java:impliedImport name="{$fullyQualifiedClassName}"/>
+
+/**
+<sw:documentation select="$model" format=" * " />
+<sw:modelCoreReference select="$model" />
+<sw:generated />
+ */
+<sw:variableStorageReset scope="class" />
+<sw:interfaces select="$model" var="interfaces" />
+<c:setVariable select="0" var="interfacesSize" />
+<sw:getCollectionSize collection="$interfaces" var="interfacesSize" />
+<sw:getModelExtension select="$model" extension="controllerbean" var="beanDetail" />
+<swspr:scope select="$beanDetail" />
+@<java:import>org.springframework.stereotype.Controller</java:import>("<swspr:componentID select="$model" />")
+<c:include template="templates/common/spring/ClassTransactionAnnotation.jet" />
+<sw:classDeclarationAnnotation select="$model"/>
+public class <sw:javaType select="$model" /> <sw:extends select="$model"/>
+	<c:if test="$interfacesSize > 0" > implements <c:iterate select="$interfaces" var="interface" delimiter="," >
+		<java:import><c:get select="$interface" /></java:import>
+	</c:iterate></c:if>	{
+	
+	
+	<c:iterate select="$model/variables" var="variable">
+	
+		<c:include template="templates/variables/VariableDeclaration.jet" />
+	</c:iterate>
+	
+	<sw:anchorSegment anchorId="actionVariables" />
+	
+	
+	<c:iterate select="$model/operations" var="currentOperation">
+		<c:include template="templates/operation/Operation.jet" />
+	</c:iterate>
+}

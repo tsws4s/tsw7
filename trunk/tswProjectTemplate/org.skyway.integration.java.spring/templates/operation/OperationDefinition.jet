@@ -1,0 +1,24 @@
+<%@ jet 
+package="org.skyway.integration.java.spring.jet.operation" 
+class="OperationDefinitionTemplate"
+%>
+<%@taglib prefix="java" id="org.eclipse.jet.javaTags" %>
+<%@taglib prefix="ws"   id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c"    id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="f"    id="org.eclipse.jet.formatTags"%>
+<%@taglib prefix="sw"   id="org.skyway.integration.java.skywayCodeGenTags"%>
+<%@taglib prefix="swspr" id="org.skyway.integration.java.spring.skywaySpringCodeGenTags"%>
+<c:setVariable select="'false'" var="hasAnnotationContents" />
+<c:setVariable select="'false'" var="emittedSegment" />
+<c:setVariable select="'true'" var="outputViewState" />
+<c:setVariable select="'false'" var="useMethodOnAccess" />
+<c:setVariable select="'false'" var="complexOutputs" />
+<c:setVariable select="0" var="methodStepSize" />
+/**
+<sw:documentation select="$currentOperation" format=" * "/>
+<sw:modelReference select="$currentOperation" />
+ */<swspr:getStatusField select="$currentOperation" statusVar="statusField" fieldVar="validateField" /><sw:variableStorageReset scope="method" /><sw:getModelExtension select="$currentOperation" extension="operationbean" var="beanDetail" /><sw:isTextualMethod select="$currentOperation" var="isTextMethod"/>
+<c:include template="templates/common/spring/MethodTransactionAnnotation.jet" />
+<sw:methodAnnotation select="$currentOperation"/>
+<sw:modifiers select="$currentOperation" /> <java:import><sw:operationReturnType select="$currentOperation" package="true"/></java:import> <sw:methodName select="$currentOperation" /> (<c:include template="templates/operation/OperationInputs.jet" />) <sw:throwsList select="$currentOperation" /> 
+{<sw:getMethodBodyText select="$currentOperation" />}

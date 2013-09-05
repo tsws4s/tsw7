@@ -1,0 +1,51 @@
+<%@ jet 
+package="com.skyway.integration.jsf" 
+class="CrudListTemplate"
+%>
+<%@taglib prefix="jet" id="org.eclipse.jet.controlTags"%>  
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+<%@taglib prefix="gen" id="com.skyway.scaffolding.crud.common.generationTags"%>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/WEB-INF/jsf/template.xhtml">
+
+	<ui:define name="head">
+	</ui:define>
+
+	<ui:define name="content">
+		<h1>Manage #{<jet:get select="lower-case($dataType/@name)"/>msgs['<jet:get select="lower-case($dataType/@name)"/>.title']}s</h1>
+		
+		<h:form>	
+			<p:commandButton image="new" ajax="false" style="margin-right:20px;" value="#{<jet:get select="lower-case($dataType/@name)"/>msgs['navigation.new']}" action="#{<jet:get select="$dataType/@name"/>Component.new<jet:get select="$dataType/@name"/>()}"/>
+			<p:dataTable id="dta" value="#{<jet:get select="$dataType/@name"/>Component.list<jet:get select="$dataType/@name"/>s()}"  var="current" rows="15" paginator="true" paginatorPosition="bottom">
+				<p:column>
+					<h:commandLink includeViewParams="true" action="#{<jet:get select="$dataType/@name"/>Component.select<jet:get select="$dataType/@name"/>(<jet:setVariable select="0" var="keyCount" /><jet:iterate select="$dataType/fields" var="field" ><jet:if test="$field/@primaryKey = 'true'"><jet:if test="$keyCount > 0">, </jet:if>current.<jet:get select="$field/@name" /><jet:setVariable select="$keyCount+1" var="keyCount" /></jet:if></jet:iterate>)}" >
+						<h:graphicImage value="/images/icons/view.gif" style="border:0;"/>
+					</h:commandLink>
+					<h:commandLink includeViewParams="true" action="#{<jet:get select="$dataType/@name"/>Component.edit<jet:get select="$dataType/@name"/>(<jet:setVariable select="0" var="keyCount" /><jet:iterate select="$dataType/fields" var="field" ><jet:if test="$field/@primaryKey = 'true'"><jet:if test="$keyCount > 0">, </jet:if>current.<jet:get select="$field/@name" /><jet:setVariable select="$keyCount+1" var="keyCount" /></jet:if></jet:iterate>)}" >
+						<h:graphicImage value="/images/icons/edit.gif" style="border:0;"/>
+					</h:commandLink>
+					<h:commandLink includeViewParams="true" action="#{<jet:get select="$dataType/@name"/>Component.confirmDelete<jet:get select="$dataType/@name"/>(<jet:setVariable select="0" var="keyCount" /><jet:iterate select="$dataType/fields" var="field" ><jet:if test="$field/@primaryKey = 'true'"><jet:if test="$keyCount > 0">, </jet:if>current.<jet:get select="$field/@name" /><jet:setVariable select="$keyCount+1" var="keyCount" /></jet:if></jet:iterate>)}" >
+						<h:graphicImage value="/images/icons/delete.gif" style="border:0;"/>
+					</h:commandLink>
+				</p:column>
+				<jet:setVariable select="'current'" var="currentDataTypeName" />
+				<jet:iterate select="$dataType/fields" var="field">
+				<gen:displayFieldInList select="$field" var="displayable" />
+				<jet:if test="$displayable" >
+				<p:column> 
+					<f:facet name="header">
+						<h:outputText value="#{<jet:get select="lower-case($dataType/@name)"/>msgs['<jet:get select="lower-case($dataType/@name)"/>.<jet:get select="lower-case($field/@name)" />.title']}" />
+					</f:facet>
+					<gen:getDefaultFieldPattern select="$field" var="pattern" />
+					<jet:include template="templates/jsf/crud/common/crudViewField.jet" />
+				</p:column>
+				</jet:if>
+				</jet:iterate>
+			</p:dataTable>
+		</h:form>
+	</ui:define>
+</ui:composition>

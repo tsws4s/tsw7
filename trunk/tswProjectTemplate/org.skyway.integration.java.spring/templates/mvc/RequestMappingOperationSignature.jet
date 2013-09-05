@@ -1,0 +1,11 @@
+<%@ jet 
+package="org.skyway.integration.java.spring.jet.requestmapping" 
+class="RequestMappingOperationSignature" 
+%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="f" id="org.eclipse.jet.formatTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+<%@taglib prefix="swspr" id="org.skyway.integration.java.spring.skywaySpringCodeGenTags"%>
+<sw:modifiers select="$currentOperation" /> <java:import><sw:operationReturnType select="$currentOperation" package="true"/></java:import> <c:choose><c:when test="string($requestMapping/mappingMethodOperationName) = 'true'"><sw:methodName select="$currentOperation" /></c:when><c:otherwise><sw:normalize select="$requestMapping/url" /></c:otherwise></c:choose>(<c:include template="templates/requestmapping/RequestMappingInputs.jet" />) <sw:throwsList select="$currentOperation" />

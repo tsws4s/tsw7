@@ -1,0 +1,15 @@
+<%@ jet package="com.skyway.templates" class="ShortBoxTemplate"%>
+
+package <sw:package select="$model" alias="ShortBox"var="pkg"/>;
+<java:importsLocation package="{$pkg}"/>
+
+/**
+ * A <java:import>com.google.gwt.user.client.ui.ValueBox</java:import> that uses {@link ShortParser} and {@link ShortRenderer}.
+ */
+public class <sw:javaType select="$model" alias="ShortBox" package="false"/> extends ValueBox<Short> {
+
+  public <sw:javaType select="$model" alias="ShortBox" package="false"/>() {
+    super(<java:import>com.google.gwt.dom.client.Document</java:import>.get().createTextInputElement(), ShortRenderer.instance(),
+        ShortParser.instance());
+  }
+}

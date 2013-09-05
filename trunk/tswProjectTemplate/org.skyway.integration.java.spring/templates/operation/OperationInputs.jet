@@ -1,0 +1,11 @@
+<%@ jet 
+package="org.skyway.integration.java.spring.jet.operation" 
+class="OperationInputsTemplate" 
+%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="f" id="org.eclipse.jet.formatTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+<%@taglib prefix="swspr" id="org.skyway.integration.java.spring.skywaySpringCodeGenTags"%>
+<c:iterate select="$currentOperation/inputs" var="input" delimiter=","><sw:inputAnnotation select="$input"/><sw:declarationAlias select="$input" alias="inputAliasName"/><sw:declareMethodVariable select="$input"><java:import><sw:javaType select="$input" package="true" alias="{$inputAliasName}" /></java:import></sw:declareMethodVariable></c:iterate>

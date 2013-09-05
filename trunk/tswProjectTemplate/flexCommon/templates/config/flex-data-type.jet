@@ -1,0 +1,60 @@
+<%@ jet 
+package="com.skyway.integration.service.flex.jet.config" 
+class="FlexDataTypeTemplate" 
+%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+<%@taglib prefix="persistence" id="org.skyway.integration.data.persistence.skywayPersistenceTags"%>
+<%@taglib prefix="jaxb" id="com.skyway.integration.data.xml.skywayJAXBTags"%>
+package <sw:package select="$model" var="pkg"/>
+{
+	<c:setVariable select="'true'" var="emitArrayImport" />
+	<c:iterate select="$model/relationships" var="relationship">
+		<c:setVariable select="$relationship/targetDataType" var="relatedType" />		
+		<c:if test="string($relationship/@cardinality) = 'MANY' and $emitArrayImport = 'true'">
+	import mx.collections.ArrayCollection;
+		<c:setVariable select="'false'" var="emitArrayImport" />	
+		</c:if>
+	</c:iterate>
+	
+	[Bindable]
+	[RemoteClass(alias="<sw:javaType select="$model" package="true" var="fullyQualifiedClassName" emit="true"/>")]
+	public class <sw:javaType select="$model" package="false"/>
+	{
+	<c:iterate select="$model/fields" var="field">
+		<c:choose>
+			<c:when test="$field/dataType/@type = 'DECIMAL'">
+				<c:setVariable select="'Number'" var="flexType" />	
+			</c:when>
+			<c:when test="$field/dataType/@type = 'INTEGER'">
+				<c:setVariable select="'int'" var="flexType" />	
+			</c:when>
+			<c:when test="$field/dataType/@type = 'BOOLEAN'">
+				<c:setVariable select="'Boolean'" var="flexType" />		
+			</c:when>
+			<c:when test="$field/dataType/@type = 'DATE' or $field/dataType/@type = 'TIME' or $field/dataType/@type = 'DATETIME'">
+				<c:setVariable select="'Date'" var="flexType" />	
+			</c:when>
+			<c:otherwise>
+				<c:setVariable select="'String'" var="flexType" />
+			</c:otherwise>						
+		</c:choose>	
+		public var <c:get select="$field/@name" /> : <c:get select="$flexType"/>;
+	</c:iterate>
+	<c:iterate select="$model/relationships" var="relationship">
+	<c:setVariable select="$relationship/targetDataType" var="relatedType" />
+	<c:choose>
+		<c:when test="string($relationship/@cardinality) = 'MANY'">
+		public var <c:get select="$relationship/@name"/>:ArrayCollection = new ArrayCollection();	
+		</c:when>
+		<c:when test="string($relationship/@cardinality) = 'ONE'">
+		public var <c:get select="$relationship/@name"/> : <c:get select="$relatedType/@name"/>;
+		</c:when>
+	</c:choose>
+	</c:iterate>
+	
+	
+	}
+}

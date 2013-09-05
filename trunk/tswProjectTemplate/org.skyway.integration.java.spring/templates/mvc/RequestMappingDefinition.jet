@@ -1,0 +1,58 @@
+<%@ jet 
+package="org.skyway.integration.java.spring.jet.operation" 
+class="RequestMappingDefinitionTemplate"
+%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="f" id="org.eclipse.jet.formatTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+<%@taglib prefix="swspr" id="org.skyway.integration.java.spring.skywaySpringCodeGenTags"%>
+<swspr:getStatusField select="$currentOperation" statusVar="statusField" fieldVar="validateField" />
+<sw:getCollectionSize collection="$currentOperation/outputs" var="outputsSize" />
+<sw:getCollectionSize collection="$currentOperation/inputs" var="inputsSize" />
+<sw:getCollectionSize collection="$currentOperation/variables" var="variablesSize" />
+<sw:getCollectionSize collection="$currentOperation/constants" var="constantsSize" />
+<sw:getCollectionSize collection="$currentOperation/throwsList" var="throwsSize" />
+<c:setVariable select="'false'" var="hasAnnotationContents" />
+<c:setVariable select="'false'" var="emittedSegment" />
+<c:setVariable select="'true'" var="outputViewState" />
+<c:setVariable select="'false'" var="useMethodOnAccess" />
+<c:setVariable select="'false'" var="complexOutputs" />
+<sw:getCollectionSize collection="$requestMapping/requestMethods" var="rqSize" />
+<c:if test="$requestMapping/url != ''">
+	<c:setVariable select="'true'" var="hasAnnotationContents" />
+</c:if>
+<c:if test="$requestMapping/params">
+	<c:setVariable select="'true'" var="hasAnnotationContents" />
+</c:if>
+<c:if test="$rqSize > 0">
+	<c:setVariable select="'true'" var="hasAnnotationContents" />
+</c:if>
+<c:setVariable select="''" var="defaultActionName" />
+<c:setVariable select="'false'" var="emitCode" />
+<c:if test="$currentOperation/entryPoint">
+	<c:setVariable select="$currentOperation/entryPoint" var="action" />
+	<c:setVariable select="$currentOperation/entryPoint/@name" var="defaultActionName" />
+</c:if>
+/**
+ * Handles a request for <code><c:get select="$requestMapping/url" /></code>
+ * <sw:modelReference select="$currentOperation" /><c:get select="$requestMapping/url" />
+ */
+<sw:variableStorageReset scope="method" />
+<sw:getModelExtension select="$currentOperation" extension="operationbean" var="beanDetail" />
+<c:include template="templates/common/spring/MethodTransactionAnnotation.jet" />
+@<java:import>org.springframework.web.bind.annotation.RequestMapping</java:import><c:if test="$hasAnnotationContents = 'true'">(<c:if test="$requestMapping/url">value="<c:get select="$requestMapping/url" />"<c:setVariable select="'true'" var="emittedSegment" /></c:if><c:if test="$requestMapping/params != ''"><c:if test="$emittedSegment = 'true'">,</c:if>params="<c:get select="$requestMapping/params"/>"<c:setVariable select="'true'" var="emittedSegment" /></c:if><c:if test="$rqSize > 0"><c:if test="$emittedSegment = 'true'">,</c:if>method={<c:iterate select="$requestMapping/requestMethods" var="rm" delimiter=","><java:import>org.springframework.web.bind.annotation.RequestMethod</java:import>.<c:get select="$rm" /></c:iterate>}</c:if>)</c:if>
+<c:include template="templates/requestmapping/RequestMappingSignature.jet" /> {
+<c:choose>
+	<c:when test="toBoolean($currentOperation/@groovy)">
+		<c:include template="templates/requestmapping/GroovyRequestMappingBody.jet" />
+	</c:when>
+	<c:when test="string($requestMapping/singleMappingOperation) = 'true'">
+		<c:include template="templates/requestmapping/JavaRequestMappingBody.jet" />
+	</c:when>
+</c:choose>
+}
+<c:if test="$currentOperation/entryPoint and not(toBoolean($currentOperation/@groovy))">
+	<c:include template="templates/operation/OperationStepMethodDefinition.jet" />
+</c:if>

@@ -1,0 +1,32 @@
+<%@ jet package="com.skyway.templates" class="ShortRendererTemplate"%>
+
+package <sw:package select="$model" alias="ShortRenderer"var="pkg"/>;
+<java:importsLocation package="{$pkg}"/>
+
+/**
+ * A simple renderer of Short values.
+ */
+public class Short<java:import>com.google.gwt.text.shared.Renderer</java:import> extends <java:import>com.google.gwt.text.shared.AbstractRenderer</java:import><Short> {
+  private static <sw:javaType select="$model" alias="ShortRenderer" package="false"/> INSTANCE;
+
+  /**
+   * @return the instance
+   */
+  public static Renderer<Short> instance() {
+    if (INSTANCE == null) {
+      INSTANCE = new <sw:javaType select="$model" alias="ShortRenderer" package="false"/>();
+    }
+    return INSTANCE;
+  }
+
+  protected <sw:javaType select="$model" alias="ShortRenderer" package="false"/>() {
+  }
+
+  public String render(Short object) {
+    if (object == null) {
+      return "";
+    }
+
+    return object.toString();
+  }
+}

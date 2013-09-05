@@ -1,0 +1,11 @@
+<%@ jet 
+package="com.skyway.integration.data.xml.jet.build" 
+class="IncludesFileTemplate" 
+%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+<%@taglib prefix="persistence" id="org.skyway.integration.data.persistence.skywayPersistenceTags"%>
+<c:iterate select="$model/dataTypes" var="dataType" delimiter="
+">**/<c:replaceStrings replace="." with="/"><sw:javaType select="$dataType" package="true"/></c:replaceStrings>.java</c:iterate>

@@ -1,0 +1,8 @@
+<%@ jet 
+package="com.skyway.scaffolding.crud.templates.method" 
+class="FindAllCrudServiceImplementationTemplate" 
+%>
+<%@taglib prefix="jet" id="org.eclipse.jet.controlTags"%>  
+<%@taglib prefix="f" id="org.eclipse.jet.formatTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+ return new java.util.ArrayList<<jet:get select="uppercaseFirst($dataType/@name)"/>>(<jet:get select="lowercaseFirst($dataType/@name)"/>DAO.findAll<jet:get select="uppercaseFirst($dataType/@name)"/>s(startResult, maxRows));

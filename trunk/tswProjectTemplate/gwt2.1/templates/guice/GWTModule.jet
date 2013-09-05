@@ -1,0 +1,32 @@
+<%@ jet package="com.skyway.templates" class="GWTModuleTemplate"%>
+<%@taglib prefix="swgwt" id="com.skyway.integration.google.webtoolkit.common.skywayGWTCodeGenTags"%>
+
+package <sw:package select="$model" alias="GWTModule" var="pkg"/>;
+<java:importsLocation package="{$pkg}"/>
+
+public class <sw:javaType select="$model" alias="GWTModule" package="false"/> extends <java:import>com.google.inject.servlet.ServletModule</java:import>{
+
+	@Override
+	protected void configureServlets() {		
+		bind (<swgwt:getRequestFactoryPackage/>.server.RequestFactoryServlet.class).in(<java:import>com.google.inject.Singleton</java:import>.class);
+		serve("*/gwtRequest").with(<swgwt:getRequestFactoryPackage/>.server.RequestFactoryServlet.class);
+		tempInjectReferencesForGWT();
+	}
+	
+	/**
+	 * We can remove this when we move to GWT 2.1.1
+	 */
+	protected void tempInjectReferencesForGWT () {
+	<sw:injectJavaMethod method="tempInjectReferencesForGWT">
+		<c:iterate select="$model/dataTypes" var="dataType">  
+		<sw:getVariableName select="$dataType" uncapitalize="true" var="domainObjName" emit="false"/> <sw:getVariableName select="$dataType" uncapitalize="false" var="DomainObjName" emit="false"/>
+		<swgwt:isGWTDataType select="$dataType" var="isGWTDataType"/> 
+		<c:if test="$isGWTDataType">
+		<sw:injectJava anchor="tempInjectReferencesForGWT () {">
+			requestStaticInjection(<sw:javaType select="$dataType" emitIncludes="true"/>.class);
+		</sw:injectJava>
+		</c:if>
+		</c:iterate>
+		</sw:injectJavaMethod>
+	}
+}

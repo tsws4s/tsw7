@@ -1,0 +1,35 @@
+<%@ jet 
+package="com.skyway.integration.java.spring.jet.config.websphere" 
+class="WebSphereEntityManagerTemplate" 
+%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="f" id="org.eclipse.jet.formatTags"%>
+<%@taglib prefix="persistence" id="org.skyway.integration.data.persistence.skywayPersistenceTags"%>
+<%@taglib prefix="swspr" id="org.skyway.integration.java.spring.skywaySpringCodeGenTags"%>
+<%@taglib prefix="swsprjee" id="com.skyway.integration.java.spring.skywaySpringJeeCodeGenTags"%>
+<persistence:getAllPersistenceUnits select="$model" var="persistenceUnits" />
+	<c:iterate select="$persistenceUnits" var="puDetail">
+		<!-- Configure a JPA vendor adapter -->
+		<bean id="<c:get select="$puDetail/persistenceUnitName" />JPAVendorAdapter" class="org.springframework.orm.jpa.vendor.OpenJpaVendorAdapter">
+			<property name="showSql" value="<c:get select="$puDetail/showSQL" />" />
+			<property name="generateDdl" value="<c:get select="$puDetail/allowTableMods" />" />
+		</bean>
+		<!-- now an EntityManager Factory that brings together the persistence unit, datasource, and JPA Vendor -->
+		<bean id="<c:get select="$puDetail/persistenceUnitName" />" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+			<property name="dataSource" ref="<c:get select="$puDetail/persistenceUnitName" />DS" />
+			<property name="persistenceUnitName" value="<c:get select="$puDetail/persistenceUnitName" />" />
+			<property name="jpaVendorAdapter" ref="<c:get select="$puDetail/persistenceUnitName" />JPAVendorAdapter" />
+			<property name="jpaPropertyMap">
+				<map>
+					<entry key="openjpa.TransactionMode" value="managed" />
+					<entry key="openjpa.ConnectionFactoryMode" value="managed" />
+					<c:if test="$puDetail/showSQL = 'true'">
+						<entry key="openjpa.Log" value="SQL=TRACE"/>
+					</c:if>
+					<c:if test="$puDetail/allowTableMods = 'true'">
+						<entry key="openjpa.jdbc.SynchronizeMappings" value="buildSchema"/>
+					</c:if>
+				</map>
+			</property>
+		</bean>
+	</c:iterate>

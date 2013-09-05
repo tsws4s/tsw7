@@ -1,0 +1,23 @@
+<%@ jet 
+package="com.skyway.integration.google.webtoolkit.deploy.templates" 
+class="ResponseTemplate" 
+%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+
+package <sw:package select="$model" alias="gwtresponse" var="pkg"/>;
+
+<java:importsLocation package="{$pkg}"/>
+
+/**
+* A common interface for all Responses which may be sent to remote services following the Command pattern.
+* 
+* @see Action
+* @see ActionService
+<sw:generated />
+*/
+public interface <sw:javaType select="$model" alias="gwtresponse" package="false"/> extends <java:import>java.io.Serializable</java:import>{
+
+}

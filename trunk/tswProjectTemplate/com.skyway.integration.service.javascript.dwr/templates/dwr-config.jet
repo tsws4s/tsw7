@@ -1,0 +1,62 @@
+<%@ jet 
+package="com.skyway.integration.service.javascript.dwr.jet" 
+class="DwrConfigTemplate" 
+%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+<%@taglib prefix="swspr" id="org.skyway.integration.java.spring.skywaySpringCodeGenTags"%>
+<%@taglib prefix="swdwr" id="com.skyway.integration.service.javascript.dwr.skywayDWRCodeGenTags"%>
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:dwr="http://www.directwebremoting.org/schema/spring-dwr"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+      http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+      http://www.springframework.org/schema/aop
+      http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+      http://www.directwebremoting.org/schema/spring-dwr
+      http://www.directwebremoting.org/schema/spring-dwr-2.0.xsd">
+      
+    <dwr:controller id="dwrController" debug="true" />
+	
+	<bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+		<property name="alwaysUseFullPath" value="true"/>
+		<property name="mappings">
+			<props>
+				<prop key="/dwr/**">dwrController</prop>
+			</props>
+		</property>
+	</bean>
+			
+	<bean class="org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping" />
+	<bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping" />
+	<c:iterate select="$model/project/services" var="service">
+		<swdwr:getDWRService service="$service" var="dwrService" />
+		<c:if test="string($dwrService/publish) = 'true'" >
+	<swdwr:getDWRSignatureTypes service="$service" var="signatureTypes" />
+	<dwr:configuration>
+		<c:iterate select="$signatureTypes" var="signatureType" >
+		<dwr:convert type="bean" class="<sw:javaType select="$signatureType" emitCollectionPolicy="omit" package="true" />" />       
+		</c:iterate>
+	</dwr:configuration>
+
+
+	<sw:getModelExtension select="$service" extension="servicebean" var="beanDetail" />
+	<bean id="Dwr<swspr:componentID select="$service" alias="interface" />" class="org.springframework.aop.framework.ProxyFactoryBean" >
+		<property name="proxyInterfaces" value="<sw:javaType select="$service" alias="interface" package="true" />" />
+		<property name="target" ref="<swspr:componentID select="$service" alias="interface" />" />
+		<dwr:remote javascript="<c:get select="$dwrService/@javascriptName" />" >
+		<c:iterate select="$dwrService/methods" var="dwrMethod" >
+			<c:if test="string($dwrMethod/exclude) = 'false'" >
+			<dwr:include method="<c:get select="lowercaseFirst($dwrMethod/@operationName)" />" />
+			</c:if>
+		</c:iterate>
+		</dwr:remote>
+	</bean>
+		</c:if>
+	</c:iterate>
+ 	
+</beans>

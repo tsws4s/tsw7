@@ -1,0 +1,16 @@
+<%@ jet 
+package="com.skyway.integration.java.spring.jet.config.security" 
+class="DBAuthenticationProviderContextTemplate" 
+%>
+	<authentication-manager alias="authenticationManager" <c:if test="toBoolean($springSecurity2)" >/</c:if>>
+	<authentication-provider user-service-ref='userDetailsService' >
+		<password-encoder hash="<c:get select="$springJeeProject/securitySettings/passwordEncoder" />"/>
+	</authentication-provider>
+	<c:if test="not(toBoolean($springSecurity2))" ></authentication-manager></c:if>
+	
+	<beans:bean id="userDetailsService" class="<c:choose><c:when test="toBoolean($springSecurity2)" >org.springframework.security.userdetails.jdbc.JdbcDaoImpl</c:when><c:otherwise>org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl</c:otherwise></c:choose>">
+		<beans:property name="rolePrefix" value="ROLE_" />
+		<beans:property name="dataSource" ref="springSecurityDataSource" />
+		<beans:property name="usersByUsernameQuery" value="<c:get select="$springJeeProject/securitySettings/dbSecuritySettings/@usersByUsernameQuery" />" />
+		<beans:property name="authoritiesByUsernameQuery" value="<c:get select="$springJeeProject/securitySettings/dbSecuritySettings/@authoritiesByUsernameQuery" />" />
+	</beans:bean>

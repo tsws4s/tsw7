@@ -1,0 +1,13 @@
+<%@ jet 
+package="com.skyway.integration.java.spring.jet.config.security" 
+class="InMemoryAuthenticationProviderContextTemplate" 
+%>
+ 	<authentication-manager alias="authenticationManager" <c:if test="toBoolean($springSecurity2)" >/</c:if>>
+    	<authentication-provider>
+			<password-encoder hash="<c:get select="$springJeeProject/securitySettings/passwordEncoder" />"/>
+	        <user-service>
+	            <user name="admin" password="admin" authorities="ROLE_ADMIN"/>
+		        <user name="user" password="user" authorities="ROLE_USER"/>
+		    </user-service>
+    	</authentication-provider>
+	<c:if test="not(toBoolean($springSecurity2))" ></authentication-manager></c:if>

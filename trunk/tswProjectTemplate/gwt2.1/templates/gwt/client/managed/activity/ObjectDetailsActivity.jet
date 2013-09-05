@@ -1,0 +1,92 @@
+<%@ jet package="com.skyway.templates" class="ObjectDetailsActivityTemplate"%>
+<%@taglib prefix="swgwt" id="com.skyway.integration.google.webtoolkit.common.skywayGWTCodeGenTags"%>
+
+package <sw:package select="$model" alias="ObjectDetailsActivity"var="pkg"/>;
+<java:importsLocation package="{$pkg}"/>
+<sw:getVariableName select="$model" uncapitalize="true" var="domainObjName" emit="false"/> <sw:getVariableName select="$model" uncapitalize="false" var="DomainObjName" emit="false"/>
+
+/**
+ * An {@link com.google.gwt.activity.shared.Activity Activity} that requests and
+ * displays detailed information on a given .
+ */
+public class <sw:javaType select="$model" alias="ObjectDetailsActivity" package="false"/> extends <java:import>com.google.gwt.activity.shared.AbstractActivity</java:import> implements  <sw:javaType select="$model/project" alias="ProxyDetailsView" package="true" emitIncludes="true"/>.Delegate, <sw:javaType select="$model/project" alias="IsScaffoldMobileActivity" package="true"/> {
+	private final <sw:javaType select="$model/project" alias="ApplicationRequestFactory" package="true"/> requests;
+	private final <java:import>com.google.gwt.place.shared.PlaceController</java:import> placeController;
+	private final <sw:javaType select="$model/project" alias="ProxyDetailsView" package="true"/><<sw:javaType select="$model" alias="ObjectProxy" package="false"/>> view;
+    private final <java:import><swgwt:getRequestFactoryPackage/>.shared.EntityProxyId</java:import><<sw:javaType select="$model" alias="ObjectProxy" package="true"/>> proxyId;
+	private <java:import>com.google.gwt.user.client.ui.AcceptsOneWidget</java:import> display;
+
+	public <sw:javaType select="$model" alias="ObjectDetailsActivity" package="false"/>(EntityProxyId<<sw:javaType select="$model" alias="ObjectProxy" emitIncludes="true" package="true"/>> proxyId, <sw:javaType select="$model/project" alias="ApplicationRequestFactory" package="true"/> requests, PlaceController placeController, ProxyDetailsView<<sw:javaType select="$model" alias="ObjectProxy" package="false"/>> view) {
+		this.placeController = placeController;
+		this.proxyId = proxyId;
+		this.requests = requests;
+		view.setDelegate(this);
+		this.view = view;
+	}
+
+	public void deleteClicked() {
+		if (!view.confirm("Really delete this entry? You cannot undo this change.")) {
+			return;
+		}
+   		
+		requests.<c:get select="$domainObjName"/>Request().delete<c:get select="$DomainObjName"/>(view.getValue()).fire(new <java:import><swgwt:getRequestFactoryPackage/>.shared.Receiver</java:import><Void>() {
+			public void onSuccess(Void ignore) {
+				if (display == null) {
+					// This activity is dead
+					return;
+				}
+
+				// Go back to the previous place.
+				placeController.goTo(getBackButtonPlace());
+			}
+		});
+	}
+
+	public void editClicked() {
+		placeController.goTo(getEditButtonPlace());
+	}
+
+	public <java:import>com.google.gwt.place.shared.Place</java:import> getBackButtonPlace() {
+		return new <sw:javaType select="$model/project" alias="ProxyListPlace" package="true"/> (<sw:javaType select="$model" alias="ObjectProxy" package="false"/>.class);
+	}
+
+	public String getBackButtonText() {
+		return "Back";
+	}
+
+	public Place getEditButtonPlace() {
+		return new <sw:javaType select="$model/project" alias="ProxyPlace" package="true" emitIncludes="true"/>(view.getValue().stableId(), <sw:javaType select="$model/project" alias="ProxyPlace" package="true" emitIncludes="true"/>.Operation.EDIT);
+	}
+
+	public String getTitleText() {
+		return "View <c:get select="$DomainObjName"/>";
+	}
+
+	public boolean hasEditButton() {
+		return true;
+	}
+
+	public void onCancel() {
+		onStop();
+	}
+
+	public void onStop() {
+		display = null;
+	}
+
+	public void start(AcceptsOneWidget displayIn, <java:import>com.google.gwt.event.shared.EventBus</java:import> eventBus) {
+   	this.display = displayIn;
+   	<java:import><swgwt:getRequestFactoryPackage/>.shared.Receiver</java:import><<java:import><swgwt:getRequestFactoryPackage/>.shared.EntityProxy</java:import>> callback = new Receiver<EntityProxy>() {
+      public void onSuccess(EntityProxy proxy) {
+        if (display == null) {
+   	  		return;
+   			}
+  		  view.setValue((<sw:javaType select="$model" alias="ObjectProxy" package="false"/>) proxy);
+        display.setWidget(view);
+      }
+    };
+
+	
+		requests.find(proxyId).with(<c:iterate select="$listFields" delimiter="," var="propertyselection"><c:setVariable select="$propertyselection/Property" var="field"/>"<sw:getVariableName select="$field" capitalize="false"/>"</c:iterate><c:iterate select="$model/relationships" delimiter="," var="relationship">"<sw:getVariableName select="$relationship" capitalize="false"/>"</c:iterate>).fire(callback);
+	}
+}

@@ -1,0 +1,49 @@
+<%@ jet package="com.skyway.templates" class="ObjectListActivityTemplate"%>
+<%@taglib prefix="swgwt" id="com.skyway.integration.google.webtoolkit.common.skywayGWTCodeGenTags"%>
+
+package <sw:package select="$model" alias="ObjectListActivity"var="pkg"/>;
+<java:importsLocation package="{$pkg}"/>
+<sw:getVariableName select="$model" uncapitalize="true" var="domainObjName" emit="false"/> <sw:getVariableName select="$model" uncapitalize="false" var="DomainObjName" emit="false"/>
+
+/**
+ * Activity that requests and displays all <c:get select="$DomainObjName"/>s.
+ */
+public class <sw:javaType select="$model" alias="ObjectListActivity" package="false"/> extends <sw:javaType select="$model/project" alias="AbstractProxyListActivity" package="true"/> <<sw:javaType select="$model" alias="ObjectProxy" package="true"/>>
+		implements <sw:javaType select="$model/project" alias="IsScaffoldMobileActivity" package="true"/> {
+
+	private final <java:import><sw:javaType select="$model/project" alias="ApplicationRequestFactory" package="true"/></java:import> requests;
+
+	public <sw:javaType select="$model" alias="ObjectListActivity" package="false"/>(ApplicationRequestFactory requests, 
+      <sw:javaType select="$model/project" alias="ProxyListView" package="true"/><<sw:javaType select="$model" alias="ObjectProxy" package="true"/>> view, <java:import>com.google.gwt.place.shared.PlaceController</java:import> placeController) {
+   	super(placeController, view, <sw:javaType select="$model" alias="ObjectProxy" package="true"/>.class);
+   	this.requests = requests;
+	}
+
+	public <java:import>com.google.gwt.place.shared.Place</java:import> getBackButtonPlace() {
+		return <sw:javaType select="$model/project" alias="ScaffoldMobileApp" package="true"/>.ROOT_PLACE;
+	}
+
+	public String getBackButtonText() {
+		return "Entities";
+	}
+
+	public Place getEditButtonPlace() {
+		return null;
+	}
+
+	public String getTitleText() {
+		return "<c:get select="$DomainObjName"/>";
+	}
+
+	public boolean hasEditButton() {
+		return false;
+	}
+
+	protected <java:import><swgwt:getRequestFactoryPackage/>.shared.Request</java:import><<java:import>java.util.List</java:import><<sw:javaType select="$model" alias="ObjectProxy" package="true"/>>> create<java:import>com.google.gwt.view.client.Range</java:import>Request(Range range) {
+		return requests.<c:get select="$domainObjName"/>Request().findAll<c:get select="$DomainObjName"/>s(range.getStart(), range.getLength());
+	}
+
+	protected void fireCountRequest(<java:import><swgwt:getRequestFactoryPackage/>.shared.Receiver</java:import><Integer> callback) {
+		requests.<c:get select="$domainObjName"/>Request().count<c:get select="$DomainObjName"/>s().fire(callback);
+	}
+}

@@ -1,0 +1,58 @@
+<%@ jet 
+package="com.skyway.integration.java.spring.jet.config.hibernate" 
+class="HibernateEntityDSTemplate" 
+%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="f" id="org.eclipse.jet.formatTags"%>
+<%@taglib prefix="persistence" id="org.skyway.integration.data.persistence.skywayPersistenceTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+<%@taglib prefix="swspr" id="org.skyway.integration.java.spring.skywaySpringCodeGenTags"%>
+<%@taglib prefix="swsprjee" id="com.skyway.integration.java.spring.skywaySpringJeeCodeGenTags"%>
+ 	<!-- ******************************************************************** -->
+	<!-- Setup a data source -->
+	<!-- ******************************************************************** -->
+<swsprjee:springJeeDeployables select="$model" container="containerType" persistenceManager="persistenceManager" transactionManager="transactionManager" />
+<swsprjee:springJeeProjectVar select="$model" var="springJeeProject" />
+	<c:setVariable select="''" var="SecurityDSName" />
+	<c:if test="$springJeeProject/securitySettings/@enabled = 'true'">
+		<c:if test="$springJeeProject/securitySettings/@useDbSecurity = 'true'">
+			<persistence:setDataSource select="$springJeeProject/securitySettings/dbSecuritySettings/@connectionName" name="connection"/>
+			<c:setVariable select="$connection/@name" var="SecurityDSName" />
+		</c:if>
+	</c:if>
+	
+	<persistence:getAllPersistenceUnits select="$model" var="persistenceUnits" />
+	<c:iterate select="$persistenceUnits" var="puDetail">
+		<c:choose>
+			<c:when test="$puDetail/xaDataSourceEnabled = 'true'" >
+			<!-- Using Atomikos XA Data Sources -->
+				<bean name="<c:get select="$puDetail/persistenceUnitName" />DS<c:if test="$puDetail/@profileName = '{$SecurityDSName}'">,springSecurityDataSource</c:if>" class="com.atomikos.jdbc.AtomikosDataSourceBean" >
+					<property name="uniqueResourceName" value="<c:get select="$puDetail/persistenceUnitName" />_<f:uuid/>" />
+					<property name="xaDataSourceClassName" value="<c:get select="$puDetail/xaDataSourceClassName" />" />
+					<property name="xaProperties">
+						<props>
+					 	<persistence:getXADataSourceProperties select="$puDetail" var="xaDataSourceProperties" emit="false"/>
+						<c:iterate select="$xaDataSourceProperties/properties" var="property">
+							<prop key="<c:get select="$property/name" />" >${<c:get select="$puDetail/persistenceUnitName" />.properties.<c:get select="$property/name" />}</prop>
+						</c:iterate>
+						</props>
+					</property>
+					<property name="minPoolSize" value="${<c:get select="$puDetail/persistenceUnitName" />.minPoolSize}" />
+					<property name="maxPoolSize" value="${<c:get select="$puDetail/persistenceUnitName" />.maxPoolSize}" />
+					<property name="reapTimeout" value="0"/>
+				</bean>
+			</c:when>
+			<c:otherwise>
+				<!-- Using Apache DBCP Data Sources -->
+				<bean name="<c:get select="$puDetail/persistenceUnitName" />DS<c:if test="$puDetail/@profileName = '{$SecurityDSName}'">,springSecurityDataSource</c:if>" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close" >
+					<property name="driverClassName" value="${<c:get select="$puDetail/persistenceUnitName" />.connection.driver_class}" />
+					<property name="username" value="${<c:get select="$puDetail/persistenceUnitName" />.connection.username}" />
+					<property name="password" value="${<c:get select="$puDetail/persistenceUnitName" />.connection.password}" />
+					<property name="url" value="${<c:get select="$puDetail/persistenceUnitName" />.connection.url}" />
+					<property name="maxIdle" value="${<c:get select="$puDetail/persistenceUnitName" />.minPoolSize}" />
+					<property name="maxActive" value="${<c:get select="$puDetail/persistenceUnitName" />.maxPoolSize}" />
+				</bean>
+			</c:otherwise>
+		</c:choose>
+		
+	</c:iterate>

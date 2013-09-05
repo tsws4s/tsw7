@@ -1,0 +1,16 @@
+<%@ jet 
+package="com.skyway.integration.service.webservice.jet.jaxws" 
+class="OutputParametersTemplate" 
+%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+<%@taglib prefix="jaxws" id="com.skyway.integration.service.webservice.skywayJAXWSTags"%>
+<c:iterate select="$currentOperation/outputs" var="output" delimiter=",">
+<c:if test="isVariableDefined('webMethod')" >
+	<jaxws:getWebParam webMethod="$webMethod" input="$output" var="webParam" />
+	<jaxws:webParam select="$webParam"/>
+</c:if> 
+<sw:declareMethodVariable select="$output"><java:import>javax.xml.ws.Holder</java:import><<java:import><sw:javaType package="true" select="$output" /></java:import>></sw:declareMethodVariable>
+</c:iterate>

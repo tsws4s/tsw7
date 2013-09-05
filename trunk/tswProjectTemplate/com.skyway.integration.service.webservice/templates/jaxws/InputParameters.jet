@@ -1,0 +1,23 @@
+<%@ jet 
+package="com.skyway.integration.service.webservice.jet.jaxws" 
+class="InputParametersTemplate" 
+%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+<%@taglib prefix="jaxws" id="com.skyway.integration.service.webservice.skywayJAXWSTags"%>
+<c:iterate select="$currentOperation/inputs" var="input" delimiter=",">
+<c:choose>
+	<c:when test="isVariableDefined('methodCall') and $methodCall">
+		<sw:getVariableName select="$input"/>
+	</c:when>
+	<c:otherwise>
+		<c:if test="isVariableDefined('webMethod')" >
+			<jaxws:getWebParam webMethod="$webMethod" input="$input" var="webParam" />
+			<jaxws:webParam select="$webParam"/>
+		</c:if> 
+		<sw:declareMethodVariable select="$input"><java:import><sw:javaType select="$input" package="true" /></java:import></sw:declareMethodVariable>
+	</c:otherwise>
+</c:choose>
+</c:iterate>

@@ -1,0 +1,219 @@
+<%@ jet 
+package="com.skyway.integration.google.webtoolkit.deploy.templates" 
+class="RelatedEditorTemplate" 
+%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+<%@taglib prefix="swgwt" id="com.skyway.integration.google.webtoolkit.common.skywayGWTCodeGenTags"%>
+
+package <sw:package select="$model" alias="gwteditwidget" var="pkg"/>;
+<sw:javaType select="$model" package="true" var="fullyQualifiedClassName" emit="false"/>
+<java:importsLocation package="{$pkg}"/>
+<java:impliedImport name="{$fullyQualifiedClassName}"/>
+<sw:getVariableName select="$model" uncapitalize="true" var="domainObjName" emit="false"/> <sw:getVariableName select="$model" uncapitalize="false" var="DomainObjName" emit="false"/>
+
+/**
+* Presenter for the View of related <sw:javaType select="$model" alias="gwtdatatype" package="false"/> which can be used for any object that has a relationship to <sw:javaType select="$model" alias="gwtrelatededitor" package="false"/>
+* This presenter takes care of managing the relationship data as well as handling whether or not to present the view for managing a ONE relationship, or a MANY relationship
+<sw:generated />
+*/
+public class <sw:javaType select="$model" alias="gwtrelatededitor" package="false"/> {
+	// Display Interface that must be implemented to bind a Display to this editor
+	interface Display {
+		public <java:import>com.google.gwt.user.client.ui.HasValue</java:import><<java:import>java.util.Set</java:import><<java:import><sw:javaType select="$model" alias="gwtdatatype" package="true"/></java:import>>> <c:get select="$domainObjName"/>s();
+		public HasValue<Set<<sw:javaType select="$model" alias="gwtdatatype" package="true"/>>> selected<c:get select="$domainObjName"/>s();
+		public <java:import>com.google.gwt.event.logical.shared.HasOpenHandlers</java:import><<java:import>com.google.gwt.user.client.ui.DisclosurePanel</java:import>> get<c:get select="$DomainObjName"/>sOpened();
+		public <java:import>com.google.gwt.event.dom.client.HasClickHandlers</java:import> getNewButton();
+		public HasClickHandlers getSelectButton();
+		public HasClickHandlers getRemoveButton();
+		public HasClickHandlers getEditButton();
+	}
+	
+	/**
+	 * The Action to use for loading the relationship can be injected into this editor so that it is reusable by any object that is related to <sw:javaType select="$model" alias="gwtdatatype" package="false"/>
+	<sw:generated />
+	 */
+	private <java:import><sw:javaType select="$model" alias="gwtloadrelated" package="true"/></java:import><?> loadRelated<c:get select="$domainObjName"/>s;
+	
+	/**
+	 * The Action to use for removing elements from the relationship can be injected into this editor so that it is reusable by any object that is related to <sw:javaType select="$model" alias="gwtdatatype" package="false"/>
+	<sw:generated />
+	 */
+	private <java:import><sw:javaType select="$model" alias="gwtremovefromrelated" package="true"/></java:import><?> remove<c:get select="$domainObjName"/>sFromRelated;
+	
+	/**
+	 * The Action to use for adding objects to the relationship can be injected into this editor so that it is reusable by any object that is related to <sw:javaType select="$model" alias="gwtdatatype" package="false"/>
+	<sw:generated />
+	 */
+	private <java:import><sw:javaType select="$model" alias="gwtaddtorelated" package="true"/></java:import><?> add<c:get select="$DomainObjName"/>sToRelated;
+	
+	/**
+	 * The CRUD service to use for persistence
+	<sw:generated />
+	 */
+	private <java:import><sw:javaType select="$model/project" alias="gwtactionservice" package="true"/></java:import> service;
+	
+	/**
+	 * The Display instance that is bound to this presenter
+	<sw:generated />
+	 */
+	private Display display;
+	
+	/**
+	 * The I18N messages
+	<sw:generated />
+	 */
+	private final static <java:import><sw:javaType select="$model" alias="gwtmessagesinterface" package="true"/></java:import> messages = (<sw:javaType select="$model" alias="gwtmessagesinterface" package="false"/>)<java:import>com.google.gwt.core.client.GWT</java:import>.create (<sw:javaType select="$model" alias="gwtmessagesinterface" package="false"/>.class);
+		
+	
+	/**
+	 * Create a new Editor for related <sw:javaType select="$model" alias="gwtdatatype" package="false"/>
+	<sw:generated />
+	 */
+	public <sw:javaType select="$model" alias="gwtrelatededitor" package="false"/>(<sw:javaType select="$model/project" alias="gwtactionservice" package="false"/> service, <sw:javaType select="$model" alias="gwtloadrelated" package="false"/><?> load, <sw:javaType select="$model" alias="gwtremovefromrelated" package="false"/><?> remove, <java:import><sw:javaType select="$model" alias="gwtaddtorelated" package="true"/></java:import><?> add) {
+		this.loadRelated<c:get select="$domainObjName"/>s = load;
+		this.remove<c:get select="$domainObjName"/>sFromRelated = remove;
+		this.add<c:get select="$DomainObjName"/>sToRelated = add;
+		this.service = service;
+	}
+	
+	/**
+	 * Bind the view to this presenter
+	<sw:generated />
+	 */
+	public void bindDisplay (Display binding) {
+		this.display = binding;
+		
+		// load the relationship information when the View is opened
+		display.get<c:get select="$DomainObjName"/>sOpened().addOpenHandler(new <java:import>com.google.gwt.event.logical.shared.OpenHandler</java:import><DisclosurePanel>(){
+			public void onOpen(<java:import>com.google.gwt.event.logical.shared.OpenEvent</java:import><DisclosurePanel> event) {
+				loadRelated<c:get select="$domainObjName"/>s();	
+			}
+		});
+		
+		// Handle the New gesture
+		display.getNewButton().addClickHandler(new <java:import>com.google.gwt.event.dom.client.ClickHandler</java:import>() {
+			public void onClick(<java:import>com.google.gwt.event.dom.client.ClickEvent</java:import> event) {
+				final <java:import><sw:javaType select="$model" alias="gwteditdialog" package="true"/></java:import> editDialog = new <sw:javaType select="$model" alias="gwteditdialog" package="false"/>(create<c:get select="$domainObjName"/>(), false);
+				editDialog.addCloseHandler(new <java:import>com.google.gwt.event.logical.shared.CloseHandler</java:import><<java:import>com.google.gwt.user.client.ui.PopupPanel</java:import>>() {
+					public void onClose(<java:import>com.google.gwt.event.logical.shared.CloseEvent</java:import><PopupPanel> event) {		
+						if (editDialog.get<c:get select="$DomainObjName"/>() == null)
+							return;
+						
+						add<c:get select="$DomainObjName"/>ToRelated(editDialog.get<c:get select="$DomainObjName"/>());
+					}
+				});
+				editDialog.center();
+			}
+		});
+	
+		<swgwt:getGWTDataType select="$model" var="gwtDataType"/>
+		// Handle the Select gesture
+		display.getSelectButton().addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				final <java:import><sw:javaType select="$model" alias="gwtpicker" package="true"/></java:import> picker = new <sw:javaType select="$model" alias="gwtpicker" package="true"/>();
+				picker.addCloseHandler(new CloseHandler<PopupPanel>() {
+					public void onClose(CloseEvent<PopupPanel> event) {		
+						if (picker.getSelected<c:get select="$domainObjName"/>s() == null || picker.getSelected<c:get select="$domainObjName"/>s().size() <= 0)
+							return;
+						
+						add<c:get select="$DomainObjName"/>sToRelated(picker.getSelected<c:get select="$domainObjName"/>s());
+					}
+				});
+	
+				picker.setGlassEnabled(true);
+				picker.center();
+			}
+		});
+	
+		// handle the remove gesture
+		display.getRemoveButton().addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				if (<java:import>com.google.gwt.user.client.Window</java:import>.confirm(messages.breakRelationshipConfirmation())) {
+					removeRelated<c:get select="$domainObjName"/>s(display.selected<c:get select="$domainObjName"/>s().getValue());
+				}
+			}
+		});
+		
+		// handle the edit gesture
+		display.getEditButton().addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				<sw:javaType select="$model" alias="gwteditdialog" package="false"/> editDialog = new <java:import><sw:javaType select="$model" alias="gwteditdialog" package="true"/></java:import>(getSelected<c:get select="$DomainObjName"/>());
+				editDialog.center();
+			}
+		});
+	}
+	
+	/**
+	 * Create a new instance of <sw:javaType select="$model" alias="gwtdatatype" package="false"/> for adding to a relationship.  Subclasses may wish to extend to add default field values etc.
+	<sw:generated />
+	 */
+	<sw:javaType select="$model" alias="gwtdatatype" package="false"/> create<c:get select="$domainObjName"/>() {
+		<java:import><sw:javaType select="$model" alias="gwtdatatype" package="true"/></java:import> <c:get select="$domainObjName"/> = new <sw:javaType select="$model" alias="gwtdatatype" package="false"/>();
+		
+		return <c:get select="$domainObjName"/>;
+	}
+	
+	/**
+	 * Returns the first selected <sw:javaType select="$model" alias="gwtdatatype" package="false"/> from Display
+	<sw:generated />
+	 */
+	public <sw:javaType select="$model" alias="gwtdatatype" package="false"/> getSelected<c:get select="$DomainObjName"/>() {
+		Set <<sw:javaType select="$model" alias="gwtdatatype" package="false"/>> selected = display.selected<c:get select="$domainObjName"/>s().getValue();
+		
+		return selected != null && !selected.isEmpty() ? selected.iterator().next(): null;
+	}
+	
+	/**
+	 * Kicks off the Async call to load the related <sw:javaType select="$model" alias="gwtdatatype" package="false"/>s
+	<sw:generated />
+	 */
+	void loadRelated<c:get select="$domainObjName"/>s() {
+		service.execute(loadRelated<c:get select="$domainObjName"/>s, new <java:import><sw:javaType select="$model" alias="gwtloadedrelated" package="true"/></java:import>() {
+			public void loaded (Set<<sw:javaType select="$model" alias="gwtdatatype" package="false"/>> <c:get select="$domainObjName"/>s) {
+				display.<c:get select="$domainObjName"/>s().setValue(<c:get select="$domainObjName"/>s);
+			}
+		});
+	}
+	
+	/**
+	 * Kicks off the Async call to remove <sw:javaType select="$model" alias="gwtdatatype" package="false"/>s from the relationship
+	<sw:generated />
+	 */
+	void removeRelated<c:get select="$domainObjName"/>s(Set<<sw:javaType select="$model" alias="gwtdatatype" package="false"/>> <c:get select="$domainObjName"/>s) {
+		remove<c:get select="$domainObjName"/>sFromRelated.set<c:get select="$DomainObjName"/>s(<c:get select="$domainObjName"/>s);
+		service.execute(remove<c:get select="$domainObjName"/>sFromRelated, new <java:import><sw:javaType select="$model" alias="gwtremovedfromrelated" package="true"/></java:import>() {
+			public void removed() {
+				loadRelated<c:get select="$domainObjName"/>s();
+			}
+		});
+	}
+	
+	/**
+	 * Kicks off the Async call to add <sw:javaType select="$model" alias="gwtdatatype" package="false"/>s to the relationship
+	<sw:generated />
+	 */
+	void add<c:get select="$DomainObjName"/>sToRelated(Set<<sw:javaType select="$model" alias="gwtdatatype" package="false"/>> <c:get select="$domainObjName"/>s) {
+		add<c:get select="$DomainObjName"/>sToRelated.set<c:get select="$DomainObjName"/>s(<c:get select="$domainObjName"/>s);
+		service.execute(add<c:get select="$DomainObjName"/>sToRelated, new <java:import><sw:javaType select="$model" alias="gwtaddedtorelated" package="true"/></java:import>() {
+			public void added<c:get select="$DomainObjName"/>s() {
+				loadRelated<c:get select="$domainObjName"/>s();
+			}
+		});
+	}
+	
+	/**
+	 * Kicks off the Async call to add a <sw:javaType select="$model" alias="gwtdatatype" package="false"/> to the relationship
+	<sw:generated />
+	 */
+	void add<c:get select="$DomainObjName"/>ToRelated(<sw:javaType select="$model" alias="gwtdatatype" package="false"/> <c:get select="$domainObjName"/>) {
+		if (<c:get select="$domainObjName"/> == null)
+			return;
+		
+		<java:import>java.util.HashSet</java:import><<sw:javaType select="$model" alias="gwtdatatype" package="false"/>> <c:get select="$domainObjName"/>s = new HashSet<<sw:javaType select="$model" alias="gwtdatatype" package="false"/>>();
+		<c:get select="$domainObjName"/>s.add(<c:get select="$domainObjName"/>);
+		add<c:get select="$DomainObjName"/>sToRelated (<c:get select="$domainObjName"/>s);
+	}
+}

@@ -1,0 +1,49 @@
+<%@ jet 
+package="com.skyway.integration.java.spring.jet.config.jboss" 
+class="JBossDataSourcesTemplate" 
+%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="f" id="org.eclipse.jet.formatTags"%>
+<%@taglib prefix="persistence" id="org.skyway.integration.data.persistence.skywayPersistenceTags"%>
+<%@taglib prefix="swspr" id="org.skyway.integration.java.spring.skywaySpringCodeGenTags"%>
+<%@taglib prefix="swsprjee" id="com.skyway.integration.java.spring.skywaySpringJeeCodeGenTags"%>
+<?xml version="1.0" encoding="UTF-8" ?> 
+<datasources>
+	<attribute name="SecurityDomainJndiName"><c:get select="$model/name" />SQLDbRealm</attribute>
+	<persistence:getAllPersistenceUnits select="$model" var="persistenceUnits" />
+	<c:iterate select="$persistenceUnits" var="puDetail">
+		<c:choose>
+			<c:when test="$puDetail/xaDataSourceEnabled = 'true'" >
+				<xa-datasource>
+					<jndi-name><c:get select="$puDetail/persistenceUnitName" />DS</jndi-name>
+					<track-connection-by-tx />   
+					<xa-datasource-class><c:get select="$puDetail/xaDataSourceClassName" /></xa-datasource-class> 
+					<min-pool-size><c:get select="$puDetail/minPoolSize" /></min-pool-size>
+					<max-pool-size><c:get select="$puDetail/maxPoolSize" /></max-pool-size>
+					
+					<persistence:getXADataSourceProperties select="$puDetail" var="xaDataSourceProperties" emit="false"/>
+					<c:iterate select="$xaDataSourceProperties/properties" var="property">
+						<xa-datasource-property name="<c:get select="uppercaseFirst($property/name)" />" ><c:get select="$property/value" /></xa-datasource-property>
+					</c:iterate>
+				</xa-datasource>
+			</c:when>
+			<c:otherwise>
+				<local-tx-datasource>
+					<jndi-name><c:get select="$puDetail/persistenceUnitName" />DS</jndi-name>
+					<connection-url><c:get select="$puDetail/url" /></connection-url>
+					<driver-class><c:get select="$puDetail/driverClassName" /></driver-class>
+					<user-name><c:get select="$puDetail/userName" /></user-name>
+					<password><c:get select="$puDetail/password" /></password>
+					<min-pool-size><c:get select="$puDetail/minPoolSize" /></min-pool-size>
+					<max-pool-size><c:get select="$puDetail/maxPoolSize" /></max-pool-size>
+				</local-tx-datasource>
+			</c:otherwise>
+		</c:choose>
+				
+		<mbean code="org.jboss.naming.NamingAlias" name="<c:get select="$model/name" />SQLDbRealm:service=NamingAlias,fromName=<c:get select="$puDetail/persistenceUnitName" />DS">
+			<attribute name="ToName">java:/<c:get select="$puDetail/persistenceUnitName" />DS</attribute>
+			<attribute name="FromName"><c:get select="$puDetail/persistenceUnitName" />DS</attribute>
+		</mbean>
+
+ 	</c:iterate>
+</datasources>

@@ -1,0 +1,48 @@
+<%@ jet 
+package="com.skyway.scaffolding.crud.templates.springmvc" 
+class="NestedCrudViewTemplate" 
+%>
+<%@taglib prefix="jet" id="org.eclipse.jet.controlTags"%>  
+<%@taglib prefix="f" id="org.eclipse.jet.formatTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+<%@taglib prefix="gen" id="com.skyway.scaffolding.crud.common.generationTags"%>
+<\%@page language="java" isELIgnored="false" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
+<jsp:directive.include file="/WEB-INF/sitemesh-decorators/include.jsp"/>
+<fmt:setBundle basename="bundles.<jet:get select="lower-case($dataType/@name)"/>-resources"/>
+<html>
+<head>
+<title>View <fmt:message key="<jet:get select="lower-case($dataType/@name)"/>.title"/> <fmt:message key="<jet:get select="lower-case($relatedType/@name)"/>.title"/></title>
+</head>
+<body>
+<div id="contentarea">      
+	<div id="lb"><div id="rb"><div id="bb"><div id="blc">
+	<div id="brc"><div id="tb"><div id="tlc"><div id="trc">
+		<div id="content">
+			<h1><fmt:message key="navigation.view"/> <fmt:message key="<jet:get select="lower-case($relatedType/@name)"/>.title"/></h1>
+			<div class="navitem"><a class="button" href="${pageContext.request.contextPath}/select<jet:get select="$dataType/@name" />?<jet:iterate select="$dataType/fields" var="field"><jet:if test="string($field/@primaryKey) = 'true'"><jet:get select="$field/@name" />Key=${<jet:get select="lower-case($dataType/@name)"/>_<jet:get select="$field/@name" />}&</jet:if></jet:iterate>"><span><img src="images/icons/back.gif" /><fmt:message key="navigation.back"/></span></a></div>
+		
+			<table cellpadding="0" cellspacing="0" id="viewTable">
+				<tbody>
+				<jet:setVariable select="lower-case($relatedType/@name)" var="currentDataTypeName" />
+				<jet:iterate select="$relatedType/fields" var="field">
+					<gen:isFieldDisplayable select="$field" var="displayable" />
+					<gen:getDefaultFieldPattern select="$field" var="pattern" />
+					<jet:if test="$displayable" >
+					<tr>
+						<td class="label" valign="top">
+							<fmt:message key="<jet:get select="lower-case($relatedType/@name)"/>.<jet:get select="lower-case($field/@name)" />.title"/>:
+						</td>
+						<td>
+							<jet:include template="templates/crud/common/crudViewField.jet" />
+						</td>
+					</tr>
+					</jet:if>
+				</jet:iterate>
+				</tbody>
+			</table>
+		</div>
+	</div></div></div></div>
+	</div></div></div></div>
+</div>
+</body>
+</html>

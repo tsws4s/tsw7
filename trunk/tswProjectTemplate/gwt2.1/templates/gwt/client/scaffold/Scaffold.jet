@@ -1,0 +1,17 @@
+<%@ jet package="com.skyway.templates" class="ScaffoldTemplate"%>
+
+package <sw:package select="$model" alias="Scaffold"var="pkg"/>;
+<java:importsLocation package="{$pkg}"/>
+
+/**
+ * Application for browsing entities.
+ */
+public class <sw:javaType select="$model" alias="Scaffold" package="false"/> implements <java:import>com.google.gwt.core.client.EntryPoint</java:import> {
+    final private <sw:javaType select="$model" alias="InjectorWrapper" emitIncludes="true" package="true"/>  injectorWrapper = <java:import>com.google.gwt.core.client.GWT</java:import>.create(<sw:javaType select="$model" alias="DesktopInjectorWrapper" package="true" emitIncludes="true"/>.class);
+
+    public void onModuleLoad() {
+        /* Get and run platform specific app */
+
+        injectorWrapper.getInjector().get<sw:javaType select="$model" alias="Scaffold" package="false"/>App().run();
+    }
+}

@@ -1,0 +1,272 @@
+<%@ jet 
+package="com.skyway.integration.data.xml.jet.data" 
+class="DataTypeTemplate" 
+%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+<%@taglib prefix="persistence" id="org.skyway.integration.data.persistence.skywayPersistenceTags"%>
+<%@taglib prefix="jaxb" id="com.skyway.integration.data.xml.skywayJAXBTags"%>
+
+package <sw:package select="$model" var="pkg"/>;
+
+<sw:javaType select="$model" package="true" var="fullyQualifiedClassName" emit="false"/>
+<java:importsLocation package="{$pkg}"/>
+<java:impliedImport name="{$fullyQualifiedClassName}"/>
+
+
+import javax.xml.bind.annotation.*;
+
+
+
+<c:if test="$model/dataStore">
+import javax.persistence.*;
+</c:if>
+
+/**
+<sw:documentation select="$model" format=" * "/>
+<sw:modelCoreReference select="$model" />
+<sw:generated />
+ */
+<persistence:idClass select="$model" package="true" />
+
+<persistence:entity select="$model"/>
+
+<c:if test="$model/dataStore">
+	<sw:namedQueriesForDataType select="$model" var="namedQueries" count="queriesCount"/>
+	<c:if test="$queriesCount > 0" >
+		@<java:import>javax.persistence.NamedQueries</java:import>({
+		<c:iterate select="$namedQueries" var="namedQuery" delimiter=",">
+			<sw:daoStatementType statementText="$namedQuery/queryText/@text" var="statementType" />
+			@<java:import>javax.persistence.NamedQuery</java:import>(
+		    	name="<c:get select="$namedQuery/@name" />",
+		    	query=<sw:encodeVariableText select="$namedQuery/@queryText" encoding="jpql" />
+			)
+		</c:iterate>})
+	</c:if>
+	
+	<sw:nativeNamedQueriesForDataType select="$model" var="namedQueries" count="queriesCount"/>
+	<c:if test="$queriesCount > 0" >
+		@<java:import>javax.persistence.NamedNativeQueries</java:import>({
+		<c:iterate select="$namedQueries" var="namedQuery" delimiter=",">
+			<sw:daoStatementType statementText="$namedQuery/queryText/@text" var="statementType" />
+			<c:if test="string($statementType) = 'select'" >
+				@<java:import>javax.persistence.NamedNativeQuery</java:import>(
+			    	name="<c:get select="$namedQuery/@name" />",
+			    	query=<sw:encodeVariableText select="$namedQuery/@queryText" encoding="jpql" />,
+			    	resultClass=<sw:javaType select="$model" package="false"/>.class
+				)
+			</c:if>
+		</c:iterate>})
+	</c:if>
+</c:if>
+
+<persistence:table select="$model"/>
+
+<jaxb:xmlAccessorType select="$model" />
+
+<jaxb:xmlType select="$model"/>
+
+<jaxb:xmlRootElement select="$model" />
+
+<sw:interfaces select="$model" var="interfaces" />
+public class <sw:javaType select="$model" package="false"/> <sw:extends select="$model"/> implements <java:import>java.io.Serializable</java:import>
+	<c:iterate select="$interfaces" var="interface">
+		, <java:import><c:get select="$interface" /></java:import>
+	</c:iterate>	{
+	private static final long serialVersionUID = 1L;
+
+	<c:iterate select="$model/fields" var="field">
+		/**
+		<sw:documentation select="$field" format=" * "/>
+		<sw:modelReference select="$field" />
+		 */
+		<c:if test="not(toBoolean($model/@annotateGetters))" >
+			<persistence:temporal select="$field"/>
+		
+			<persistence:column select="$field" dataType="$model" />
+		
+			<persistence:basic select="$field" dataType="$model" />
+		
+			<persistence:lob select="$field" dataType="$model" />
+			
+			<persistence:generatedValue select="$field"/>
+			
+			<persistence:version select="$field"/>
+		
+			<c:if test="$field/@primaryKey = 'true'">
+			<persistence:id select="$field" />
+			</c:if>
+		</c:if>
+		<jaxb:xmlElement select="$field" dataType="$model" />
+		<jaxb:xmlAttribute select="$field" dataType="$model" />
+		<c:choose>
+			<c:when test="$field/@collection = 'true'">
+				<sw:modifiers select="$field" /> <sw:declareClassVariable select="$field" ><sw:javaType select="$field" package="true" emitCollectionPolicy="concrete" emitIncludes="true"/> </sw:declareClassVariable>;
+			</c:when>
+			<c:otherwise>
+				<sw:modifiers select="$field" /> <sw:declareClassVariable select="$field" ><sw:javaType select="$field" package="true" emitIncludes="true"/> </sw:declareClassVariable><jaxb:ifAttributeConstraint select="$field" dataType="$model" constraintType="any" > = <sw:initialValue select="$field" emitDefault="true" initialValue="{$attributeValue}" /></jaxb:ifAttributeConstraint>;
+			</c:otherwise>
+		</c:choose>
+	</c:iterate>
+	
+	<c:iterate select="$model/relationships" var="relationship">
+		/**
+		<sw:documentation select="$relationship" format=" * "/>
+		<sw:modelReference select="$relationship" />
+		 */
+		<c:if test="not(toBoolean($model/@annotateGetters))" >
+			<persistence:relationshipType select="$relationship" />
+
+			<persistence:joinColumns select="$relationship" />
+		
+			<persistence:joinTable select="$relationship" />
+		</c:if>
+		<jaxb:xmlElement select="$relationship" dataType="$model" />
+	    <sw:modifiers select="$relationship" /> <sw:declareClassVariable select="$relationship"><sw:javaType select="$relationship" package="true" emitIncludes="true"/></sw:declareClassVariable>;
+	</c:iterate>
+
+	<c:iterate select="$model/fields" var="field">
+		/**
+		<sw:documentation select="$field" format=" * "/>
+		<sw:generated />
+		 */
+		public void set<sw:getVariableName select="$field" capitalize="true"/>(
+			<c:choose>
+				<c:when test="$field/@collection = 'true'">
+					<sw:javaType select="$field" package="true" emitCollectionPolicy="concrete" emitIncludes="true"/> <sw:getVariableName select="$field"/>
+				</c:when>
+				<c:otherwise>
+					<sw:javaType select="$field" package="true" emitIncludes="true"/> <sw:getVariableName select="$field"/>
+				</c:otherwise>
+			</c:choose>
+			) {
+			<jaxb:ifAttributeConstraint select="$field" dataType="$model" constraintType="fixed">
+			// This field was marked as fixed so it cannot be set
+			if (true){
+				return;
+			}
+			</jaxb:ifAttributeConstraint>
+			<c:if test="$field/dataType/@type = 'TIME'">
+				<sw:javaType select="$field" package="true" emitCollectionPolicy="concrete" emitIncludes="true" emit="false" var="timeImplType"/>
+				<c:if test="$timeImplType = 'java.util.Calendar' or $timeImplType = 'Calendar'">
+					<java:import>org.skyway.spring.util.databinding.TypeConversionUtils</java:import>.clearDateFields(<sw:getVariableName select="$field"/>);
+				</c:if>
+			</c:if>
+			this.<sw:getVariableName select="$field"/> = <sw:getVariableName select="$field"/>;
+		}
+		
+		/**
+		<sw:documentation select="$field" format=" * "/>
+		<sw:generated />
+		 */
+		<c:if test="toBoolean($model/@annotateGetters)" >
+			<persistence:temporal select="$field"/>
+		
+			<persistence:column select="$field" dataType="$model" />
+		
+			<persistence:basic select="$field" dataType="$model" />
+		
+			<persistence:lob select="$field" dataType="$model" />
+		
+			<c:if test="$field/@primaryKey = 'true'">
+			<persistence:id select="$field" />
+			</c:if>
+		</c:if>
+		public 
+			<c:choose>
+				<c:when test="$field/@collection = 'true'">
+					<sw:javaType select="$field" package="true" emitCollectionPolicy="concrete" emitIncludes="true"/>
+				</c:when>
+				<c:otherwise>
+					<sw:javaType select="$field" package="true" emitIncludes="true"/>
+				</c:otherwise>
+			</c:choose>
+			get<sw:getVariableName select="$field" capitalize="true"/>() {			
+			return this.<sw:getVariableName select="$field"/>;
+		} 
+	</c:iterate>
+
+
+	<c:iterate select="$model/relationships" var="relationship">
+		/**
+		<sw:documentation select="$relationship" format=" * "/>
+		<sw:generated />
+		 */
+		public void set<sw:getVariableName select="$relationship" capitalize="true"/>(<sw:javaType select="$relationship" package="false" emitIncludes="true"/> <sw:getVariableName select="$relationship"/>) {
+			this.<sw:getVariableName select="$relationship"/> = <sw:getVariableName select="$relationship"/>;
+		}
+		
+		/**
+		<sw:documentation select="$relationship" format=" * "/>
+		<sw:generated />
+		 */
+		<c:if test="toBoolean($model/@annotateGetters)" >
+			<persistence:relationshipType select="$relationship" />
+
+			<persistence:joinColumns select="$relationship" />
+		
+			<persistence:joinTable select="$relationship" />
+		</c:if>
+		<sw:methodAnnotation select="$model" />
+		public <sw:javaType select="$relationship" package="false" emitIncludes="true"/> get<sw:getVariableName select="$relationship" capitalize="true"/>() {
+			<sw:relationshipCardinality select="$relationship" var="cardinality" />
+			<c:if test="$cardinality = 'MANY'" >
+				if (<sw:getVariableName select="$relationship"/> == null){
+					<sw:getVariableName select="$relationship"/> = <sw:initialValue select="$relationship" emitDefault="true"/>;
+				}
+			</c:if>
+			return <sw:getVariableName select="$relationship"/>;
+		} 
+
+	</c:iterate>
+
+
+	/**
+	 <sw:generated />  
+	 */
+	public <sw:javaType select="$model" package="false"/> ()	{
+	}
+
+	/**
+	 * Copies the contents of the specified bean into this bean.
+	 *
+	 <sw:generated />  
+	 */
+	public void copy(<sw:javaType select="$model" /> that) {
+		<c:iterate select="$model/fields" var="field">
+			set<sw:getVariableName select="$field" capitalize="true"/>(that.get<sw:getVariableName select="$field" capitalize="true"/>());
+		</c:iterate>
+		<c:iterate select="$model/relationships" var="relationship" >
+			<sw:relationshipCardinality select="$relationship" var="cardinality" />
+			<c:choose>
+				<c:when test="$cardinality = 'ONE'" >
+					set<sw:getVariableName select="$relationship" capitalize="true"/> (that.get<sw:getVariableName select="$relationship" capitalize="true"/>());
+				</c:when>
+				<c:otherwise>
+					set<sw:getVariableName select="$relationship" capitalize="true"/> (new <sw:javaType select="$relationship" emitIncludes="true" package="true" emitCollectionPolicy="concrete"/> (that.get<sw:getVariableName select="$relationship" capitalize="true"/>()));
+				</c:otherwise>
+			</c:choose>
+		</c:iterate>
+	}
+
+	/**
+	 * Returns a textual representation of a bean.
+	 *
+	 <sw:generated />  
+	 */
+	public String toString(){
+		
+		<java:import>java.lang.StringBuilder</java:import> buffer = new <java:import>java.lang.StringBuilder</java:import>();
+		
+		<c:iterate select="$model/fields" var="field">
+		buffer.append("<sw:getVariableName select="$field"/>=[").append(<sw:getVariableName select="$field"/>).append("] ");
+		</c:iterate>
+		
+		return buffer.toString();
+	}	
+
+	<c:setVariable select="'main'" var="equalsTypeAlias" />
+	<c:include template="templates/common/jpa/HashCodeAndEquals.jet" />
+}

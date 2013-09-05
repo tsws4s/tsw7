@@ -1,0 +1,118 @@
+<%@ jet 
+package="com.skyway.integration.google.webtoolkit.deploy.templates" 
+class="ProjectEntryPointTemplate" 
+%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+
+
+package <sw:package select="$model" alias="gwtentrypoint" var="pkg"/>;
+<java:importsLocation package="{$pkg}"/>
+
+
+/**
+ * A simple EntryPoint that manages a Toolbar and DeckPanel that can be used to click between the different UI's for
+ * each of the generated CRUD sections.  Each CRUD Section manages a Domain Object.  This class is meant to be a simple
+ * example of loading the GWT modules that are generated from MyEclipseForSpring.  
+ * Entry point classes define <code>onModuleLoad()</code>.
+<sw:generated />
+ */
+public class <sw:javaType select="$model" alias="gwtentrypoint" package="false"/> implements <java:import>com.google.gwt.core.client.EntryPoint</java:import> {
+	
+	/**
+	* Menu Bar with one button for each CRUD section
+	<sw:generated />
+	*/
+	private <java:import>com.google.gwt.user.client.ui.VerticalPanel</java:import> menuBar = new VerticalPanel();
+	
+	/**
+	* Deck Panel to quickly switch between CRUD sections
+	<sw:generated />
+	*/
+	private <java:import>com.google.gwt.user.client.ui.DeckPanel</java:import> appRegion = new DeckPanel();
+	
+	/**
+	* The currently selected toggle button
+	<sw:generated />
+	*/
+	private <java:import>com.google.gwt.user.client.ui.ToggleButton</java:import> selectedButton = null;
+	
+	/**
+	* Invoked by GWT when the Module is loaded into the Browser and added to the page
+	<sw:generated />
+	*/
+	public void onModuleLoad() {
+	    loadSections ();
+	    
+	    // example of listening for ExceptionEvents on the EventBus
+	    registerExceptionListener();
+	    
+	    <java:import>com.google.gwt.user.client.ui.RootPanel</java:import>.get("GWTMenuBar").add(menuBar); 
+	    RootPanel.get("GWTAppRegion").add(appRegion); 
+	}
+	
+	/**
+	* Adds a CRUD Section to the UI, adds a menu bar button for it, wires it all together
+	<sw:generated />
+	*/
+	public void addSection (final <java:import><sw:javaType select="$model" alias="gwtcrudsection" package="true"/></java:import> section, <java:import>com.google.gwt.user.client.ui.Widget</java:import> display) {
+		final ToggleButton button = new ToggleButton (section.getTitle());
+		button.addStyleName("gwt-MenuBarButton");
+		
+		appRegion.add(display);
+		menuBar.add(button);
+		final int widgetIndex = menuBar.getWidgetCount() - 1;
+		
+		button.addClickHandler(new <java:import>com.google.gwt.event.dom.client.ClickHandler</java:import>() {
+			public void onClick(<java:import>com.google.gwt.event.dom.client.ClickEvent</java:import> event) {
+				selectButton (button);
+				appRegion.showWidget(widgetIndex);
+				section.load();
+			}
+		});
+		
+		// load the first section to get things started
+		if (selectedButton == null) {
+			selectButton (button);
+			appRegion.showWidget(0);
+			section.load();
+		}
+	}
+
+	/**
+	* Handles the toggle behavior and management of the currently selected button
+	<sw:generated />
+	*/
+	private void selectButton(ToggleButton button) {
+		if (selectedButton != null)
+			selectedButton.setDown(false);
+		
+		if (button != null)
+			button.setDown(true);
+		
+		selectedButton = button;
+	}
+	
+	/**
+	* Register an EventListener on the EventBus to listen for the Exceptions that may be pushed to the EventBus in the Crud Actions
+	<sw:generated />
+	*/
+	public void registerExceptionListener() {
+		<java:import><sw:javaType select="$model" alias="gwteventbus" package="true"/></java:import>.get().addHandler(<java:import><sw:javaType select="$model/project" alias="gwtcrudexceptionevent" package="true"/></java:import>.TYPE, new <java:import><sw:javaType select="$model/project" alias="gwtcrudexceptionhandler" package="true"/></java:import>() {
+			public void onException(<sw:javaType select="$model/project" alias="gwtcrudexceptionevent" package="false"/> event) {
+				// TODO customize the exception handling 
+				<java:import>com.google.gwt.user.client.Window</java:import>.alert(event.getException().getLocalizedMessage());
+			}
+		});
+	}
+	
+	/**
+	* MyEclipseForSpring will manage adding lines of code to this method to register each CRUD Section as it is generated
+	<sw:generated />
+	*/
+	private void loadSections() {
+		
+	}
+}

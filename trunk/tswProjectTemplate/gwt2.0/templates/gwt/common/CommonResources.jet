@@ -1,0 +1,41 @@
+<%@ jet 
+package="com.skyway.integration.google.webtoolkit.deploy.templates" 
+class="CommonResourcesTemplate" 
+%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+
+package <sw:package select="$model" alias="gwtcommonresources" var="pkg"/>;
+<java:importsLocation package="{$pkg}"/>
+
+/**
+* A common set of resources for images and CSS that may be reused by other GWT modules
+<sw:generated />
+*/
+public interface <sw:javaType select="$model" alias="gwtcommonresources" package="false"/> extends <java:import>com.google.gwt.resources.client.ClientBundle</java:import> {
+	public static final <sw:javaType select="$model" alias="gwtcommonresources" package="false"/> INSTANCE =  <java:import>com.google.gwt.core.client.GWT</java:import>.create(<sw:javaType select="$model" alias="gwtcommonresources" package="false"/>.class);
+	
+	@Source("closeActionClicked.png")
+	<java:import>com.google.gwt.resources.client.ImageResource</java:import> closeActionClicked();
+	
+	@Source("closeActionHover.png")
+	ImageResource closeActionHover();
+	
+	@Source("closeAction.png")
+	ImageResource closeAction();
+	
+	@Source("cancelAction.png")
+	ImageResource cancelAction();
+	
+	@Source("deleteAction.png")
+	ImageResource deleteAction();
+	
+	@Source("editAction.png")
+	ImageResource editAction();
+	
+	@Source("newAction.png")
+	ImageResource newAction();
+	
+}

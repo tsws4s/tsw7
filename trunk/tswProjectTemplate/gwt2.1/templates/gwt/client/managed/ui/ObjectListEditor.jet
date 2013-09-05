@@ -1,0 +1,232 @@
+<%@ jet package="com.skyway.templates" class="ObjectListEditorTemplate"%>
+<%@taglib prefix="swgwt" id="com.skyway.integration.google.webtoolkit.common.skywayGWTCodeGenTags"%>
+
+package <sw:package select="$model" alias="ObjectListEditor"var="pkg"/>;
+<java:importsLocation package="{$pkg}"/>
+<sw:getVariableName select="$model" uncapitalize="true" var="domainObjName" emit="false"/> <sw:getVariableName select="$model" uncapitalize="false" var="DomainObjName" emit="false"/>
+<swgwt:getPropertiesWithAction select="$model" var="pickerFields" action="PICKER" defaultToPrimaryKeys="true"/>	
+<swgwt:getGWTDataType select="$model" var="gwtDataType"/>
+<c:iterate select="$pickerFields" var="pickerField"><c:setVariable select="$pickerField/Property" var="nameLabelField"/></c:iterate>
+public class <sw:javaType select="$model" alias="ObjectListEditor" package="false"/> extends <java:import>com.google.gwt.user.client.ui.Composite</java:import>
+    implements <java:import>com.google.gwt.editor.client.ValueAwareEditor</java:import><<java:import>java.util.List</java:import><<sw:javaType select="$model" alias="ObjectProxy" package="true" emitIncludes="true"/>>>,
+    <java:import>com.google.gwt.editor.client.LeafValueEditor</java:import><List<<sw:javaType select="$model" alias="ObjectProxy" package="false"/>>> {
+
+  interface Binder extends <java:import>com.google.gwt.uibinder.client.UiBinder</java:import><<java:import>com.google.gwt.user.client.ui.Widget</java:import>, <sw:javaType select="$model" alias="ObjectListEditor" package="false"/>> {
+
+  }
+
+  interface Driver extends <java:import><swgwt:getRequestFactoryPackage suffix="gwt"/>.client.RequestFactoryEditorDriver</java:import><<java:import>java.util.List</java:import><<sw:javaType select="$model" alias="ObjectProxy" package="true" emitIncludes="true"/>>, //
+      <java:import>com.google.gwt.editor.client.adapters.ListEditor</java:import><<sw:javaType select="$model" alias="ObjectProxy" package="true" emitIncludes="true"/>, Name<java:import>com.google.gwt.user.client.ui.Label</java:import>>> {
+
+  }
+
+  class NameLabel extends Composite implements ValueAwareEditor<<sw:javaType select="$model" alias="ObjectProxy" package="false"/>> {
+    final <swgwt:labelControl select="$nameLabelField" package="true"/> <sw:getVariableName select="$nameLabelField" capitalize="false"/>Editor = new <swgwt:labelControl select="$nameLabelField" package="true"/>();
+	final <java:import>com.google.gwt.user.client.ui.Image</java:import> removeButton = new Image (<sw:javaType select="$model/project" alias="Styles" package="false" emitIncludes="true"/>.resources().removeIcon());
+	private <sw:javaType select="$model" alias="ObjectProxy" package="false"/> <c:get select="$domainObjName"/>;
+	
+    public NameLabel() {
+      this(null);
+    }
+
+    public NameLabel(final <java:import>com.google.gwt.event.shared.EventBus</java:import> eventBus) {
+     	<java:import>com.google.gwt.user.client.ui.HorizontalPanel</java:import> hp = new HorizontalPanel();
+		removeButton.addClickHandler(new <java:import>com.google.gwt.event.dom.client.ClickHandler</java:import>() {
+			public void onClick(<java:import>com.google.gwt.event.dom.client.ClickEvent</java:import> event) {
+				remove<c:get select="$DomainObjName"/>(<c:get select="$domainObjName"/>);
+			}
+		});
+		hp.add(removeButton);
+		hp.add(<sw:getVariableName select="$nameLabelField" capitalize="false"/>Editor);
+		initWidget(hp);
+    }
+
+    public void flush() {
+      // No-op
+    }
+
+    public void onPropertyChange(String... strings) {
+
+    }
+
+    public void setDelegate(
+        <java:import>com.google.gwt.editor.client.EditorDelegate</java:import><<sw:javaType select="$model" alias="ObjectProxy" package="false"/>> editorDelegate) {
+    }
+
+    public void setValue(<sw:javaType select="$model" alias="ObjectProxy" package="false"/> proxy) {
+    	<c:get select="$domainObjName"/> = proxy;
+    }
+  }
+
+  interface Style extends <java:import>com.google.gwt.resources.client.CssResource</java:import> {
+
+    String editorPanelHidden();
+
+    String editorPanelVisible();
+
+    String viewPanelHidden();
+
+    String viewPanelVisible();
+  }
+
+  /**
+   * This is used by a ListEditor.
+   */
+  private class NameLabelSource extends <java:import>com.google.gwt.editor.client.adapters.EditorSource</java:import><NameLabel> {
+
+    @Override
+    public NameLabel create(int index) {
+      NameLabel label = new NameLabel();
+      container.insert(label, index);
+      return label;
+    }
+
+    @Override
+    public void dispose(NameLabel <sw:getVariableName select="$nameLabelField" capitalize="false"/>Editor) {
+      <sw:getVariableName select="$nameLabelField" capitalize="false"/>Editor.removeFromParent();
+    }
+
+    @Override
+    public void setIndex(NameLabel editor, int index) {
+      container.insert(editor, index);
+    }
+  }
+
+  @<java:import>com.google.gwt.uibinder.client.UiField</java:import>
+  <java:import>com.google.gwt.user.client.ui.FlowPanel</java:import> container;
+
+  @<java:import>com.google.gwt.uibinder.client.UiField</java:import>(provided = true)
+  @<java:import>com.google.gwt.editor.client.Editor</java:import>.Ignore
+  <java:import>com.google.gwt.user.client.ui.ValueListBox</java:import><<sw:javaType select="$model" alias="ObjectProxy" package="false"/>> picker
+      = new ValueListBox<<sw:javaType select="$model" alias="ObjectProxy" package="false"/>>(
+      <sw:javaType select="$model" alias="ObjectProxyRenderer" package="false"/>.instance(),
+      new <swgwt:getRequestFactoryPackage suffix="gwt"/>.ui.client.EntityProxyKeyProvider<<sw:javaType select="$model" alias="ObjectProxy" package="false"/>>());
+
+  @UiField
+  <java:import>com.google.gwt.user.client.ui.Button</java:import> add;
+
+  @UiField
+  <java:import>com.google.gwt.user.client.ui.HTMLPanel</java:import> editorPanel;
+
+  @UiField
+  Button clickToEdit;
+
+  @UiField
+  HTMLPanel viewPanel;
+
+  @UiField
+  Label viewLabel;
+
+  @UiField
+  Style style;
+
+  boolean editing = false;
+
+  private List<<sw:javaType select="$model" alias="ObjectProxy" package="false"/>> values;
+
+  private final List<<sw:javaType select="$model" alias="ObjectProxy" package="false"/>> displayedList;
+
+  public <sw:javaType select="$model" alias="ObjectListEditor" package="false"/>() {
+
+    // Create the UI
+    initWidget(<java:import>com.google.gwt.core.client.GWT</java:import>.<Binder>create(Binder.class).createAndBindUi(this));
+
+    // Create the driver which manages the data-bound widgets
+    Driver driver = GWT.<Driver>create(Driver.class);
+
+    // Use a ListEditor that uses our NameLabelSource
+    ListEditor<<sw:javaType select="$model" alias="ObjectProxy" package="true" emitIncludes="true"/>, NameLabel> editor = ListEditor
+        .of(new NameLabelSource());
+
+    // Configure the driver
+    ListEditor<<sw:javaType select="$model" alias="ObjectProxy" package="true" emitIncludes="true"/>, NameLabel> listEditor = editor;
+    driver.initialize(listEditor);
+
+    /*
+     * Notice the backing list is essentially anonymous.
+     */
+    driver.display(new <java:import>java.util.ArrayList</java:import><<sw:javaType select="$model" alias="ObjectProxy" package="false"/>>());
+
+    // Modifying this list triggers widget creation and destruction
+    displayedList = listEditor.getList();
+
+    editing = false;
+  }
+
+  @<java:import>com.google.gwt.uibinder.client.UiHandler</java:import>("add")
+  public void addClicked(<java:import>com.google.gwt.event.dom.client.ClickEvent</java:import> e) {
+    displayedList.add(picker.getValue());
+    viewLabel.setText(makeFlatList(displayedList));
+  }
+
+  @UiHandler("clickToEdit")
+  public void clickToEditClicked(ClickEvent e) {
+    toggleEditorMode();
+  }
+
+  public void flush() {
+  }
+
+  public List<<sw:javaType select="$model" alias="ObjectProxy" package="false"/>> getValue() {
+    if (values == null && displayedList.size() == 0) {
+      return null;
+    }
+    return new <java:import>java.util.ArrayList</java:import><<sw:javaType select="$model" alias="ObjectProxy" package="false"/>>(displayedList);
+  }
+
+  public void remove<c:get select="$DomainObjName"/>(<sw:javaType select="$model" alias="ObjectProxy" package="false"/> <c:get select="$domainObjName"/>) {
+	displayedList.remove(<c:get select="$domainObjName"/>);
+  }
+
+  public void onLoad() {
+    makeEditable(false);
+  }
+
+  public void onPropertyChange(String... strings) {
+  }
+
+  public void setAcceptableValues(<java:import>java.util.Collection</java:import><<sw:javaType select="$model" alias="ObjectProxy" package="false"/>> proxies) {
+    picker.setAcceptableValues(proxies);
+  }
+
+  public void setDelegate(
+      EditorDelegate<List<<sw:javaType select="$model" alias="ObjectProxy" package="false"/>>> editorDelegate) {
+  }
+
+  public void setValue(List<<sw:javaType select="$model" alias="ObjectProxy" package="false"/>> values) {
+    this.values = values;
+    makeEditable(editing = false);
+    if (displayedList != null) {
+      displayedList.clear();
+    }
+
+    if (values != null) {
+      for (<sw:javaType select="$model" alias="ObjectProxy" package="false"/> e : values) {
+        displayedList.add(e);
+      }
+    }
+    viewLabel.setText(makeFlatList(values));
+  }
+
+  private void makeEditable(boolean editable) {
+    if (editable) {
+      editorPanel.setStylePrimaryName(style.editorPanelVisible());
+      viewPanel.setStylePrimaryName(style.viewPanelHidden());
+      clickToEdit.setText("Done");
+    } else {
+      editorPanel.setStylePrimaryName(style.editorPanelHidden());
+      viewPanel.setStylePrimaryName(style.viewPanelVisible());
+      clickToEdit.setText("Edit");
+    }
+  }
+
+  private String makeFlatList(Collection<<sw:javaType select="$model" alias="ObjectProxy" package="false"/>> values) {
+    return <sw:javaType select="$model/project" alias="CollectionRenderer" package="true" emitIncludes="true"/>.of(<sw:javaType select="$model" alias="ObjectProxyRenderer" package="true" emitIncludes="true"/>.instance())
+        .render(values);
+  }
+
+  private void toggleEditorMode() {
+    editing = !editing;
+    makeEditable(editing);
+  }
+}

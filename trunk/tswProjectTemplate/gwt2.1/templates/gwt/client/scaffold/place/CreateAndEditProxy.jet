@@ -1,0 +1,50 @@
+<%@ jet package="com.skyway.templates" class="CreateAndEditProxyTemplate"%>
+<%@taglib prefix="swgwt" id="com.skyway.integration.google.webtoolkit.common.skywayGWTCodeGenTags"%>
+
+package <sw:package select="$model" alias="CreateAndEditProxy"var="pkg"/>;
+<java:importsLocation package="{$pkg}"/>
+
+/**
+ * Extends {@link AbstractProxyEditActivity} to first create an instance to edit
+ * 
+ * @param <P> the type of proxy to create and edit
+ */
+public abstract class <sw:javaType select="$model" alias="CreateAndEditProxy" package="false"/><P extends <java:import><swgwt:getRequestFactoryPackage/>.shared.EntityProxy</java:import>> extends AbstractProxyEditActivity<P> {
+
+  private final P proxy;
+  private final <java:import>com.google.gwt.place.shared.PlaceController</java:import> placeController;
+  private Class<P> proxyClass;
+
+  public <sw:javaType select="$model" alias="CreateAndEditProxy" package="false"/>(Class<P> proxyClass, <java:import><swgwt:getRequestFactoryPackage/>.shared.RequestContext</java:import> request,
+      ProxyEditView<P, ?> view, PlaceController placeController) {
+    super(view, placeController);
+    this.proxy = request.create(proxyClass);
+    this.placeController = placeController;
+    this.proxyClass = proxyClass;
+  }
+
+  @Override
+  public void start(<java:import>com.google.gwt.user.client.ui.AcceptsOneWidget</java:import> display, <java:import>com.google.gwt.event.shared.EventBus</java:import> eventBus) {
+    super.start(display, eventBus);
+  }
+
+  /**
+   * Called when the user cancels or has successfully saved. Refines the default
+   * implementation to clear the display given at {@link #start} on cancel.
+   * 
+   * @param saved true if changes were comitted, false if user canceled
+   */
+  @Override
+  protected void exit(boolean saved) {
+    if (!saved) {
+      placeController.goTo(new ProxyListPlace(proxyClass));
+    } else {
+      super.exit(saved);
+    }
+  }
+
+  @Override
+  protected P getProxy() {
+    return proxy;
+  }  
+}

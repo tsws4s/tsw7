@@ -1,0 +1,59 @@
+<%@ jet 
+package="com.skyway.integration.google.webtoolkit.deploy.templates" 
+class="CrudExceptionTemplate" 
+%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+
+
+package <sw:package select="$model" alias="gwtcrudexception" var="pkg"/>;
+<java:importsLocation package="{$pkg}"/>
+
+/**
+ * An Exception extension that is used in the contract between the client and server layers.
+ * Any exception from the Server that is thrown while invoking CRUD operations will be wrapped
+ * in this exception.  When these Exceptions occur they are pushed on the EventBus so that listeners
+ * may respond to the exceptions.
+<sw:generated />
+ */
+public class <sw:javaType select="$model" alias="gwtcrudexception" package="false"/>  extends Exception implements <java:import>java.io.Serializable</java:import>{
+
+	/**
+	<sw:generated />
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * Constructor
+	<sw:generated />
+	 */
+	public <sw:javaType select="$model" alias="gwtcrudexception" package="false"/>() {
+		super();
+	}
+
+	/**
+	 * Constructor with a message
+	<sw:generated />
+	 */
+	public <sw:javaType select="$model" alias="gwtcrudexception" package="false"/>(String message) {
+		super(message);
+	}
+
+	/**
+	 * Constructor taking root cause
+	<sw:generated />
+	 */
+	public <sw:javaType select="$model" alias="gwtcrudexception" package="false"/>(Throwable t) {
+		super(t);
+	}
+
+	/**
+	 * Constructor taking message and root cause
+	<sw:generated />
+	 */
+	public <sw:javaType select="$model" alias="gwtcrudexception" package="false"/>(String message, Throwable t) {
+		super(message, t);
+	}
+}

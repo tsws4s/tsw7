@@ -1,0 +1,44 @@
+<%@ jet package="com.skyway.templates" class="ScaffoldModuleTemplate"%>
+
+package <sw:package select="$model" alias="ScaffoldModule"var="pkg"/>;
+<java:importsLocation package="{$pkg}"/>
+
+public class <sw:javaType select="$model" alias="ScaffoldModule" package="false"/> extends <java:import>com.google.gwt.inject.client.AbstractGinModule</java:import> {
+
+	@Override
+    protected void configure() {
+        bind(EventBus.class).to(<java:import>com.google.gwt.event.shared.SimpleEventBus</java:import>.class).in(<java:import>com.google.inject.Singleton</java:import>.class);
+        bind(<sw:javaType select="$model" alias="ApplicationRequestFactory" package="true"/> .class).to<java:import>com.google.inject.Provider</java:import>(RequestFactoryProvider.class).in(Singleton.class);
+        bind(<java:import>com.google.gwt.place.shared.PlaceController</java:import>.class).toProvider(PlaceControllerProvider.class).in(Singleton.class);
+    }
+
+    static class PlaceControllerProvider implements Provider<PlaceController> {
+
+        private final <java:import>com.google.gwt.event.shared.EventBus</java:import> eventBus;
+
+        @<java:import>com.google.inject.Inject</java:import>
+        public PlaceControllerProvider(EventBus eventBus) {
+            this.eventBus = eventBus;
+        }
+
+        public PlaceController get() {
+            return new PlaceController(eventBus);
+        }
+    }
+
+    static class RequestFactoryProvider implements Provider<<java:import><sw:javaType select="$model" alias="ApplicationRequestFactory" package="true"/></java:import>> {
+
+        private final EventBus eventBus;
+
+        @Inject
+        public RequestFactoryProvider(EventBus eventBus) {
+            this.eventBus = eventBus;
+        }
+
+        public <sw:javaType select="$model" alias="ApplicationRequestFactory" package="false"/> get() {
+            <sw:javaType select="$model" alias="ApplicationRequestFactory" package="true"/> requestFactory = <java:import>com.google.gwt.core.client.GWT</java:import>.create(<sw:javaType select="$model" alias="ApplicationRequestFactory" package="true"/>.class);
+            requestFactory.initialize(eventBus);
+            return requestFactory;
+        }
+    }
+}

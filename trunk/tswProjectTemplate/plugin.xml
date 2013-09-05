@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><?eclipse version="3.0"?>
+<plugin>
+   <extension id="" name="" point="org.eclipse.jet.transform">
+      <transform enableEmbeddedExpressions="false" startTemplate="templates/main.jet" templateLoaderClass="tswProjectTemplate.compiled._jet_transformation">
+         <description/>
+         <tagLibraries>
+            <importLibrary autoImport="true" id="org.eclipse.jet.controlTags" usePrefix="c"/>
+            <importLibrary autoImport="true" id="org.eclipse.jet.javaTags" usePrefix="java"/>
+            <importLibrary autoImport="true" id="org.eclipse.jet.formatTags" usePrefix="f"/>
+            <importLibrary autoImport="false" id="org.eclipse.jet.workspaceTags" usePrefix="ws"/>
+         <importLibrary autoImport="true" id="org.skyway.integration.data.persistence.skywayPersistenceTags" usePrefix="persistence"/><importLibrary autoImport="true" id="org.skyway.integration.java.spring.skywaySpringCodeGenTags" usePrefix="swspr"/><importLibrary autoImport="true" id="com.skyway.integration.flex.common.skywayFlexCodeGenTags" usePrefix="swflex"/><importLibrary autoImport="true" id="com.skyway.integration.service.webservice.skywayJAXWSTags" usePrefix="jaxws"/><importLibrary autoImport="true" id="org.skyway.integration.java.spring.webflow.skywaySpringWebFlowCodeGenTags" usePrefix="swswf"/><importLibrary autoImport="true" id="com.skyway.integration.service.javascript.dwr.skywayDWRCodeGenTags" usePrefix="swdwr"/><importLibrary autoImport="true" id="org.skyway.integration.java.skywayCodeGenTags" usePrefix="sw"/></tagLibraries>
+      </transform>
+   </extension>
+</plugin>

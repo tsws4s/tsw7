@@ -1,0 +1,37 @@
+<%@ jet 
+package="com.skyway.integration.google.webtoolkit.deploy.templates" 
+class="RelationshipsWidgetUiXmlTemplate" 
+%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+<%@taglib prefix="swgwt" id="com.skyway.integration.google.webtoolkit.common.skywayGWTCodeGenTags"%>
+<swgwt:getGWTDataType select="$model" var="gwtDataType"/>
+<ui:UiBinder
+  ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
+  ui:generateKeys="com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator"
+  ui:generateLocales="default"
+  xmlns:ui='urn:ui:com.google.gwt.uibinder'
+  xmlns:dp='urn:import:com.google.gwt.user.datepicker.client'
+  xmlns:gc='urn:import:<sw:package select="$model/project" alias="gwtaction"/>'
+   <c:iterate select="$model/relationships" var="relationship">
+	<sw:relationshipCardinality select="$relationship" var="cardinality" />
+	<c:setVariable select="$relationship/targetDataType" var="dataType" />
+	xmlns:<sw:getVariableName select="$relationship" capitalize="false"/>='urn:import:<sw:package select="$dataType" alias="gwtmultirelatedwidget"/>'
+ 	</c:iterate>
+  xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+  <ui:style src='../<sw:javaType select="$model" alias="gwtcss" package="false"/>.css'/>
+  <g:VerticalPanel addStyleNames="{style.gwt-CrudRelatedSection}" ui:field="relationships">
+  <c:iterate select="$model/relationships" var="relationship">
+	<sw:relationshipCardinality select="$relationship" var="cardinality" />
+	<c:setVariable select="$relationship/targetDataType" var="dataType" />
+	<c:if test="$cardinality = 'MANY'" >
+		<<sw:getVariableName select="$relationship" capitalize="false"/>:<sw:javaType select="$dataType" alias="gwtmultirelatedwidget" package="false"/> ui:field="<sw:getVariableName select="$relationship" capitalize="false"/>Widget"/>
+	</c:if>
+	<c:if test="$cardinality = 'ONE'" >
+		<<sw:getVariableName select="$relationship" capitalize="false"/>:<sw:javaType select="$dataType" alias="gwtsinglerelatedwidget" package="false"/> ui:field="<sw:getVariableName select="$relationship" capitalize="false"/>Widget"/>	
+	</c:if>
+	</c:iterate>
+  </g:VerticalPanel>
+</ui:UiBinder>

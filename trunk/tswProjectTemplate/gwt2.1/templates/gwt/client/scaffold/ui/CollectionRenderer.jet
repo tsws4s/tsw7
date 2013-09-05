@@ -1,0 +1,39 @@
+<%@ jet package="com.skyway.templates" class="CollectionRendererTemplate"%>
+
+package <sw:package select="$model" alias="CollectionRenderer"var="pkg"/>;
+<java:importsLocation package="{$pkg}"/>
+
+/**
+ * A renderer for <java:import>java.util.Collection</java:import>s that is parameterized by another renderer.
+ */
+public class Collection<java:import>com.google.gwt.text.shared.Renderer</java:import><E, R extends Renderer<E>, T extends Collection<E>>
+    extends <java:import>com.google.gwt.text.shared.AbstractRenderer</java:import><T> implements Renderer<T> {
+
+  public static <E, R extends Renderer<E>,
+      T extends Collection<E>> <sw:javaType select="$model" alias="CollectionRenderer" package="false"/><E, R, T> of(
+      R r) {
+    return new <sw:javaType select="$model" alias="CollectionRenderer" package="false"/><E, R, T>(r);
+  }
+
+  private R elementRenderer;
+
+  public <sw:javaType select="$model" alias="CollectionRenderer" package="false"/>(R elementRenderer) {
+    this.elementRenderer = elementRenderer;
+  }
+
+  public String render(T t) {
+    StringBuffer toReturn = new StringBuffer();
+    boolean first = true;
+    if (t != null) {
+      for (E e : t) {
+        if (!first) {
+          toReturn.append(',');
+        } else {
+          first = false;
+        }
+        toReturn.append(elementRenderer.render(e));
+      }
+    }
+    return toReturn.toString();
+  }
+}

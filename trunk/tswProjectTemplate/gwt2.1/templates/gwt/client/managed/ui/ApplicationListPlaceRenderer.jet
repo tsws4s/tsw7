@@ -1,0 +1,32 @@
+<%@ jet package="com.skyway.templates" class="ApplicationListPlaceRendererTemplate"%>
+<%@taglib prefix="swgwt" id="com.skyway.integration.google.webtoolkit.common.skywayGWTCodeGenTags"%>
+package <sw:package select="$model" alias="ApplicationListPlaceRenderer"var="pkg"/>;
+<java:importsLocation package="{$pkg}"/>
+
+/**
+*
+*/
+public class <sw:javaType select="$model" alias="ApplicationListPlaceRenderer" package="false"/> extends <java:import>com.google.gwt.text.shared.AbstractRenderer</java:import><<sw:javaType select="$model" alias="ProxyListPlace" package="true" emitIncludes="true"/>> {
+
+	public String render(<sw:javaType select="$model" alias="ProxyListPlace" package="true" emitIncludes="true"/> object) {
+<sw:injectJavaMethod method="render">
+	
+		return new <sw:javaType select="$model" alias="ApplicationEntityTypesProcessor" package="true"/><String>() {
+
+	 <c:iterate select="$model/dataTypes" var="dataType">
+	 <swgwt:getGWTDataType select="$dataType" var="gwtDataType"/>
+	 <swgwt:isGWTDataType select="$dataType" var="isGWTDataType"/>
+	 <c:if test="$isGWTDataType">
+	 <sw:injectJava anchor="<String>() {">
+	   <sw:getVariableName select="$dataType" uncapitalize="true" var="domainObjName" emit="false"/> <sw:getVariableName select="$dataType" uncapitalize="false" var="DomainObjName" emit="false"/>   
+	  @Override
+      public void handle<c:get select="$DomainObjName"/>(<sw:javaType select="$dataType" alias="ObjectProxy" package="true" emitIncludes="true"/> isNull) {
+        setResult("<c:get select="$gwtDataType/@display"/>s");
+      }
+    </sw:injectJava>
+    </c:if>
+	 </c:iterate>	
+		}.process(object.getProxyClass());
+</sw:injectJavaMethod>
+	}
+}
