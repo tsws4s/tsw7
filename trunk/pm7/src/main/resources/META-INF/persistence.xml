@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="1.0" xmlns="http://java.sun.com/xml/ns/persistence" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd">
+	
+	
+		<persistence-unit name="mySql_pm7" transaction-type="JTA" >
+			<description>generated-persistence-unit</description>
+					<provider>org.hibernate.ejb.HibernatePersistence</provider>
+      			<class>pm7.domain.Statusupdate</class>
+      			<class>pm7.domain.Releaseplan</class>
+      			<class>pm7.domain.Requirement</class>
+      			<class>pm7.domain.Changerequest</class>
+      			<class>pm7.domain.Testcasestep</class>
+      			<class>pm7.domain.Invoice</class>
+      			<class>pm7.domain.Feature</class>
+      			<class>pm7.domain.Authority</class>
+      			<class>pm7.domain.Projecttemplate</class>
+      			<class>pm7.domain.Account</class>
+      			<class>pm7.domain.Defect</class>
+      			<class>pm7.domain.Testcase</class>
+      			<class>pm7.domain.Invoiceitem</class>
+      			<class>pm7.domain.Timeentry</class>
+      			<class>pm7.domain.Task</class>
+      			<class>pm7.domain.Project</class>
+      			<class>pm7.domain.Attachment</class>
+      			<class>pm7.domain.Client</class>
+      			<class>pm7.domain.User</class>
+      			<class>pm7.domain.Person</class>
+      			<class>pm7.domain.Projectteam</class>
+   			<exclude-unlisted-classes>true</exclude-unlisted-classes>
+		</persistence-unit>
+
+	
+</persistence>
