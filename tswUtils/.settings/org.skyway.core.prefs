@@ -1,0 +1,6 @@
+#org.skyway.core settings
+#Sat Feb 16 14:43:45 CST 2013
+version=10.0.0.qualifier
+default.top.level.package=timeslot
+models.folder.name=.springDSL
+initialized=true
