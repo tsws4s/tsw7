@@ -1,0 +1,29 @@
+	.theme-bar-color 											{ background-color:#000; }
+	
+	/*** Body - Background color *******************************/
+	body 														{ background:#fff; }	
+
+	/*** Body - Background transparency ************************/
+	#style-background 											{ opacity:1;background:url('../images/back-body-texture.png'); }
+	
+	/*** Body - Top light transparency *************************/
+	#style-shadow 												{ opacity:1;background:url('../images/back-body-light.png') no-repeat center top;}
+	
+	/*** Panel - Title bar color  *****   Default (BLUE)  ********************/
+	.panel .title,
+	.panel .title-large 										{ background:#019ddd; }
+	.tabularData .sorting_asc									{ color:#000;background:#0370ae; opacity:1; }
+	.tabularData tfoot,
+	.tabularData thead 											{ color:#fff;background:#0370ae; opacity:0.7;}
+
+	#header #notice-wrapper-left								{ background:url('../images/back-bar-header.png') repeat-x left top;height:40px;margin-bottom:10px; }
+
+	/*** Panel - Gradient transparency *************************/
+	.panel .title .theme,
+	.panel .title-large .theme 									{ opacity:1; }
+	
+	/*** Bar - Button Bar    rgb(209, 209, 209)  *************************/
+	.button-bar													{ padding-left:100px;padding-top:7px;padding-bottom:7px;background-color:rgb(209, 209, 209); }
+
+
+}

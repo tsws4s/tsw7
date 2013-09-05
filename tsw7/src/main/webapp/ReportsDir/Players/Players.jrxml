@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version last-->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Players1" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" whenResourceMissingType="Empty" uuid="086b77eb-7710-4fbf-b8b6-08060d3c0544">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="MySQL_tsw7"/>
+	<import value="static net.sf.jasperreports.expressions.functions.LogicalFunctions.*"/>
+	<style name="Title" forecolor="#FFFFFF" fontName="Times New Roman" fontSize="50" isBold="false" pdfFontName="Times-Bold"/>
+	<style name="SubTitle" forecolor="#CCCCCC" fontName="Times New Roman" fontSize="18" isBold="false" pdfFontName="Times-Roman"/>
+	<style name="Column header" forecolor="#666666" fontName="Times New Roman" fontSize="14" isBold="true" pdfFontName="Times-Roman"/>
+	<style name="Detail" mode="Transparent" fontName="Times New Roman" pdfFontName="Times-Roman"/>
+	<style name="Row" mode="Transparent" fontName="Times New Roman" pdfFontName="Times-Roman">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></conditionExpression>
+			<style mode="Opaque" backcolor="#F0EFEF"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="tswAcctId" class="java.lang.Integer" isForPrompting="false">
+		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select t1.teamName , tp1.amtPaid, tp1.signedWaiverYN, c.firstname, c.lastname, p.programName,sp.sportPositionName
+from Team t1, TeamPlayers tp1, Customer c, Program p, SportPosition sp 
+where tp1.tswAcctFK = $P{tswAcctId}  and
+p.leagueYN = 1 and
+tp1.customerFK = c.customerId and
+tp1.teamFK = t1.teamId and
+tp1.programFK = p.programId and
+tp1.sportPositionFK = sp.sportPositionId
+ order by p.programName,t1.teamName,c.lastname;]]>
+	</queryString>
+	<field name="teamName" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="amtPaid" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="signedWaiverYN" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="firstname" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="lastname" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="programName" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="sportPositionName" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<sortField name="programName"/>
+	<sortField name="teamName"/>
+	<sortField name="lastname"/>
+	<group name="Group1" isReprintHeaderOnEachPage="true">
+		<groupExpression><![CDATA[$F{programName}+" - "+$F{teamName}]]></groupExpression>
+		<groupHeader>
+			<band height="37">
+				<frame>
+					<reportElement uuid="ecec0cd3-857b-4e4a-abbb-60ebec57220a" mode="Opaque" x="0" y="7" width="555" height="24" forecolor="#B89F7D" backcolor="#000000"/>
+					<textField isStretchWithOverflow="true">
+						<reportElement uuid="e8d07461-adde-4860-bd6f-6839b4bb6b77" style="SubTitle" x="2" y="0" width="528" height="24" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Group1" forecolor="#FFFFFF"/>
+						<textElement verticalAlignment="Middle">
+							<font fontName="Verdana" size="14" isBold="false"/>
+							<paragraph leftIndent="10"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$F{programName}+" - "+$F{teamName}]]></textFieldExpression>
+					</textField>
+				</frame>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="6"/>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="132" splitType="Stretch">
+			<frame>
+				<reportElement uuid="ba32615f-3aad-4d12-8f40-82b5b240e530" mode="Opaque" x="0" y="0" width="553" height="95" backcolor="#000000"/>
+				<staticText>
+					<reportElement uuid="ed62747c-f43d-430f-88cb-ee84d6bc08b0" style="Title" x="20" y="0" width="520" height="66"/>
+					<textElement>
+						<font isBold="false"/>
+					</textElement>
+					<text><![CDATA[Team Players for League]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="b7931f9f-9a04-42cb-bfbe-0837d6dd0cf4" style="SubTitle" x="360" y="60" width="184" height="29"/>
+					<textElement>
+						<font size="22" isBold="false"/>
+					</textElement>
+					<text><![CDATA[Team Sportsware]]></text>
+				</staticText>
+			</frame>
+			<frame>
+				<reportElement uuid="8299afc1-726f-4505-86b8-5048925b9ab0" mode="Opaque" x="0" y="95" width="553" height="37" forecolor="#000000" backcolor="#CC0000"/>
+				<textField pattern="EEEEE dd MMMMM yyyy">
+					<reportElement uuid="1051f36d-9a87-46d6-a6dc-a0a1cacf1f8e" x="400" y="6" width="144" height="20" forecolor="#FFFFFF"/>
+					<textElement textAlignment="Right">
+						<font size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="27" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="8b0565f2-76ca-4d00-9345-fd3f0efdf116" style="Column header" x="0" y="4" width="250" height="18" forecolor="#000000"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Verdana" isBold="false"/>
+					<paragraph leftIndent="10"/>
+				</textElement>
+				<text><![CDATA[Player Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="7a3b1dd9-3993-4a2f-8f9b-8b14925c5f20" style="Column header" x="412" y="4" width="80" height="18" forecolor="#000000"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Verdana" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Paid]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="ae51216a-f9d6-475d-960c-760a41fab412" style="Column header" x="490" y="4" width="63" height="18" forecolor="#000000"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Verdana" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Waiver]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="11b83c90-e849-4dee-ae51-81aaeb4d751b" style="Column header" x="250" y="4" width="162" height="18" forecolor="#000000"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Verdana" isBold="false"/>
+					<paragraph leftIndent="10"/>
+				</textElement>
+				<text><![CDATA[Position]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="27" splitType="Stretch">
+			<frame>
+				<reportElement uuid="99d5e721-d122-4fb4-ad15-d0d7e446b3e1" style="Row" mode="Opaque" x="0" y="0" width="555" height="27"/>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement uuid="d8e24970-6e2e-4ec4-a96f-084857e1afcd" style="Detail" positionType="Float" x="414" y="0" width="76" height="27"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Verdana" size="12"/>
+						<paragraph rightIndent="10"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{amtPaid}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+					<reportElement uuid="a653887c-0889-4460-8397-9eb179fcfb56" style="Detail" positionType="Float" x="490" y="0" width="63" height="27"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Verdana" size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($F{signedWaiverYN}>0,"Yes","")]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement uuid="65c4660c-8cda-4c76-affc-6684046e6b4d" style="Detail" positionType="Float" x="0" y="0" width="250" height="27"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Verdana" size="14"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{firstname}+" "+$F{lastname}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement uuid="8f10e96e-8339-49c2-b9f2-0c9d075d4782" x="250" y="0" width="162" height="27"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Verdana" size="12"/>
+						<paragraph leftIndent="10"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{sportPositionName}]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="12" splitType="Stretch">
+			<line>
+				<reportElement uuid="3010623c-2d51-4015-88d8-fc140f1df6e7" positionType="FixRelativeToBottom" x="0" y="3" width="555" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="25" splitType="Stretch">
+			<frame>
+				<reportElement uuid="9a07e8d0-8e9a-4beb-a2d4-9a7539b4f4c1" mode="Opaque" x="0" y="1" width="555" height="24" forecolor="#D0B48E" backcolor="#000000"/>
+				<textField evaluationTime="Report">
+					<reportElement uuid="2b889357-f7d2-4d6b-bbf5-1d3fad67e5a6" style="Column header" x="513" y="0" width="40" height="20" forecolor="#FFFFFF"/>
+					<textElement verticalAlignment="Middle">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement uuid="0bf67532-998f-40d4-b588-91e7732b0d19" style="Column header" x="433" y="0" width="80" height="20" forecolor="#FFFFFF"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+				</textField>
+				<textField pattern="EEEEE dd MMMMM yyyy">
+					<reportElement uuid="a9108df6-ac07-4176-af66-d5fa1e41642e" style="Column header" x="2" y="1" width="197" height="20" forecolor="#FFFFFF"/>
+					<textElement verticalAlignment="Middle">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

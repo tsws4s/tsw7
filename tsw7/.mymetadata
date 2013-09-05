@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-module
+  type="WEB"
+  name="tsw7"
+  id="myeclipse.1349569795996"
+  context-root="/tsw7"
+  j2ee-spec="6.0"
+  archive="tsw7.war">
+  <attributes>
+    <attribute name="webrootdir" value="src/main/webapp" />
+  </attributes>
+</project-module>
+
