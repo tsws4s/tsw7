@@ -1,0 +1,164 @@
+ 	
+	/***
+	 * 1. CUSTOMER, firstname, lastname, yearBorn, email, phone, address, city, state, zipcode
+	 * 2. PROGRAM, programName, sportName, startDate, endDate, levelName, price, resourceName, coordFname, coordLname
+	 * 3. PARTICIPANT, programName, programGroup, partFname, partLname, yearBorn, group, amtPaid, signedWaiver
+	 * 4. LEAGUE, leagueName, sportName, startDate, endDate, levelName, price, resourceName, coordFname, coordLname
+	 * 5. TEAM, leagueName, teamName, CoachFname, CoachLname, teamGroup
+	 * 6. TEAMPLAYER, leagueName, teamName, positionName, playerFname, playerLname, yearBorn, amtPaid, signedWaiver, group
+	 * 7. GAME, leagueName, resourceName, gameDate, startTime, endTime, homeTeamName, visitorTeamName, refFname, refLname
+	 * 8. GAMESCORE, leagueName, gameDate, homeTeamName, visitorTeamName, homeScore, visitorScore
+	 * 9. GAMESTATS, leagueName, gameDate, homeTeamName, visitorTeamName, playerFname, playerLname, statTime, statTypeName, statValue
+	 *10. EVENT, resourceName, eventName, eventType, eventDesc, eventDate, startTime, endTime
+	 **/
+ 
+    private static final String THEME_BLUE = "Blue";
+ 	private static final String DEFLT_PWD = "changeme";
+    
+	//  Import, Tables and Columns
+	public static String FILE_DATA_TYPE_CUSTOMER 	= "Customer";
+			private static final String CUST_FNAME = "custFname";
+			private static final String CUST_LNAME = "custLname";
+			private static final String CUST_YRBORN = "yearBorn";
+			private static final String CUST_EMAIL = "email";
+			private static final String CUST_PHONE = "phone";
+			private static final String CUST_ADDRESS = "address";
+			private static final String CUST_CITY = "city";
+			private static final String CUST_STATE = "state";
+			private static final String CUST_ZIPCODE = "zipcode";
+
+	public static String FILE_DATA_TYPE_PROGRAM		= "Program";
+	public static String FILE_DATA_TYPE_LEAGUE		= "Program";
+			private static final String PGM_NAME = "programName";
+			private static final String PGM_SPORTNAME = "sportName";
+			private static final String PGM_STARTDATE = "startDate";
+			private static final String PGM_ENDDATE = "endDate";
+			private static final String PGM_LEVELNAME = "levelName";
+			private static final String PGM_PRICE = "price";
+			private static final String PGM_RESOURCENAME = "resourceName";
+			private static final String PGM_COORDFNAME = "coordFname";
+			private static final String PGM_COORDLNAME = "coordLname";
+
+	public static String FILE_DATA_TYPE_PARTICIPANT = "Participant";
+			private static final String PART_PGMNAME = "programName";
+			private static final String PART_PGMGRP = "programGroup";
+			private static final String PART_FNAME = "partFname";
+			private static final String PART_LNAME = "partLname";
+			private static final String PART_YRBORN = "yearBorn";
+			private static final String PART_GROUP = "group";
+			private static final String PART_AMTPD = "amtPaid";
+			private static final String PART_WAIVER = "signedWaiver";
+
+	public static String FILE_DATA_TYPE_TEAMS 		= "Team";
+			private static final String TM_LGNAME = "leagueName";
+			private static final String TM_NAME = "teamName";;
+			private static final String TM_COACHFNAME = "CoachFname";
+			private static final String TM_COACHLNAME = "CoachLname";
+			private static final String TM_GROUP = "teamGroup";
+
+	public static String FILE_DATA_TYPE_TEAMPLAYER 	= "Teamplayers";
+			private static final String TMPLR_LGNAME = "leagueName";
+			private static final String TMPLR_TMNAME = "teamName";
+			private static final String TMPLR_POSNAME = "positionName";
+			private static final String TMPLR_FNAME = "playerFname";
+			private static final String TMPLR_LNAME = "playerLname";
+			private static final String TMPLR_YRBORN = "yearBorn";
+			private static final String TMPLR_AMTPD = "amtPaid";
+			private static final String TMPLR_WAIVER = "signedWaiver";
+			private static final String TMPLR_GROUP = "group";
+
+	public static String FILE_DATA_TYPE_GAME 		= "Game";
+	public static String FILE_DATA_TYPE_GAMESCORE 	= "Game";
+			private static final String GM_LGNAME = "leagueName";
+			private static final String GM_RESNAME = "resourceName";
+			private static final String GM_DATE = "gameDate";
+			private static final String GM_START = "startTime";
+			private static final String GM_END = "endTime";
+			private static final String GM_HTMNAME = "homeTeamName";
+			private static final String GM_VTMNAME = "visitorTeamName";
+			private static final String GM_REFFNAME = "refFname";
+			private static final String GM_REFLNAME = "refLname";
+			private static final String GM_HSCORE = "homeScore";
+			private static final String GM_VSCORE = "visitorScore";
+
+	public static String FILE_DATA_TYPE_GAMESTATS 	= "Gamestats";
+			private static final String GMSTS_LGNAME = "leagueName";
+			private static final String GMSTS_DATE = "gameDate";
+			private static final String GMSTS_HTMNAME = "homeTeamName";
+			private static final String GMSTS_VTMNAME = "visitorTeamName";
+			private static final String GMSTS_PLYRFNAME = "playerFname";
+			private static final String GMSTS_PLYRLNAME = "playerLname";
+			private static final String GMSTS_TIME = "statTime";
+			private static final String GMSTS_TYPENAME = "statTypeName";
+			private static final String GMSTS_VALUE = "statValue";
+
+	public static String FILE_DATA_TYPE_EVENT 		= "Event";
+			private static final String EVT_RESNAME = "resourceName";
+			private static final String EVT_NAME = "eventName";
+			private static final String EVT_TYPE = "eventType";
+			private static final String EVT_DESC = "eventDesc";
+			private static final String EVT_DATE = "eventDate";
+			private static final String EVT_START = "startTime";
+			private static final String EVT_END = "endTime";
+
+
+
+
+	
+/*	
+ * public void loadImportFileToSQL(HttpServletRequest request, ImportFile importFile, Connection connection, boolean truncateBeforeLoad) throws Exception {
+		if(null == connection) {
+			throw new Exception("Not a valid connection.");
+		}
+		String questionmarks = StringUtils.repeat("?,", importFile.getHeaderRow().length);
+		questionmarks = (String) questionmarks.subSequence(0, questionmarks.length() - 1);
+		String query = SQL_INSERT.replaceFirst(TABLE_REGEX, importFile.getFileDataType());
+		query = query.replaceFirst(KEYS_REGEX, StringUtils.join(importFile.getHeaderRow(), ","));
+		query = query.replaceFirst(VALUES_REGEX, questionmarks);
+		// System.out.println("Query: " + query);
+		String[] nextLine;
+		PreparedStatement ps = null;
+		try {		
+			connection.setAutoCommit(false);
+			ps = connection.prepareStatement(query);
+			if(truncateBeforeLoad) {
+				//delete data from table before loading csv
+				connection.createStatement().execute("DELETE FROM " + importFile.getFileDataType());
+			}
+			final int batchSize = 1000;
+			int count = 0;
+			Date date = null;
+			Iterator<String[]> csvIter = importFile.getImportRecords().iterator();
+			while (csvIter.hasNext()) {
+				nextLine = (String[]) csvIter.next();
+				if (null != nextLine) {
+					int index = 1;
+					for (String string : nextLine) {
+						date = DateUtil.convertToDate(string);
+						if (null != date) {
+							ps.setDate(index++, new java.sql.Date(date
+									.getTime()));
+						} else {
+							ps.setString(index++, string);
+						}
+					}
+					ps.addBatch();
+				}
+				if (++count % batchSize == 0) {
+					ps.executeBatch();
+				}
+			}
+			ps.executeBatch(); // insert remaining records
+			connection.commit();
+		} catch (Exception e) {
+			connection.rollback();
+			e.printStackTrace();
+			throw new Exception("Error occured while loading data from file to database." + e.getMessage());
+		} finally {
+			if (null != ps)
+				ps.close();
+			if (null != connection)
+				connection.close();
+		}
+	}
+*/
