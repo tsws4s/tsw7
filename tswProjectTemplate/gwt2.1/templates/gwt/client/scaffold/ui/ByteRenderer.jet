@@ -1,0 +1,32 @@
+<%@ jet package="com.skyway.templates" class="ByteRendererTemplate"%>
+
+package <sw:package select="$model" alias="ByteRenderer"var="pkg"/>;
+<java:importsLocation package="{$pkg}"/>
+
+/**
+ * A simple renderer of Byte values.
+ */
+public class Byte<java:import>com.google.gwt.text.shared.Renderer</java:import> extends <java:import>com.google.gwt.text.shared.AbstractRenderer</java:import><Byte> {
+  private static <sw:javaType select="$model" alias="ByteRenderer" package="false"/> INSTANCE;
+
+  /**
+   * @return the instance
+   */
+  public static Renderer<Byte> instance() {
+    if (INSTANCE == null) {
+      INSTANCE = new <sw:javaType select="$model" alias="ByteRenderer" package="false"/>();
+    }
+    return INSTANCE;
+  }
+
+  protected <sw:javaType select="$model" alias="ByteRenderer" package="false"/>() {
+  }
+
+  public String render(Byte object) {
+    if (object == null) {
+      return "";
+    }
+
+    return object.toString();
+  }
+}

@@ -1,0 +1,204 @@
+<%@ jet 
+package="com.skyway.integration.google.webtoolkit.deploy.templates" 
+class="EditWidgetTemplate" 
+%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+<%@taglib prefix="swgwt" id="com.skyway.integration.google.webtoolkit.common.skywayGWTCodeGenTags"%>
+
+
+package <sw:package select="$model" alias="gwteditwidget" var="pkg"/>;
+<sw:javaType select="$model" package="true" var="fullyQualifiedClassName" emit="false"/>
+<java:importsLocation package="{$pkg}"/>
+<java:impliedImport name="{$fullyQualifiedClassName}"/>
+<swgwt:getGWTDataType select="$model" var="gwtDataType"/>
+
+/**
+ * The view for editing <sw:javaType select="$model" alias="gwtdatatype" package="false"/>
+ * This view is constructed using UIBinder
+ <sw:generated />
+ */
+public class <sw:javaType select="$model" alias="gwteditwidget" package="false"/> extends <java:import>com.google.gwt.user.client.ui.Composite</java:import> implements  <sw:javaType select="$model" alias="gwteditor" package="false"/>.Display {
+	
+	/**
+	* Interface for UIBinder extension
+	<sw:generated />
+	*/ 
+	@<java:import>com.google.gwt.uibinder.client.UiTemplate</java:import>("<sw:javaType select="$model" alias="gwteditwidgetuixml" package="false"/>.xml")
+	interface EditBinder extends <java:import>com.google.gwt.uibinder.client.UiBinder</java:import><<java:import>com.google.gwt.user.client.ui.Widget</java:import>, <sw:javaType select="$model" alias="gwteditwidget" package="false"/>>{}
+	
+	/**
+	* Instance of EditBinder interface loaded through GWT.create
+	<sw:generated />
+	*/ 
+	private static EditBinder binder = <java:import>com.google.gwt.core.client.GWT</java:import>.create(EditBinder.class);
+	
+	<c:iterate select="$gwtDataType/properties" var="propertyselection">
+	<c:setVariable select="$propertyselection/Property" var="field"/>
+	<swgwt:ifPropertyHasAction select="$propertyselection" action="EDIT">
+		/**
+		* UI Input for <sw:getVariableName select="$field" capitalize="false"/>
+		<sw:generated />
+		*/ 
+		@<java:import>com.google.gwt.uibinder.client.UiField</java:import>
+		<java:import><swgwt:editControl select="$field" package="true"/></java:import> <sw:getVariableName select="$field" capitalize="false"/>Box;
+	</swgwt:ifPropertyHasAction>
+	</c:iterate>
+	
+	/**
+	* Cancel button
+	<sw:generated />
+	*/ 
+	@UiField
+	<java:import>com.google.gwt.user.client.ui.Button</java:import> cancelButton;
+	
+	/**
+	* Save button
+	<sw:generated />
+	*/ 
+	@UiField
+	Button saveButton;
+	
+	/**
+	* Button panel, injected here so that it can be programmatically shown or hidden 
+	<sw:generated />
+	*/ 
+	@UiField
+	<java:import>com.google.gwt.user.client.ui.Widget</java:import> buttonPanel;
+	
+	
+	/**
+	 * Default view constructor
+	<sw:generated /> 
+	 */
+	public <sw:javaType select="$model" alias="gwteditwidget" package="false"/>() {
+		 initWidget(binder.createAndBindUi(this));
+	<c:iterate select="$gwtDataType/properties" var="propertyselection"><c:setVariable select="$propertyselection/Property" var="field"/><swgwt:ifPropertyHasAction select="$propertyselection" action="EDIT"><c:if test="$field/dataType/@type = 'DATE'"><sw:getVariableName select="$field" capitalize="false"/>Box.setFormat(<java:import><sw:javaType select="$model/project" alias="gwtdateboxformat" package="true"/></java:import>.MEDIUM_DATE);</c:if></swgwt:ifPropertyHasAction></c:iterate>
+	}
+	
+	<c:iterate select="$gwtDataType/properties" var="propertyselection">
+	<c:setVariable select="$propertyselection/Property" var="field"/>
+	<swgwt:ifPropertyHasAction select="$propertyselection" action="EDIT">
+	/**
+	 * Return the value handler for <sw:getVariableName select="$field" capitalize="false"/>
+	<sw:generated /> 
+	 */
+	public <java:import>com.google.gwt.user.client.ui.HasValue</java:import><<swgwt:javaType controlSafeTypes="true" select="$field" package="false" emitCollectionPolicy="concrete" emitIncludes="true"/>> get<sw:getVariableName select="$field" capitalize="true"/>Box() {
+		return <sw:getVariableName select="$field" capitalize="false"/>Box;
+	}
+	</swgwt:ifPropertyHasAction>
+	</c:iterate>	
+
+	/**
+	 * Returns the cancel button
+	<sw:generated /> 
+	 */
+	public Button getCancelButton() {
+		return cancelButton;
+	}
+	
+	/**
+	 * Returns the save button
+	<sw:generated /> 
+	 */
+	public Button getSaveButton() {
+		return saveButton;
+	}
+	
+	/**
+	 * Enables or Disables all of the fields from this view
+	<sw:generated /> 
+	 */
+	private void enableFields(boolean enabled) {
+	<c:iterate select="$gwtDataType/properties" var="propertyselection">
+	<c:setVariable select="$propertyselection/Property" var="field"/>
+	<swgwt:ifPropertyHasAction select="$propertyselection" action="EDIT">
+		<sw:getVariableName select="$field" capitalize="false"/>Box.setEnabled(enabled);
+	</swgwt:ifPropertyHasAction>
+	</c:iterate>
+	}
+	
+	/**
+	 * Disables the primary key fields if View is being presented on an Object that has already been saved
+	<sw:generated /> 
+	 */
+	public void setIsNew(boolean isNew) {
+		<sw:getPrimaryKeyFields select="$model" var="primaryKeyFields"/>
+		<c:iterate select="$primaryKeyFields" var="field">
+		<sw:getVariableName select="$field"/>Box.setEnabled(isNew);
+		</c:iterate>
+	}
+	
+	/**
+	 <sw:generated /> 
+	 * @param readOnly
+	 */
+	public void setReadOnly (boolean readOnly) {
+		buttonPanel.setVisible(!readOnly);
+		enableFields(!readOnly);
+	}
+	
+	/**
+	 * Simple implementation will collect errors from the fields on the Edit Widget
+	 * and style the elements that have errors.
+	 * Convenience methods are available for customizing the the validation of each field
+	 * until a more standard Validation approach is implemented for GWT
+	 <sw:generated /> 
+	 */
+	public boolean isValid() {
+		boolean valid = true;
+		
+	<c:iterate select="$gwtDataType/properties" var="propertyselection">
+	<c:setVariable select="$propertyselection/Property" var="field"/>
+	<swgwt:ifPropertyHasAction select="$propertyselection" action="EDIT">
+		valid &= validate<sw:getVariableName select="$field" capitalize="true"/>();
+	</swgwt:ifPropertyHasAction>
+	</c:iterate>
+		
+		return valid;
+	}
+	
+	<c:iterate select="$gwtDataType/properties" var="propertyselection">
+	<c:setVariable select="$propertyselection/Property" var="field"/>
+	<swgwt:ifPropertyHasAction select="$propertyselection" action="EDIT">
+	/**
+	 * The default implementation simply checks to verify that the value is retrievable from the Input fields and not null for required fields
+	 <sw:generated /> 
+	 */
+	public boolean validate<sw:getVariableName select="$field" capitalize="true"/>() {
+		
+		try {
+		<c:choose>
+		<c:when test="$field/@primaryKey = 'true'">
+			if (<sw:getVariableName select="$field"/>Box.getValue() == null)
+				setError (<sw:getVariableName select="$field"/>Box, true);</c:when>
+		<c:otherwise>
+			<sw:getVariableName select="$field"/>Box.getValue();</c:otherwise></c:choose>	
+			setError (<sw:getVariableName select="$field"/>Box, false);
+			return true;
+		}
+		catch (Exception e) {
+			setError (<sw:getVariableName select="$field"/>Box, true);
+			return false;
+		}
+	}
+	
+	</swgwt:ifPropertyHasAction>
+	</c:iterate>
+	
+	/**
+	 * Adds or removes the error dependent style name from the control passed
+	 * @param uiObject
+	 * @param hasError
+	 <sw:generated /> 
+	 */
+	protected void setError (<java:import>com.google.gwt.user.client.ui.UIObject</java:import> uiObject, boolean hasError) {
+		if (hasError)
+			uiObject.addStyleDependentName("invalid");
+		else
+			uiObject.removeStyleDependentName("invalid");
+	}
+	
+}

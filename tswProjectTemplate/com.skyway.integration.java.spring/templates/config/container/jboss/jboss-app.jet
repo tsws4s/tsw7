@@ -1,0 +1,15 @@
+<%@ jet 
+package="com.skyway.integration.java.spring.jet.config.jboss" 
+class="JBossAppTemplate" 
+%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="f" id="org.eclipse.jet.formatTags"%>
+<%@taglib prefix="persistence" id="org.skyway.integration.data.persistence.skywayPersistenceTags"%>
+<%@taglib prefix="swspr" id="org.skyway.integration.java.spring.skywaySpringCodeGenTags"%>
+<%@taglib prefix="swsprjee" id="com.skyway.integration.java.spring.skywaySpringJeeCodeGenTags"%>
+<?xml version="1.0" encoding="UTF-8"?>
+<jboss-app>
+	<module>
+		<service>data-sources-ds.xml</service>
+	</module>
+</jboss-app>

@@ -1,0 +1,26 @@
+<%@ jet 
+package="org.skyway.integration.java.spring.jet.config" 
+class="DAOPropertiesTemplate" 
+%><swspr:springProjectVar select="$model" var="springProject" /><persistence:getAllPersistenceUnits select="$model" var="persistenceUnits" />
+<c:iterate select="$persistenceUnits" var="puDetail">
+<c:get select="$puDetail/persistenceUnitName" />.dialect=<c:get select="$puDetail/dialect" /><% out.write(NL); %>
+<c:get select="$puDetail/persistenceUnitName" />.show_sql=<c:get select="$puDetail/showSQL" /><% out.write(NL); %>
+<c:get select="$puDetail/persistenceUnitName" />.generateDdl=<c:get select="$puDetail/allowTableMods" /><% out.write(NL); %>
+<c:get select="$puDetail/persistenceUnitName" />.minPoolSize=<c:get select="$puDetail/minPoolSize" /><% out.write(NL); %>
+<c:get select="$puDetail/persistenceUnitName" />.maxPoolSize=<c:get select="$puDetail/maxPoolSize" /><% out.write(NL); %>
+<c:get select="$puDetail/persistenceUnitName" />.connection.url=<c:get select="$puDetail/url" /><% out.write(NL); %>
+<c:get select="$puDetail/persistenceUnitName" />.connection.username=<c:get select="$puDetail/userName" /><% out.write(NL); %>
+<c:get select="$puDetail/persistenceUnitName" />.connection.password=<c:get select="$puDetail/password" /><% out.write(NL); %>
+<c:choose>
+	<c:when test="$puDetail/xaDataSourceEnabled = 'true'" >
+			<c:get select="$puDetail/persistenceUnitName" />.connection.driver_class=<c:get select="$puDetail/xaDataSourceClassName" /><% out.write(NL); %>
+			<persistence:getXADataSourceProperties select="$puDetail" var="xaDataSourceProperties" emit="false"/>
+			<c:iterate select="$xaDataSourceProperties/properties" var="property">
+				<c:get select="$puDetail/persistenceUnitName" />.properties.<c:get select="$property/name" />=<c:get select="$property/value" /><% out.write(NL); %>
+			</c:iterate>
+		</c:when>
+		<c:otherwise>
+			<c:get select="$puDetail/persistenceUnitName" />.connection.driver_class=<c:get select="$puDetail/driverClassName" /><% out.write(NL); %>
+		</c:otherwise>
+	</c:choose>
+</c:iterate>

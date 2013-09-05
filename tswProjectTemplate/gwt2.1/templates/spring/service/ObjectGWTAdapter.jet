@@ -1,0 +1,213 @@
+<%@ jet 
+package="com.skyway.integration.google.webtoolkit.deploy.templates" 
+class="SpringObjectGWTAdapterTemplate" 
+%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+<%@taglib prefix="persistence" id="org.skyway.integration.data.persistence.skywayPersistenceTags"%>
+<%@taglib prefix="swspr" id="org.skyway.integration.java.spring.skywaySpringCodeGenTags"%>
+<%@taglib prefix="swgwt" id="com.skyway.integration.google.webtoolkit.common.skywayGWTCodeGenTags"%>
+
+package <sw:package select="$model" alias="ObjectGWTAdapter"var="pkg"/>;
+<java:importsLocation package="{$pkg}"/>
+<java:impliedImport name="{$fullyQualifiedClassName}"/>
+
+<sw:getVariableName select="$model" uncapitalize="true" var="domainObjName" emit="false"/> <sw:getVariableName select="$model" uncapitalize="false" var="DomainObjName" emit="false"/>
+<swgwt:getGWTDataType select="$model" var="gwtDataType"/>
+<swgwt:implementGWTService select="$model" var="implType"/>
+
+<sw:getPrimaryKeyFields select="$model" var="primaryKeyFields"/>
+<sw:getPropertyByName select="$model" name="id" var="idField"/>
+<sw:getCollectionSize collection="$primaryKeyFields" var="pksSize" />
+
+/**
+ * Implements GWT Request Factory Locator for both Entities and Service, acts as an adapter between the GWT RequestFactory
+ * contract and the JPA/Spring back end.
+ * This class is designed to enable integration of Entities that may have composite primary keys and that may not have a version field etc.
+ * It is also designed to push requests from GWT through a standard DAO and Service layer
+ <sw:generated />
+ */
+@<java:import>org.springframework.stereotype.Component</java:import> 
+public class <sw:javaType select="$model" alias="ObjectGWTAdapter" package="false"/> extends <java:import><swgwt:getRequestFactoryPackage/>.shared.Locator</java:import> <<sw:javaType select="$model" emitIncludes="true"/>, String> implements <java:import><swgwt:getRequestFactoryPackage/>.shared.ServiceLocator</java:import>, <java:import>org.springframework.context.ApplicationContextAware</java:import> {
+   	<c:if test="$pksSize > 1">
+   	public final static String KEY_DELIMITER = "|||";
+	</c:if>
+	
+    @Override
+	public <sw:javaType select="$model" emitIncludes="true"/> create(Class<? extends <sw:javaType select="$model"/>> clazz) {
+		return new <sw:javaType select="$model"/>();
+	}
+
+	@Override
+	public <sw:javaType select="$model"/> find(Class<? extends <sw:javaType select="$model"/>> clazz, String id) {
+		Object[] keyValues = getPrimaryKeysFromGoogleKey(id);
+		<c:setVariable select="0" var="index"/>
+		<c:iterate select="$primaryKeyFields" var="field">
+		<sw:javaType select="$field" package="true" emitIncludes="true"/> <sw:getVariableName select="$field" capitalize="true"/> = (<sw:javaType select="$field" package="true" emitIncludes="true"/>)keyValues[<c:get select="$index"/>];
+		<c:setVariable select="$index + 1" var="index"/>
+		</c:iterate>
+		
+		return get<c:get select="$DomainObjName"/>Service().find<c:get select="$DomainObjName"/>ByPrimaryKey(<c:iterate select="$primaryKeyFields" var="field" delimiter=","><sw:getVariableName select="$field" capitalize="true"/></c:iterate>);
+	}
+
+	@Override
+	public Class<<sw:javaType select="$model"/>> getDomainType() {
+		return <sw:javaType select="$model"/>.class;
+	}
+
+	@Override
+	public String getId(<sw:javaType select="$model"/> domainObject) {
+		return createGoogleKey(domainObject);
+	}
+
+	@Override
+	public Class<String> getIdType() {
+		return String.class;
+	}
+
+	@Override
+	public Object getVersion(<sw:javaType select="$model"/> <c:get select="$domainObjName"/>) {
+	<persistence:getVersionField select="$model" var="versionField"/>
+	<c:choose>
+	<c:when test="$versionField">
+		// return the field for this entity that is storing the version
+		return <c:get select="$domainObjName"/>.get<sw:getVariableName select="$versionField" capitalize="true"/>();
+	</c:when>
+	<c:otherwise>
+		// If your entity has a version field, return it here, the scaffolding engine did not detect a version field for this entity
+	 	// we have generated code to return a version that is based on the contents of the fields of the Entity, GWT uses the version number to detect changes to Entity Proxies
+ 	    final int prime = 31;
+        int result = 1;
+        <c:iterate select="$model/fields" var="field">
+        <sw:generatesPrimitive select="$field" var="generatesPrimitive" />   
+        result = prime * result + <c:choose><c:when test="$generatesPrimitive" >(int)<c:get select="$domainObjName"/>.get<sw:getVariableName select="$field" capitalize="true"/>()</c:when><c:otherwise>((<c:get select="$domainObjName"/>.get<sw:getVariableName select="$field" capitalize="true"/>() == null) ? 0 : <c:get select="$domainObjName"/>.get<sw:getVariableName select="$field" capitalize="true"/>().hashCode())</c:otherwise></c:choose>;
+        </c:iterate>
+        return result;
+	</c:otherwise>
+	</c:choose>
+	}
+
+	public Object getInstance(Class<?> clazz) {
+		if (<sw:javaType select="$gwtDataType/service" alias="interface" package="true"/>.class.equals(clazz))
+			return get<c:get select="$DomainObjName"/>Service();
+		
+		return null;
+	}
+	
+	/**
+	 * Returns the Primary Key field values in the order they are required by the DAO layer to find by primary key
+	 * @param key
+	 * @return
+	 */
+	protected Object[] getPrimaryKeysFromGoogleKey (String key) {
+	<c:choose>
+	<c:when test="$pksSize > 1">
+		String[] keyValuesAsText = <java:import>org.apache.commons.lang.StringUtils</java:import>.split(key, KEY_DELIMITER);
+	</c:when>
+	<c:otherwise>
+		String[] keyValuesAsText = new String[]{key};
+	</c:otherwise>
+	</c:choose>
+	
+		Object[] keyValues = new Object[keyValuesAsText.length];
+		<c:setVariable select="0" var="count"/>
+		<c:iterate select="$primaryKeyFields" var="field"> 
+		<c:choose>
+			<c:when test="$field/dataType/@type = 'LARGETEXT'">
+				keyValues[<c:get select="$count"/>] = keyValuesAsText[<c:get select="$count"/>];
+	  		</c:when>
+			<c:when test="$field/dataType/@type = 'BOOLEAN'">
+				keyValues[<c:get select="$count"/>] = Boolean.parseBoolean(keyValuesAsText[<c:get select="$count"/>]);
+	  		</c:when>
+			<c:when test="$field/dataType/@type = 'DATE'">
+				keyValues[<c:get select="$count"/>] = new Date(new Long (keyValuesAsText[<c:get select="$count"/>]));
+	  		</c:when>
+			<c:when test="$field/dataType/@type = 'TIME'">
+				keyValues[<c:get select="$count"/>] = new Date(new Long (keyValuesAsText[<c:get select="$count"/>]));
+	  		</c:when>
+			<c:when test="$field/dataType/@type = 'DATETIME'">
+				keyValues[<c:get select="$count"/>] = new Date(new Long (keyValuesAsText[<c:get select="$count"/>]));
+	  		</c:when>
+			<c:when test="$field/dataType/@type = 'DECIMAL'">
+				keyValues[<c:get select="$count"/>] = new <sw:javaType select="$field" package="true" emitIncludes="true"/>(keyValuesAsText[<c:get select="$count"/>]);
+	  		</c:when>
+			<c:when test="$field/dataType/@type = 'INTEGER'">
+				keyValues[<c:get select="$count"/>] = new <sw:javaType select="$field" package="true" emitIncludes="true"/>(keyValuesAsText[<c:get select="$count"/>]);
+	  		</c:when>
+			<c:otherwise>
+				keyValues[<c:get select="$count"/>] = new <sw:javaType select="$field" package="true" emitIncludes="true"/>(keyValuesAsText[<c:get select="$count"/>]);
+	  		</c:otherwise>						
+		</c:choose>			
+		<c:setVariable select="$count + 1" var="count"/>
+		</c:iterate>
+		
+		return keyValues;
+	}
+	
+	/**
+	 * Returns a single String that can uniquely identify an instance to the GWT Client
+	 * The primary key values are encoded in the order they are required by the DAO layer to findByPrimaryKey for convenience
+	 * @param object
+	 * @return
+	 */
+	protected String createGoogleKey(<sw:javaType select="$model"/> <c:get select="$domainObjName"/>) {
+		StringBuilder key = new StringBuilder();
+		<c:setVariable select="0" var="count"/>
+		<c:iterate select="$primaryKeyFields" var="field" delimiter="key.append(KEY_DELIMITER);"> 
+		<c:choose>
+			<c:when test="$field/dataType/@type = 'LARGETEXT'">
+				key.append(<c:get select="$domainObjName"/>.get<sw:getVariableName select="$field" capitalize="true"/>());
+	  		</c:when>
+			<c:when test="$field/dataType/@type = 'BOOLEAN'">
+				key.append(<c:get select="$domainObjName"/>.get<sw:getVariableName select="$field" capitalize="true"/>());
+	  		</c:when>
+			<c:when test="$field/dataType/@type = 'DATE'">
+				key.append(<c:get select="$domainObjName"/>.get<sw:getVariableName select="$field" capitalize="true"/>().getTime());
+	  		</c:when>
+			<c:when test="$field/dataType/@type = 'TIME'">
+				key.append(<c:get select="$domainObjName"/>.get<sw:getVariableName select="$field" capitalize="true"/>().getTime());
+	 	  	</c:when>
+			<c:when test="$field/dataType/@type = 'DATETIME'">
+				key.append(<c:get select="$domainObjName"/>.get<sw:getVariableName select="$field" capitalize="true"/>().getTime());
+	 		</c:when>
+			<c:when test="$field/dataType/@type = 'DECIMAL'">
+				key.append(<c:get select="$domainObjName"/>.get<sw:getVariableName select="$field" capitalize="true"/>());
+	 		</c:when>
+			<c:when test="$field/dataType/@type = 'INTEGER'">
+				key.append(<c:get select="$domainObjName"/>.get<sw:getVariableName select="$field" capitalize="true"/>());
+			</c:when>
+			<c:otherwise>
+				key.append(<c:get select="$domainObjName"/>.get<sw:getVariableName select="$field" capitalize="true"/>());
+		 	</c:otherwise>						
+		</c:choose>			
+		<c:setVariable select="$count + 1" var="count"/>
+		</c:iterate>
+		return key.toString();
+	}
+	
+	/**
+	 * 
+	<sw:generated />
+	 */
+	public <sw:javaType select="$gwtDataType/service" alias="interface" emitIncludes="true"/> get<c:get select="$DomainObjName"/>Service() {
+		<sw:javaType select="$gwtDataType/service" alias="interface" package="false"/> service;
+		
+		service = (<sw:javaType select="$gwtDataType/service" alias="interface" package="false"/>)context.getBean("<c:get select="$DomainObjName"/>Service");
+		
+		return service;
+	}
+	
+	// Spring Context Management
+	private static <java:import>org.springframework.context.ApplicationContext</java:import> context;
+	
+	/**
+	* The Spring Context will be pushed in when the container is initialized
+	*/
+	public void setApplicationContext(ApplicationContext applicationContext)throws <java:import>org.springframework.beans.BeansException</java:import> {
+		context = applicationContext;
+	}
+}
+
+

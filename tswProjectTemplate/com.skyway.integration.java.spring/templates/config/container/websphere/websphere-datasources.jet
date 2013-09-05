@@ -1,0 +1,19 @@
+<%@ jet 
+package="com.skyway.integration.java.spring.jet.config.websphere" 
+class="WebSphereDataSourcesTemplate" 
+%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="f" id="org.eclipse.jet.formatTags"%>
+<%@taglib prefix="persistence" id="org.skyway.integration.data.persistence.skywayPersistenceTags"%>
+<%@taglib prefix="swspr" id="org.skyway.integration.java.spring.skywaySpringCodeGenTags"%>
+<%@taglib prefix="swsprjee" id="com.skyway.integration.java.spring.skywaySpringJeeCodeGenTags"%>
+<?xml version="1.0" encoding="UTF-8" ?> 
+	<!-- as of WebSphere 6.1.0.x there is no facility to create XML files for data sources -->
+	<!-- this file is simply for informational purposes when setting up sources in the console -->
+	<persistence:getAllPersistenceUnits select="$model" var="persistenceUnits" />
+	<c:iterate select="$persistenceUnits" var="puDetail">
+		<!-- ******************************************* -->
+		<!-- JNDI: jdbc/<c:get select="$puDetail/persistenceUnitName" />DS -->
+		<!-- URL: <c:get select="$puDetail/url" /> -->
+		<!-- ******************************************* -->
+	</c:iterate>

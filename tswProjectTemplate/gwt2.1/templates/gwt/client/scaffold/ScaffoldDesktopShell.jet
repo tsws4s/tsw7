@@ -1,0 +1,67 @@
+<%@ jet package="com.skyway.templates" class="ScaffoldDesktopShellTemplate"%>
+
+package <sw:package select="$model" alias="ScaffoldDesktopShell"var="pkg"/>;
+<java:importsLocation package="{$pkg}"/>
+
+/**
+ * The outermost UI of the application.
+ */
+public class <sw:javaType select="$model" alias="ScaffoldDesktopShell" package="false"/> extends <java:import>com.google.gwt.user.client.ui.Composite</java:import> {
+	interface Binder extends <java:import>com.google.gwt.uibinder.client.UiBinder</java:import><<java:import>com.google.gwt.user.client.ui.Widget</java:import>, <sw:javaType select="$model" alias="ScaffoldDesktopShell" package="false"/>> {
+	}
+
+	private static final Binder BINDER = <java:import>com.google.gwt.core.client.GWT</java:import>.create(Binder.class);
+
+	@UiField
+	<java:import>com.google.gwt.user.client.ui.Button</java:import> backButton;
+	
+	@<java:import>com.google.gwt.uibinder.client.UiField</java:import> <java:import>com.google.gwt.user.client.ui.SimplePanel</java:import> details;
+	@UiField <java:import>com.google.gwt.dom.client.DivElement</java:import> error;
+	@UiField SimplePanel master;
+	@UiField <java:import>com.google.gwt.user.client.ui.NotificationMole</java:import> mole;
+	@UiField(provided = true) <java:import>com.google.gwt.user.client.ui.ValuePicker</java:import><<sw:javaType select="$model" alias="ProxyListPlace" package="true"/> > placesBox = new ValuePicker<ProxyListPlace>(new <sw:javaType select="$model" alias="ApplicationListPlaceRenderer" emitIncludes="true" package="true"/> ());
+
+	public <sw:javaType select="$model" alias="ScaffoldDesktopShell" package="false"/>() {
+		initWidget(BINDER.createAndBindUi(this));
+	}
+
+	/**
+	 * @return the panel to hold the details
+	 */
+	public SimplePanel getDetailsPanel() {
+		return details;
+	}
+
+	/**
+	 * @return the panel to hold the master list
+	 */
+	public SimplePanel getMasterPanel() {
+		return master;
+	}
+
+	/**
+	 * @return the notification mole for loading feedback
+	 */
+	public NotificationMole getMole() {
+		return mole;
+	}
+
+	/**
+	 * @return the navigator
+	 */
+	public <java:import>com.google.gwt.user.client.ui.HasConstrainedValue</java:import><<sw:javaType select="$model" alias="ProxyListPlace" package="true" emitIncludes="true"/>> getPlacesBox() {
+		return placesBox;
+	}
+
+	/**
+	 * @param string
+	 */
+	public void setError(String string) {
+		error.setInnerText(string);
+	}
+	
+	@<java:import>com.google.gwt.uibinder.client.UiHandler</java:import>("backButton")
+	public void backButtonPressed(<java:import>com.google.gwt.event.dom.client.ClickEvent</java:import> evt) {
+		<java:import>com.google.gwt.user.client.Window</java:import>.Location.assign(<java:import>com.google.gwt.core.client.GWT</java:import>.getModuleBaseURL() + "..");
+	}
+}

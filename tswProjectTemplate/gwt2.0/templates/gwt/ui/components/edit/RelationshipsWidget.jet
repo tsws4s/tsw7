@@ -1,0 +1,79 @@
+<%@ jet 
+package="com.skyway.integration.google.webtoolkit.deploy.templates" 
+class="RelationshipsWidgetTemplate" 
+%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+<%@taglib prefix="swgwt" id="com.skyway.integration.google.webtoolkit.common.skywayGWTCodeGenTags"%>
+
+package <sw:package select="$model" alias="gwteditwidget" var="pkg"/>;
+<sw:javaType select="$model" package="true" var="fullyQualifiedClassName" emit="false"/>
+<java:importsLocation package="{$pkg}"/>
+<java:impliedImport name="{$fullyQualifiedClassName}"/>
+<swgwt:getGWTDataType select="$model" var="gwtDataType"/>
+
+/**
+ * The view for editing <sw:javaType select="$model" alias="gwtdatatype" package="false"/>
+ * This view is constructed using UIBinder
+ <sw:generated />
+ */
+public class <sw:javaType select="$model" alias="gwtrelationshipswidget" package="false"/> extends <java:import>com.google.gwt.user.client.ui.Composite</java:import> implements <sw:javaType select="$model" alias="gwtrelationshipseditor" package="false"/>.Display {
+	
+	/**
+	* Interface for UIBinder extension
+	<sw:generated />
+	*/ 
+	@<java:import>com.google.gwt.uibinder.client.UiTemplate</java:import>("<sw:javaType select="$model" alias="gwtrelationshipswidgetuixml" package="false"/>.xml")
+	interface EditBinder extends <java:import>com.google.gwt.uibinder.client.UiBinder</java:import><<java:import>com.google.gwt.user.client.ui.Widget</java:import>, <sw:javaType select="$model" alias="gwtrelationshipswidget" package="false"/>>{}
+	
+	/**
+	* Instance of EditBinder interface loaded through GWT.create
+	<sw:generated />
+	*/ 
+	private static EditBinder binder = <java:import>com.google.gwt.core.client.GWT</java:import>.create(EditBinder.class);
+	
+	<c:iterate select="$model/relationships" var="relationship">
+	<sw:relationshipCardinality select="$relationship" var="cardinality" />
+	<c:setVariable select="$relationship/targetDataType" var="dataType" />
+	<c:if test="$cardinality = 'MANY'" >
+		/**
+		* UI Widget for the <sw:getVariableName select="$relationship" capitalize="false"/> relationship
+		<sw:generated />
+		*/ 
+		@<java:import>com.google.gwt.uibinder.client.UiField</java:import>
+		<java:import><sw:javaType select="$dataType" alias="gwtmultirelatedwidget" package="true"/></java:import> <sw:getVariableName select="$relationship" capitalize="false"/>Widget;
+	</c:if>
+	<c:if test="$cardinality = 'ONE'" >
+		/**
+		* UI Widget for the <sw:getVariableName select="$relationship" capitalize="false"/> relationship
+		<sw:generated />
+		*/ 
+		@<java:import>com.google.gwt.uibinder.client.UiField</java:import>
+		<java:import><sw:javaType select="$dataType" alias="gwtsinglerelatedwidget" package="true"/></java:import> <sw:getVariableName select="$relationship" capitalize="false"/>Widget;
+	</c:if>
+	</c:iterate>
+	
+		
+	/**
+	 * Default view constructor
+	<sw:generated /> 
+	 */
+	public <sw:javaType select="$model" alias="gwtrelationshipswidget" package="false"/>() {
+		 initWidget(binder.createAndBindUi(this));
+	}
+	
+	<c:iterate select="$model/relationships" var="relationship">
+	<sw:relationshipCardinality select="$relationship" var="cardinality" />
+	<c:setVariable select="$relationship/targetDataType" var="dataType" />
+	/**
+	 * Return the edit widget for the <sw:getVariableName select="$relationship" capitalize="true"/> relationship
+	 <sw:generated /> 
+	 */
+<c:if test="$cardinality = 'MANY'" >public <java:import><sw:javaType select="$dataType" alias="gwtmultirelatedwidget" package="true"/></java:import> get<sw:getVariableName select="$relationship" capitalize="true"/>Widget() {</c:if>
+<c:if test="$cardinality = 'ONE'" >public <java:import><sw:javaType select="$dataType" alias="gwtsinglerelatedwidget" package="true"/></java:import> get<sw:getVariableName select="$relationship" capitalize="true"/>Widget() {</c:if>
+				return <sw:getVariableName select="$relationship" capitalize="false"/>Widget;
+		}
+	</c:iterate>
+}

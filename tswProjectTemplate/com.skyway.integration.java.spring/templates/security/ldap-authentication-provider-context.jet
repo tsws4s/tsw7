@@ -1,0 +1,38 @@
+<%@ jet 
+package="com.skyway.integration.java.spring.jet.config.security" 
+class="LdapAuthenticationProviderContextTemplate" 
+%>
+    <beans:bean id="myLdapContextSource" class="org.springframework.security.ldap.DefaultSpringSecurityContextSource">
+        <beans:constructor-arg value="<c:get select="$springJeeProject/securitySettings/ldapSecuritySettings/ldapProviderUrl" />"/>
+        <beans:property name="userDn" value="<c:get select="$springJeeProject/securitySettings/ldapSecuritySettings/@managerDn" />"/>
+        <beans:property name="password" value="<c:get select="$springJeeProject/securitySettings/ldapSecuritySettings/@managerPassword" />"/>
+    </beans:bean>
+
+	<beans:bean id="ldapUserSearch" class="org.springframework.security.ldap.search.FilterBasedLdapUserSearch">
+	  <beans:constructor-arg index="0" value="<c:get select="$springJeeProject/securitySettings/ldapSecuritySettings/@userSearchBase" />"/>
+	  <beans:constructor-arg index="1" value="<c:get select="$springJeeProject/securitySettings/ldapSecuritySettings/@userSearchFilter" />"/>
+	  <beans:constructor-arg index="2" ref="myLdapContextSource" />
+	  <beans:property name="searchSubtree" value="<c:get select="$springJeeProject/securitySettings/ldapSecuritySettings/@userSearchSubtree" />"/>
+	</beans:bean>
+	
+	<beans:bean id="ldapAuthoritiesPopulator" class="<c:choose><c:when test="toBoolean($springSecurity2)" >org.springframework.security.ldap.populator.DefaultLdapAuthoritiesPopulator</c:when><c:otherwise>org.springframework.security.ldap.userdetails.DefaultLdapAuthoritiesPopulator</c:otherwise></c:choose>">
+		<beans:constructor-arg ref="myLdapContextSource" />
+		<beans:constructor-arg value="<c:get select="$springJeeProject/securitySettings/ldapSecuritySettings/@groupSearchBase" />" />
+		<beans:property name="groupSearchFilter" value="<c:get select="$springJeeProject/securitySettings/ldapSecuritySettings/@groupSearchFilter" />"/>
+		<beans:property name="groupRoleAttribute" value="<c:get select="$springJeeProject/securitySettings/ldapSecuritySettings/@groupRoleAttribute" />" />
+		<beans:property name="rolePrefix" value="<c:get select="$springJeeProject/securitySettings/ldapSecuritySettings/@rolePrefix" />"/>
+		<beans:property name="searchSubtree" value="<c:get select="$springJeeProject/securitySettings/ldapSecuritySettings/@groupSearchSubtree" />"/>
+		<beans:property name="convertToUpperCase" value="<c:get select="$springJeeProject/securitySettings/ldapSecuritySettings/@convertToUppercase" />"/>
+	</beans:bean>
+	
+	<beans:bean id="userDetailsService" class="<c:choose><c:when test="toBoolean($springSecurity2)" >org.springframework.security.userdetails.ldap.LdapUserDetailsService</c:when><c:otherwise>org.springframework.security.ldap.userdetails.LdapUserDetailsService</c:otherwise></c:choose>">
+		<beans:constructor-arg index="0" ref="ldapUserSearch" />
+		<beans:constructor-arg index="1" ref="ldapAuthoritiesPopulator" />
+	</beans:bean>
+	
+	<authentication-manager alias="authenticationManager" <c:if test="toBoolean($springSecurity2)" >/</c:if>>
+	<authentication-provider user-service-ref='userDetailsService' >
+		<password-encoder hash="<c:get select="$springJeeProject/securitySettings/passwordEncoder" />"/>
+	</authentication-provider>
+	<c:if test="not(toBoolean($springSecurity2))" ></authentication-manager></c:if>
+    

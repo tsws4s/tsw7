@@ -1,0 +1,10 @@
+<%@ jet 
+package="com.skyway.scaffolding.crud.templates.method" 
+class="DeleteRestCrudControllerImplementationTemplate" 
+%>
+<%@taglib prefix="jet" id="org.eclipse.jet.controlTags"%>  
+<%@taglib prefix="f" id="org.eclipse.jet.formatTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+<jet:setVariable select="0" var="keyCount" />
+<jet:get select="$dataType/@name"/> <jet:get select="lower-case($dataType/@name)"/> = <jet:get select="lowercaseFirst($dataType/dataStore/@name)"/>.find<jet:get select="$dataType/@name"/>ByPrimaryKey(<jet:iterate select="$dataType/fields" var="field" ><jet:if test="$field/@primaryKey = 'true'"><jet:if test="$keyCount > 0">, </jet:if><jet:get select="lower-case($dataType/@name)"/>_<jet:get select="$field/@name" /><jet:setVariable select="$keyCount+1" var="keyCount" /></jet:if></jet:iterate>);
+<jet:get select="lowercaseFirst($dataType/@name)"/>Service.delete<jet:get select="$dataType/@name"/>(<jet:get select="lower-case($dataType/@name)"/>);

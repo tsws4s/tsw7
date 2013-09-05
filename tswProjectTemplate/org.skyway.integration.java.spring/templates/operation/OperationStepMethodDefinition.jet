@@ -1,0 +1,43 @@
+<%@ jet 
+package="org.skyway.integration.java.spring.jet.operation" 
+class="OperationStepMethodDefinitionTemplate"
+%>
+<%@taglib prefix="java" id="org.eclipse.jet.javaTags" %>
+<%@taglib prefix="ws"   id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c"    id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="f"    id="org.eclipse.jet.formatTags"%>
+<%@taglib prefix="sw"   id="org.skyway.integration.java.skywayCodeGenTags"%>
+<c:if test="not(toBoolean($action/@methodStepsGenerated))" >
+<c:iterate select="$action/methodSteps" var="step">
+	<sw:stepMethodDeclaration select="$step" var="stepMethodDeclaration" emit="false"/>
+	/**
+	<sw:documentation select="$step" format=" * " />
+	* 
+    <sw:modelReference select="$step" />
+ 	*/
+	<c:include template="templates/common/spring/MethodTransactionAnnotation.jet" />
+	<sw:variableStorageReset scope="method" />
+	<sw:anchorSegment anchorId="annotationsStepMethod_{$stepMethodDeclaration}" />
+	<sw:compress>
+	private
+	<c:choose>
+		<c:when test="isVariableDefined('requestMapping') and toBoolean($currentOperation/@shouldReturnFromNestedMethod)">
+			<c:choose><c:when test="$currentOperation/outputs"><java:import>org.springframework.web.servlet.ModelAndView</java:import></c:when><c:otherwise>String</c:otherwise></c:choose>
+		</c:when>
+		<c:otherwise>
+			<java:import><sw:operationReturnType select="$currentOperation" package="true"/></java:import>
+		</c:otherwise>
+	</c:choose>
+	<c:get select="$stepMethodDeclaration" />(<c:include template="templates/operation/OperationNestedMethodInputs.jet" />) <sw:throwsList select="$currentOperation" /> {
+	</sw:compress>
+		<sw:stepVariableAnchor anchorId="{$stepMethodDeclaration}_{$action/@name}_Variables" />
+		
+		<c:include template="templates/common/java/UserCode.jet" />
+		<sw:invokeStep select="$step" generationMode="method"/>
+		
+		<sw:shouldGenerateReturn>
+			<c:include template="templates/operation/OperationResultDefinition.jet" />
+		</sw:shouldGenerateReturn>
+	}<% context.removeVariable("stepMethodDeclaration"); %>
+</c:iterate>
+</c:if>

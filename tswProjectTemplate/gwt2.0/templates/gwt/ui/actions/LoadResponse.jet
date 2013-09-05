@@ -1,0 +1,53 @@
+<%@ jet 
+package="com.skyway.integration.google.webtoolkit.deploy.templates" 
+class="LoadResponseTemplate" 
+%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+
+
+package <sw:package select="$model" alias="gwtloadresponse" var="pkg"/>;
+<sw:javaType select="$model" package="true" var="fullyQualifiedClassName" emit="false"/>
+<java:importsLocation package="{$pkg}"/>
+<java:impliedImport name="{$fullyQualifiedClassName}"/>
+
+<sw:getVariableName select="$model" uncapitalize="true" var="domainObjName" emit="false"/> <sw:getVariableName select="$model" uncapitalize="false" var="DomainObjName" emit="false"/>
+
+/**
+ * Response Object for the <sw:javaType select="$model" alias="gwtload" package="false"/> Action which is used to load <sw:javaType select="$model" alias="gwtdatatype" package="false"/>s from the server .
+ * This command can be passed to the Remote Crud Service which has the command handlers for managing the relationships on the back end.
+<sw:generated />
+ */
+public class <sw:javaType select="$model" alias="gwtloadresponse" package="false"/> implements <java:import><sw:javaType select="$model/project" alias="gwtresponse" package="true"/></java:import> {
+	private static final long serialVersionUID = 1L;
+	
+	/**
+	* 
+<sw:generated />
+	*/
+	private <java:import>java.util.Set</java:import><<java:import><sw:javaType select="$model" alias="gwtdatatype" package="true"/></java:import>> <c:get select="$domainObjName"/>s;
+	
+	/**
+	* Constructor
+<sw:generated />
+	*/
+	public <sw:javaType select="$model" alias="gwtloadresponse" package="false"/>(){}
+	
+	/**
+	* Constructor
+<sw:generated />
+	*/
+	public <sw:javaType select="$model" alias="gwtloadresponse" package="false"/> (Set<<sw:javaType select="$model" alias="gwtdatatype" package="false"/>> <c:get select="$domainObjName"/>s) {
+		this.<c:get select="$domainObjName"/>s = <c:get select="$domainObjName"/>s;
+	}
+	
+	/**
+	* 
+<sw:generated />
+	*/
+	public Set<<sw:javaType select="$model" alias="gwtdatatype" package="false"/>> get<c:get select="$DomainObjName"/>s() {
+		return <c:get select="$domainObjName"/>s;
+	}
+}

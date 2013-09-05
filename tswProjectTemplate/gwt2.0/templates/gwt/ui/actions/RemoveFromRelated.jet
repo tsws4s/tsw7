@@ -1,0 +1,110 @@
+<%@ jet 
+package="com.skyway.integration.google.webtoolkit.deploy.templates" 
+class="RemoveFromRelatedTemplate" 
+%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+
+
+package <sw:package select="$model" alias="gwtremovefromrelated" var="pkg"/>;
+<sw:javaType select="$model" package="true" var="fullyQualifiedClassName" emit="false"/>
+<java:importsLocation package="{$pkg}"/>
+<java:impliedImport name="{$fullyQualifiedClassName}"/>
+
+<sw:getVariableName select="$model" uncapitalize="true" var="domainObjName" emit="false"/> <sw:getVariableName select="$model" uncapitalize="false" var="DomainObjName" emit="false"/>
+
+/**
+ * Action which is used to remove <sw:javaType select="$model" package="false"/>s from any other object it may be related too.
+ * This command can be passed to the Remote Crud Service which has the command handlers for managing the relationships on the back end.
+<sw:generated />
+ */
+public class <sw:javaType select="$model" alias="gwtremovefromrelated" package="false"/><T extends <java:import><sw:javaType select="$model/project" alias="gwtid" package="true"/></java:import>> implements <java:import><sw:javaType select="$model/project" alias="gwtaction" package="true"/></java:import><<java:import><sw:javaType select="$model" alias="gwtremovefromrelatedresponse" package="true"/></java:import>>, <java:import>java.io.Serializable</java:import> {
+	private static final long serialVersionUID = 1L;
+	
+	/**
+	* The set of <sw:javaType select="$model" package="false"/>s to be removed from the relationship
+	<sw:generated />
+	*/
+	private <java:import>java.util.Set</java:import><<java:import><sw:javaType select="$model" alias="gwtdatatype" package="true"/></java:import>> <c:get select="$domainObjName"/>s;
+	
+	/**
+	* The name of the relationship to modify in the owning object
+		<sw:generated />
+	*/
+	private String relationshipName;
+	
+	/**
+	* The ID of the owning object
+	<sw:generated />
+	*/
+	private T id;
+	
+	/**
+	* Constructor
+	<sw:generated />
+	*/
+	public <sw:javaType select="$model" alias="gwtremovefromrelated" package="false"/>() {
+	
+	}
+	
+	/**
+	* Constructor
+	<sw:generated />
+	*/
+	public <sw:javaType select="$model" alias="gwtremovefromrelated" package="false"/> (String relationshipName, T id) {
+		this.relationshipName = relationshipName;
+		this.id = id;
+	}
+	
+	/**
+	* Returns the set of <sw:javaType select="$model" alias="gwtdatatype" package="false"/>s that will be removed from the related Object
+	<sw:generated />
+	*/
+	public Set<<java:import><sw:javaType select="$model" alias="gwtdatatype" package="true"/></java:import>> get<c:get select="$DomainObjName"/>s() {
+		return <c:get select="$domainObjName"/>s;
+	}
+
+	/**
+	* Sets the set of <sw:javaType select="$model" package="false"/>s to remove from the relationship
+	<sw:generated />
+	*/
+	public void set<c:get select="$DomainObjName"/>s (Set<<sw:javaType select="$model" alias="gwtdatatype" package="false"/>> <c:get select="$domainObjName"/>s) {
+		this.<c:get select="$domainObjName"/>s = <c:get select="$domainObjName"/>s;
+	}
+	
+	/**
+	* Returns the ID of the owning object for the relationship
+	<sw:generated />
+	*/
+	public T getId() {
+		return id;
+	}
+	
+	/**
+	* The ID of the object to be modified
+<sw:generated />
+	*/
+	public void setId(T id) {
+		this.id = id;
+	}
+	
+	/**
+	* Returns the name of the relationship in the owning object to modify
+	<sw:generated />
+	*/
+	public String getRelationshipName() {
+		return relationshipName;
+	}
+	
+	/**
+	* Sets the name of the relationship in the owning object which should be modified
+	<sw:generated />
+	*/
+	public void setRelationshipName(String relationshipName) {
+		this.relationshipName = relationshipName;
+	}
+	
+}
+

@@ -1,0 +1,58 @@
+<%@ jet 
+package="org.skyway.integration.java.spring.jet.core" 
+class="ConversationBeanInfoTemplate" 
+%>
+
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="f" id="org.eclipse.jet.formatTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+
+package <sw:package alias="beaninfo" select="$model" var="pkg"/>;
+<sw:javaType select="$model" alias="beaninfo" package="true" var="fullyQualifiedClassName" emit="false"/>
+<java:importsLocation package="{$pkg}"/>
+<java:impliedImport name="{$fullyQualifiedClassName}"/>
+
+/**
+ * <sw:javaType select="$model" />
+<sw:documentation select="$model" format=" * " />
+<sw:generated />
+<sw:auxiliaryModelComponent />
+ */
+<sw:variableStorageReset scope="class" />
+public class <sw:javaType alias="beaninfo" select="$model" /> extends <java:import>java.beans.SimpleBeanInfo</java:import>	{
+
+	/**
+	 * Default Constructor
+	 <sw:generated />
+	 */
+	public <sw:javaType alias="beaninfo" select="$model" />()	{
+	}
+
+	/**
+	 * Returns the property descriptors used by BeanInfo for getters and setters within this class.
+	 <sw:generated />
+	 */
+	@Override
+	public <java:import>java.beans.PropertyDescriptor</java:import>[] getPropertyDescriptors() {
+		try{
+			return new <java:import>java.beans.PropertyDescriptor</java:import>[] {
+				<c:setVariable select="'false'" var="emitCommaFlag" />
+				<c:iterate select="$model/variables" var="variable"><c:if test="$emitCommaFlag = 'true'">,</c:if>
+					new <java:import>java.beans.PropertyDescriptor</java:import>("<sw:getVariableName select="$variable" />", <sw:javaType select="$model" />.class, "get<sw:getVariableName select="$variable" capitalize="true" />", "set<sw:getVariableName select="$variable" capitalize="true"/>")<c:setVariable select="'true'" var="emitCommaFlag" />
+				</c:iterate>
+				<c:iterate select="$model/constants" var="constant" ><c:if test="$emitCommaFlag = 'true'">,</c:if>
+					new <java:import>java.beans.PropertyDescriptor</java:import>("<sw:getVariableName select="$constant" />", <sw:javaType select="$model" />.class, "get<sw:getVariableName select="$constant" capitalize="true" />", null)<c:setVariable select="'true'" var="emitCommaFlag" />
+				</c:iterate>
+			};
+		} catch(<java:import>java.lang.Throwable</java:import> t) {
+			if (t instanceof <java:import>java.lang.RuntimeException</java:import>) {
+				throw (<java:import>java.lang.RuntimeException</java:import>)t;
+			} else {
+				throw new <java:import>java.lang.RuntimeException</java:import> (t);
+			}
+		}
+	}
+	
+}

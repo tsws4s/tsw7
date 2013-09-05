@@ -1,0 +1,44 @@
+<%@ jet 
+package="org.skyway.deploy.templates.config" 
+class="WebFlowConfigTemplate" 
+%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+<%@taglib prefix="swspr" id="org.skyway.integration.java.spring.skywaySpringCodeGenTags"%>
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:webflow="http://www.springframework.org/schema/webflow-config"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+      http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+        http://www.springframework.org/schema/webflow-config
+        http://www.springframework.org/schema/webflow-config/spring-webflow-config-2.0.xsd">
+ 	<sw:getChildModels select="$model" result="flows" skywayType="org.skyway.extension.java.spring.webflow.WebFlowCore"/>
+	<sw:getCollectionSize collection="$flows" var="flowsSize" />
+	<c:if test="$flowsSize > 0" >
+    <webflow:flow-executor id="flowExecutor">
+    </webflow:flow-executor>
+    
+	<bean id="enhancedConversionService" class="org.skyway.spring.util.databinding.EnhancedConversionService" />
+	<webflow:flow-builder-services id="flowBuilderServices" conversion-service="enhancedConversionService" />
+	
+	<webflow:flow-registry id="flowRegistry" flow-builder-services="flowBuilderServices">
+    	<c:iterate select="$flows" var="flow" >
+		<swswf:getWebFlowPath select="$flow" var="flowPath" emit="false" /> 
+        <webflow:flow-location path="<c:get select="$flowPath" />" />
+        </c:iterate>
+    </webflow:flow-registry>
+    
+	<!-- Handles requests mapped to a flow -->
+	<bean class="org.springframework.webflow.mvc.servlet.FlowHandlerMapping">
+		<property name="flowRegistry" ref="flowRegistry" />
+	</bean>
+	
+	<!-- Dispatches requests mapped to flows to FlowHandler implementations -->
+	<bean class="org.springframework.webflow.mvc.servlet.FlowHandlerAdapter">
+		<property name="flowExecutor" ref="flowExecutor"/>
+	</bean>
+	</c:if>
+</beans>

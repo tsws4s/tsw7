@@ -1,0 +1,31 @@
+<%@ jet 
+package="com.skyway.integration.google.webtoolkit.deploy.templates" 
+class="AddToRelatedResponseTemplate" 
+%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+
+
+package <sw:package select="$model" alias="gwtaddtorelatedresponse" var="pkg"/>;
+<sw:javaType select="$model" package="true" var="fullyQualifiedClassName" emit="false"/>
+<java:importsLocation package="{$pkg}"/>
+
+<sw:getVariableName select="$model" uncapitalize="true" var="domainObjName" emit="false"/> <sw:getVariableName select="$model" uncapitalize="false" var="DomainObjName" emit="false"/>
+
+/**
+ * Response Object for the <sw:javaType select="$model" alias="gwtaddtorelated" package="false"/> Action which is used to add <sw:javaType select="$model" package="false"/> to any other object it may be related too.
+ * This command can be passed to the Remote Crud Service which has the command handlers for managing the relationships on the back end.
+<sw:generated />
+ */
+public class <sw:javaType select="$model" alias="gwtaddtorelatedresponse" package="false"/> implements <java:import><sw:javaType select="$model/project" alias="gwtresponse" package="true"/></java:import> {
+	private static final long serialVersionUID = 1L;
+	
+	/**
+	* Constructor
+<sw:generated />
+	*/
+	public <sw:javaType select="$model" alias="gwtaddtorelatedresponse" package="false"/>(){}
+	
+}

@@ -1,0 +1,80 @@
+<%@ jet 
+package="com.skyway.integration.google.webtoolkit.deploy.templates" 
+class="SorterTemplate" 
+%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+<%@taglib prefix="swgwt" id="com.skyway.integration.google.webtoolkit.common.skywayGWTCodeGenTags"%>
+
+package <sw:package select="$model" alias="gwtsorter" var="pkg"/>;
+<sw:javaType select="$model" package="true" var="fullyQualifiedClassName" emit="false"/>
+<java:importsLocation package="{$pkg}"/>
+<java:impliedImport name="{$fullyQualifiedClassName}"/>
+<swgwt:getGWTDataType select="$model" var="gwtDataType"/>
+
+public class <sw:javaType select="$model" alias="gwtsorter" package="false"/> {
+
+/**
+ * A Sorter for <sw:javaType select="$model" alias="gwtdatatype" package="false"/>s, provides a set of comparators based on each of the fields in <sw:javaType select="$model" alias="gwtdatatype" package="false"/>
+ <sw:generated />
+ */
+public <java:import>java.util.Map</java:import><<sw:javaType select="$model" alias="gwtdatatypeid" package="false"/>, <java:import><sw:javaType select="$model" alias="gwtdatatype" package="true"/></java:import>> sort(Map<<sw:javaType select="$model" alias="gwtdatatypeid" package="false"/>, <sw:javaType select="$model" alias="gwtdatatype" package="false"/>> map, <java:import>java.util.Comparator</java:import><<sw:javaType select="$model" alias="gwtdatatype" package="false"/>> comparator) {
+	final <java:import>java.util.List</java:import><<sw:javaType select="$model" alias="gwtdatatype" package="false"/>> list = new <java:import>java.util.LinkedList</java:import><<sw:javaType select="$model" alias="gwtdatatype" package="false"/>>(map.values());
+	<java:import>java.util.Collections</java:import>.sort(list, comparator);
+	Map<<java:import><sw:javaType select="$model" alias="gwtdatatypeid" package="true"/></java:import>, <sw:javaType select="$model" alias="gwtdatatype" package="false"/>> result = new <java:import>java.util.LinkedHashMap</java:import><<sw:javaType select="$model" alias="gwtdatatypeid" package="false"/>, <sw:javaType select="$model" alias="gwtdatatype" package="false"/>>(list.size());
+	for(<sw:javaType select="$model" alias="gwtdatatype" package="false"/> p : list) {
+		result.put(new <sw:javaType select="$model" alias="gwtdatatypeid" package="false"/>(p), p);
+	}
+	return result;
+}
+	
+	<c:iterate select="$gwtDataType/properties" var="propertyselection">
+	<swgwt:ifPropertyHasAction select="$propertyselection" action="LIST">
+	<c:setVariable select="$propertyselection/Property" var="field"/>
+	/**
+	 * A Comparator for <sw:getVariableName select="$field" capitalize="true"/>s
+	 <sw:generated />
+	 */
+	public final static class <sw:getVariableName select="$field" capitalize="true"/>Comparator implements Comparator<<sw:javaType select="$model" alias="gwtdatatype" package="false"/>> {
+		
+		/**
+		 * Track ascending, descending
+		 <sw:generated />
+		 */
+		private final boolean ascending;
+		
+		/**
+		 * Create a comparator
+		 <sw:generated />
+		 */
+		public <sw:getVariableName select="$field" capitalize="true"/>Comparator(boolean ascending) { this.ascending = ascending; }
+		
+		/**
+		 * Performs the comparison
+		 <sw:generated />
+		 */
+		public int compare(<sw:javaType select="$model" alias="gwtdatatype" package="false"/> m1, <sw:javaType select="$model" alias="gwtdatatype" package="false"/> m2) {
+			final <swgwt:javaType select="$field" package="false" emitCollectionPolicy="concrete" emitIncludes="true"/> <sw:getVariableName select="$field" capitalize="true"/>1 = m1.get<sw:getVariableName select="$field" capitalize="true"/>(); 
+			final <swgwt:javaType select="$field" package="false" emitCollectionPolicy="concrete" emitIncludes="true"/> <sw:getVariableName select="$field" capitalize="true"/>2 = m2.get<sw:getVariableName select="$field" capitalize="true"/>(); 
+		
+			<sw:generatesPrimitive select="$field" var="generatesPrimitive" />
+			<c:choose><c:when test="$generatesPrimitive" >
+			if(ascending) { 
+				return (int)(<sw:getVariableName select="$field" capitalize="true"/>1 - <sw:getVariableName select="$field" capitalize="true"/>2);
+			} else { 
+				return (int)(<sw:getVariableName select="$field" capitalize="true"/>2 - <sw:getVariableName select="$field" capitalize="true"/>1);
+			}
+			</c:when><c:otherwise>
+			if(ascending) { 
+				return <sw:getVariableName select="$field" capitalize="true"/>1.compareTo(<sw:getVariableName select="$field" capitalize="true"/>2);
+			} else { 
+				return <sw:getVariableName select="$field" capitalize="true"/>2.compareTo(<sw:getVariableName select="$field" capitalize="true"/>1);
+			}
+			</c:otherwise></c:choose>
+		}
+	}
+	</swgwt:ifPropertyHasAction>
+	</c:iterate>
+}

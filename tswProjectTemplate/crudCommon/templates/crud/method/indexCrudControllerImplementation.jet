@@ -1,0 +1,8 @@
+<%@ jet 
+package="com.skyway.scaffolding.crud.templates.method" 
+class="IndexCrudControllerImplementationTemplate" 
+%>
+<%@taglib prefix="jet" id="org.eclipse.jet.controlTags"%>  
+<%@taglib prefix="f" id="org.eclipse.jet.formatTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+return "redirect:/index<jet:get select="$dataType/@name"/>";

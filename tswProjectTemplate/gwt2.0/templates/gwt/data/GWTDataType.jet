@@ -1,0 +1,108 @@
+<%@ jet 
+package="com.skyway.integration.google.webtoolkit.deploy.templates" 
+class="GWTDataTypeTemplate" 
+%>
+
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+<%@taglib prefix="swgwt" id="com.skyway.integration.google.webtoolkit.common.skywayGWTCodeGenTags"%>
+
+
+package <sw:package select="$model" alias="gwtdatatype" var="pkg"/>;
+
+<sw:javaType select="$model" package="true" var="fullyQualifiedClassName" emit="false"/>
+<java:importsLocation package="{$pkg}"/>
+<java:impliedImport name="{$fullyQualifiedClassName}"/>
+
+/**
+ * A lightweight POJO without relationships that can be used for RPC style remote calls with GWT.
+ * The GWT Services have methods for adding, removing and loading Objects and for managing relationships on Objects.
+ * This approach encourages loose coupling between objects and asynchronous loading of related data
+ * 
+ * @see  <sw:javaType select="$model"  package="false"/> 
+<sw:generated />
+ */
+public class <sw:javaType select="$model" alias="gwtdatatype" package="false"/> implements <java:import>java.io.Serializable</java:import>{
+	private static final long serialVersionUID = 1L;
+
+	<c:iterate select="$model/fields" var="field">
+		/**
+		<sw:documentation select="$field" format=" * "/>
+		* Declare <sw:getVariableName select="$field"/>
+		<sw:generated />
+		*/
+		<c:choose><c:when test="$field/@collection = 'true'"><sw:modifiers select="$field" /> <sw:declareClassVariable select="$field" ><swgwt:javaType select="$field" package="true" emitCollectionPolicy="concrete" emitIncludes="true"/> </sw:declareClassVariable>;</c:when><c:otherwise><sw:modifiers select="$field" /> <sw:declareClassVariable select="$field" ><swgwt:javaType select="$field" package="true" emitIncludes="true"/> </sw:declareClassVariable>;</c:otherwise></c:choose>
+	</c:iterate>
+	
+
+<c:iterate select="$model/fields" var="field">
+		/**
+		* Setter for <sw:getVariableName select="$field"/>
+		<sw:documentation select="$field" format=" * "/>
+		<sw:generated />
+		 */
+		public void set<sw:getVariableName select="$field" capitalize="true"/>(<c:choose><c:when test="$field/@collection = 'true'"><swgwt:javaType select="$field" package="true" emitCollectionPolicy="concrete" emitIncludes="true"/> <sw:getVariableName select="$field"/></c:when><c:otherwise><swgwt:javaType select="$field" package="true" emitIncludes="true"/> <sw:getVariableName select="$field"/></c:otherwise></c:choose>) {
+			this.<sw:getVariableName select="$field"/> = <sw:getVariableName select="$field"/>;
+		}
+		
+		/**
+		* Getter for <sw:getVariableName select="$field"/>
+		<sw:documentation select="$field" format=" * "/>
+		<sw:generated />
+		 */
+		public <c:choose><c:when test="$field/@collection = 'true'"><swgwt:javaType select="$field" package="true" emitCollectionPolicy="concrete" emitIncludes="true"/></c:when><c:otherwise><swgwt:javaType select="$field" package="true" emitIncludes="true"/></c:otherwise></c:choose> get<sw:getVariableName select="$field" capitalize="true"/>() {			
+			return this.<sw:getVariableName select="$field"/>;
+		} 
+	</c:iterate>
+
+
+	/**
+	<sw:generated />  
+	 */
+	public <sw:javaType select="$model" alias="gwtdatatype" package="false"/> ()	{
+	}
+
+	/**
+	 * A clone method.
+	 *
+	<sw:generated />  
+	 */
+	public static <sw:javaType select="$model" alias="gwtdatatype" package="false"/> from(<sw:javaType select="$model" alias="gwtdatatype" /> that) {
+		<sw:javaType select="$model" alias="gwtdatatype" package="false"/> cloned = new <sw:javaType select="$model" alias="gwtdatatype" package="false"/> ();
+		cloned.copy (that);
+		
+		return cloned;
+	}
+
+	/**
+	 * Copies the contents of the specified bean into this bean.
+	 *
+	 <sw:generated />  
+	 */
+	public void copy(<sw:javaType select="$model" alias="gwtdatatype" /> that) {
+		<c:iterate select="$model/fields" var="field">
+			set<sw:getVariableName select="$field" capitalize="true"/>(that.get<sw:getVariableName select="$field" capitalize="true"/>());
+		</c:iterate>
+	}
+
+	/**
+	 * Returns a textual representation of a bean.
+	 *
+	 <sw:generated />  
+	 */
+	public String toString(){
+		
+		<java:import>java.lang.StringBuilder</java:import> buffer = new <java:import>java.lang.StringBuilder</java:import>();
+		
+		<c:iterate select="$model/fields" var="field">
+		buffer.append("<sw:getVariableName select="$field"/>=[").append(<sw:getVariableName select="$field"/>).append("] ");
+		</c:iterate>
+		
+		return buffer.toString();
+	}	
+
+	<c:setVariable select="'gwtdatatype'" var="equalsTypeAlias" />
+	<c:include template="templates/common/jpa/HashCodeAndEquals.jet" />
+}

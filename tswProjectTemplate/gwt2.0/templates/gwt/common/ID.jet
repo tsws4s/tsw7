@@ -1,0 +1,22 @@
+<%@ jet 
+package="com.skyway.integration.google.webtoolkit.deploy.templates" 
+class="IDTemplate" 
+%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+
+package <sw:package select="$model" alias="gwtid" var="pkg"/>;
+
+<java:importsLocation package="{$pkg}"/>
+
+/**
+* An interface that is used for all strongly typed ID's used to identify Pojo instances.
+* These IDs can be used by Actions which are parameterized to allow for loose coupling of Object
+* relationships etc.
+<sw:generated />
+*/
+public interface <sw:javaType select="$model" alias="gwtid" package="false"/> extends <java:import>java.io.Serializable</java:import> {
+
+}

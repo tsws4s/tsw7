@@ -1,0 +1,43 @@
+<%@ jet 
+package="com.skyway.integration.service.flex.jet.config" 
+class="FlexConfigTemplate" 
+%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+<%@taglib prefix="swspr" id="org.skyway.integration.java.spring.skywaySpringCodeGenTags"%>
+<%@taglib prefix="swflex" id="com.skyway.integration.flex.common.skywayFlexCodeGenTags"%>
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:flex="http://www.springframework.org/schema/flex"
+    <swspr:compareSpringVersion select="$model" version="3.1" compareType=">=" var="spring31" />
+	<swspr:compareSpringVersion select="$model" version="3.0" compareType="==" var="spring3" />
+	<c:choose>
+	<c:when test="toBoolean($spring31)" >	
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+      http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+    </c:when>
+    <c:when test="toBoolean($spring3)" >	
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+      http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+    </c:when>
+    <c:otherwise>
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+      http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+    </c:otherwise>
+    </c:choose>    
+      http://www.springframework.org/schema/flex 
+	  http://www.springframework.org/schema/flex/spring-flex-1.0.xsd">
+	  
+	<flex:message-broker/>
+	<c:iterate select="$model/project/services" var="service">
+		<swflex:getFlexService service="$service" var="flexService" />
+		<c:if test="string($flexService/publish) = 'true'" >
+	<flex:remoting-destination ref="<swspr:componentID select="$service" alias="interface" />" destination-id="<swspr:componentID select="$service" alias="interface" />"/>
+		
+		</c:if>		
+	</c:iterate>
+ 
+</beans>

@@ -1,0 +1,23 @@
+<%@ jet 
+package="com.skyway.scaffolding.crud.templates.common" 
+class="CrudViewFieldTemplate" 
+%>
+<%@taglib prefix="jet" id="org.eclipse.jet.controlTags"%>  
+<%@taglib prefix="jetf" id="org.eclipse.jet.formatTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+<%@taglib prefix="gen" id="com.skyway.scaffolding.crud.common.generationTags"%>
+						<gen:isCalendarField select="$field" var="isCalendarField" />
+						<jet:choose>
+							<jet:when test="$field/dataType/@type = 'DATE'">
+							<h:outputText value="#{<jet:get select="$currentDataTypeName"/>.<jet:get select="$field/@name" />}"  converter="dateConverterFor<jet:choose><jet:when test="$isCalendarField">Calendar</jet:when><jet:otherwise>Date</jet:otherwise></jet:choose>" />
+							</jet:when>
+							<jet:when test="$field/dataType/@type = 'DATETIME'">
+							<h:outputText value="#{<jet:get select="$currentDataTypeName"/>.<jet:get select="$field/@name" />}" converter="dateTimeConverterFor<jet:choose><jet:when test="$isCalendarField">Calendar</jet:when><jet:otherwise>Date</jet:otherwise></jet:choose>" />
+							</jet:when>
+							<jet:when test="$field/dataType/@type = 'TIME'">
+							<h:outputText value="#{<jet:get select="$currentDataTypeName"/>.<jet:get select="$field/@name" />}" converter="timeConverterFor<jet:choose><jet:when test="$isCalendarField">Calendar</jet:when><jet:otherwise>Date</jet:otherwise></jet:choose>" />
+							</jet:when>
+							<jet:otherwise>
+							<h:outputText value="#{<jet:get select="$currentDataTypeName"/>.<jet:get select="$field/@name" />}"/>
+							</jet:otherwise>
+						</jet:choose>

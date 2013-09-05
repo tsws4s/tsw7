@@ -1,0 +1,4 @@
+<%@ jet 
+package="org.skyway.deploy.templates.config" 
+class="GenerateNothingTemplate" 
+%>

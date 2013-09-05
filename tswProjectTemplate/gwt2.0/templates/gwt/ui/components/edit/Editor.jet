@@ -1,0 +1,215 @@
+<%@ jet 
+package="com.skyway.integration.google.webtoolkit.deploy.templates" 
+class="EditorTemplate" 
+%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+<%@taglib prefix="swgwt" id="com.skyway.integration.google.webtoolkit.common.skywayGWTCodeGenTags"%>
+
+package <sw:package select="$model" alias="gwteditor" var="pkg"/>;
+<sw:javaType select="$model" package="true" var="fullyQualifiedClassName" emit="false"/>
+<java:importsLocation package="{$pkg}"/>
+<java:impliedImport name="{$fullyQualifiedClassName}"/>
+
+<sw:getVariableName select="$model" uncapitalize="true" var="domainObjName" emit="false"/> <sw:getVariableName select="$model" uncapitalize="false" var="DomainObjName" emit="false"/>
+<swgwt:getGWTDataType select="$model" var="gwtDataType"/>
+
+/**
+ * Presenter for <sw:javaType select="$model" alias="gwtdatatype" package="false"/> editing
+<sw:generated />
+ */
+public class <sw:javaType select="$model" alias="gwteditor" package="false"/> {
+	// Display Interface that must be implemented to bind a Display to this editor
+	interface Display {
+	<c:iterate select="$gwtDataType/properties" var="propertyselection">
+	<c:setVariable select="$propertyselection/Property" var="field"/>
+	<swgwt:ifPropertyHasAction select="$propertyselection" action="EDIT">
+		public <java:import>com.google.gwt.user.client.ui.HasValue</java:import><<swgwt:javaType controlSafeTypes="true" select="$field" package="false" emitCollectionPolicy="concrete" emitIncludes="true"/>> get<sw:getVariableName select="$field" capitalize="true"/>Box();
+	</swgwt:ifPropertyHasAction>
+	</c:iterate>
+		public <java:import>com.google.gwt.event.dom.client.HasClickHandlers</java:import> getCancelButton();
+		public HasClickHandlers getSaveButton();
+		public void setIsNew(boolean isNew);
+		public boolean isValid();
+	}
+	
+	/**
+	 * Reference to the Display that is bound to this presenter 
+	<sw:generated />
+	 */
+	private Display display;
+	
+	/**
+	 * The <sw:javaType select="$model" alias="gwtdatatype" package="false"/> being edited
+	<sw:generated />
+	 */
+	private <java:import><sw:javaType select="$model" alias="gwtdatatype" package="true"/></java:import> <c:get select="$domainObjName"/>;
+	
+	/**
+	 * The Crud Service used to handle saves from this Editor
+	<sw:generated />
+	 */
+	private <java:import><sw:javaType select="$model" alias="gwtserviceasync" package="true"/></java:import> service;
+	
+	/**
+	 * The Registration for listening for Stored Events on the event bus
+	 <sw:generated />
+	 */
+	private <java:import>com.google.gwt.event.shared.HandlerRegistration</java:import> storedHandler;
+	
+	
+	/**
+	 * The I18N Messages
+	 <sw:generated />
+	 */
+	private final static <java:import><sw:javaType select="$model" alias="gwtmessagesinterface" package="true"/></java:import> messages = (<sw:javaType select="$model" alias="gwtmessagesinterface" package="false"/>)<java:import>com.google.gwt.core.client.GWT</java:import>.create (<sw:javaType select="$model" alias="gwtmessagesinterface" package="false"/>.class);
+	
+	
+	/**
+	 * Constructor that takes an instance of the Display to bind to this presenter
+	<sw:generated />
+	 */
+	public <sw:javaType select="$model" alias="gwteditor" package="false"/> (Display display) {
+		this (display, <java:import><sw:javaType select="$model" alias="gwtservice" package="true"/></java:import>.Util.getInstance());
+	}
+	
+	/**
+	 * Constructor that takes an instance of the Display to bind to this presenter, and an override to disable calls through to the server
+	 * This constructor just avoids creating an instance of the Default crud Service.
+	 * The Editor will only perform saves if the Async Crud Service is present
+	 * 
+	<sw:generated />
+	 */
+	public <sw:javaType select="$model" alias="gwteditor" package="false"/> (Display display, boolean performSave) {
+		bindDisplay (display);
+		if (performSave)
+			this.service = <java:import><sw:javaType select="$model" alias="gwtservice" package="true"/></java:import>.Util.getInstance();
+	}
+	
+	/**
+	 * Constructor that takes the Display to bind to this presenter, and the Async Service to use for saving
+	<sw:generated />
+	 */
+	public <sw:javaType select="$model" alias="gwteditor" package="false"/> (Display display, <sw:javaType select="$model" alias="gwtserviceasync" package="false"/> service) {
+		bindDisplay (display);
+		this.service = service;
+	}
+
+	/**
+	 * Binds the view to the presenter
+	<sw:generated />
+	 */
+	void bindDisplay (final Display display) {
+		this.display = display;
+		
+		if (display.getSaveButton() != null) {
+			display.getSaveButton().addClickHandler(new <java:import>com.google.gwt.event.dom.client.ClickHandler</java:import>() {
+				public void onClick(<java:import>com.google.gwt.event.dom.client.ClickEvent</java:import> event) {
+					if (display.isValid())
+						doSave();
+					else 
+						doError();
+				}
+			});
+		}
+		
+		if (display.getCancelButton() != null) {
+			display.getCancelButton().addClickHandler(new ClickHandler() {
+				public void onClick(ClickEvent event) {
+					doCancel();
+				}
+			});
+		}
+		
+		storedHandler = <java:import><sw:javaType select="$model/project" alias="gwteventbus" package="true"/></java:import>.get().addHandler(<java:import><sw:javaType select="$model" alias="gwtstoredevent" package="true"/></java:import>.TYPE, new <java:import><sw:javaType select="$model" alias="gwtstoredhandler" package="true"/></java:import>() {
+			public void on<c:get select="$DomainObjName"/>Stored(<sw:javaType select="$model" alias="gwtstoredevent" package="false"/> event) {
+				if (new <java:import><sw:javaType select="$model" alias="gwtdatatypeid" package="true"/></java:import>(event.get<c:get select="$DomainObjName"/>()).equals(new <java:import><sw:javaType select="$model" alias="gwtdatatypeid" package="true"/></java:import>(<c:get select="$domainObjName"/>)))
+					edit (event.get<c:get select="$DomainObjName"/>());
+			}
+		});
+	}
+	
+	/**
+	 * Sets the <sw:javaType select="$model" alias="gwtdatatype" package="false"/> being edited and binds its properties to the Display
+	 * If null is passed, all fields will be cleared
+	<sw:generated />
+	 */
+	public void edit (<sw:javaType select="$model" alias="gwtdatatype" package="false"/> toEdit) {
+		<c:get select="$domainObjName"/> = (toEdit == null) ? new <sw:javaType select="$model" alias="gwtdatatype" package="false"/> () : <sw:javaType select="$model" alias="gwtdatatype" package="false"/>.from(toEdit);
+	<c:iterate select="$gwtDataType/properties" var="propertyselection">
+	<c:setVariable select="$propertyselection/Property" var="field"/>
+	<swgwt:ifPropertyHasAction select="$propertyselection" action="EDIT"><sw:generatesPrimitive select="$field" var="generatesPrimitive" />
+	<swgwt:javaType select="$field" package="true" emitCollectionPolicy="concrete" emitIncludes="true" emit="false" var="javaType"/>
+	
+	<c:choose><c:when test="$generatesPrimitive">
+	display.get<sw:getVariableName select="$field" capitalize="true"/>Box().setValue(<c:choose><c:when test="$javaType = 'Long'"><c:get select="$domainObjName"/>.get<sw:getVariableName select="$field" capitalize="true"/>().intValue()</c:when><c:when test="$javaType = 'long'">(int)<c:get select="$domainObjName"/>.get<sw:getVariableName select="$field" capitalize="true"/>()</c:when><c:when test="$javaType = 'Float'"><c:get select="$domainObjName"/>.get<sw:getVariableName select="$field" capitalize="true"/>().doubleValue()</c:when><c:when test="$javaType = 'float'">new Double(<c:get select="$domainObjName"/>.get<sw:getVariableName select="$field" capitalize="true"/>())</c:when><c:otherwise><c:get select="$domainObjName"/>.get<sw:getVariableName select="$field" capitalize="true"/>()</c:otherwise></c:choose>);
+	</c:when>
+	<c:otherwise>
+	if (<c:get select="$domainObjName"/>.get<sw:getVariableName select="$field" capitalize="true"/>() != null)
+			display.get<sw:getVariableName select="$field" capitalize="true"/>Box().setValue(<c:choose><c:when test="$javaType = 'Long'"><c:get select="$domainObjName"/>.get<sw:getVariableName select="$field" capitalize="true"/>().intValue()</c:when><c:when test="$javaType = 'long'">(int)<c:get select="$domainObjName"/>.get<sw:getVariableName select="$field" capitalize="true"/>()</c:when><c:when test="$javaType = 'Float'"><c:get select="$domainObjName"/>.get<sw:getVariableName select="$field" capitalize="true"/>().doubleValue()</c:when><c:when test="$javaType = 'float'">new Double(<c:get select="$domainObjName"/>.get<sw:getVariableName select="$field" capitalize="true"/>())</c:when><c:otherwise><c:get select="$domainObjName"/>.get<sw:getVariableName select="$field" capitalize="true"/>()</c:otherwise></c:choose>);
+	</c:otherwise>
+	</c:choose>
+	</swgwt:ifPropertyHasAction>
+	</c:iterate>
+	}
+	
+	/**
+	 * Handles the Save of the <sw:javaType select="$model" alias="gwtdatatype" package="false"/> being edited.
+	 * Binds the data from the View back into the model and if a valid service is available, calls the store method
+	 * @see <sw:javaType select="$model" alias="gwtserviceasync" package="false"/>
+	<sw:generated />
+	 */
+	void doSave () {
+		<c:iterate select="$gwtDataType/properties" var="propertyselection">
+		<c:setVariable select="$propertyselection/Property" var="field"/>
+		<swgwt:ifPropertyHasAction select="$propertyselection" action="EDIT">
+		<swgwt:javaType select="$field" package="true" emitCollectionPolicy="concrete" emitIncludes="true" emit="false" var="javaType"/>
+		 <c:get select="$domainObjName"/>.set<sw:getVariableName select="$field" capitalize="true"/>(<c:choose><c:when test="$javaType = 'Long'">new Long(display.get<sw:getVariableName select="$field" capitalize="true"/>Box().getValue()));</c:when><c:when test="$javaType = 'Float'">new Float(display.get<sw:getVariableName select="$field" capitalize="true"/>Box().getValue()));</c:when><c:when test="$javaType = 'float'">display.get<sw:getVariableName select="$field" capitalize="true"/>Box().getValue().floatValue());</c:when><c:otherwise>display.get<sw:getVariableName select="$field" capitalize="true"/>Box().getValue());</c:otherwise></c:choose>	 
+		</swgwt:ifPropertyHasAction>
+		</c:iterate>
+		
+		if (service != null) {
+			service.execute(new <java:import><sw:javaType select="$model" alias="gwtstore" package="true"/></java:import>(<c:get select="$domainObjName"/>), new <java:import><sw:javaType select="$model" alias="gwtstored" package="true"/></java:import>() {
+				public void stored (<sw:javaType select="$model" alias="gwtdatatype" package="false"/> <c:get select="$domainObjName"/>) {}
+			});
+		}
+	}
+	
+	/**
+	 * Cancels editing and nulls the <sw:javaType select="$model" alias="gwtdatatype" package="false"/> being edited
+	<sw:generated />
+	 */
+	void doCancel() {
+		<c:get select="$domainObjName"/> = null;
+	}
+	
+	/**
+	 * Gives the user feedback that the fields for the editor are not all valid and must be corrected
+	<sw:generated />
+	 */
+	void doError() {
+		<java:import>com.google.gwt.user.client.Window</java:import>.alert (messages.invalidEditorMessage());
+	}
+	
+	/**
+	 * Returns the <sw:javaType select="$model" alias="gwtdatatype" package="false"/> being edited or null if the edit was canceled
+	<sw:generated />
+	 */
+	public <sw:javaType select="$model" alias="gwtdatatype" package="false"/> get<c:get select="$DomainObjName"/>() {
+		return <c:get select="$domainObjName"/>;
+	}	
+	
+	/**
+	 * Remove hanlders and clean up
+	 <sw:generated />
+	 */
+	void dispose() {
+		storedHandler.removeHandler();
+		storedHandler = null;
+		<c:get select="$domainObjName"/> = null;
+		service = null;
+	}
+}
+

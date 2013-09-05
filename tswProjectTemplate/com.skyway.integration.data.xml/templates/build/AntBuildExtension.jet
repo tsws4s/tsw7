@@ -1,0 +1,29 @@
+<%@ jet 
+package="com.skyway.integration.data.xml.jet.build" 
+class="AntBuildExtension" 
+%>
+<%@taglib prefix="persistence" id="org.skyway.integration.data.persistence.skywayPersistenceTags"%>
+<%@taglib prefix="jaxb" id="com.skyway.integration.data.xml.skywayJAXBTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="f" id="org.eclipse.jet.formatTags"%>
+
+<?eclipse.ant.import?>
+<project basedir="." default="generate-schema">
+	<taskdef name="schemagen" classname="com.sun.tools.jxc.SchemaGenTask">
+		<classpath refid="all-jax-execution.libraryclasspath" />
+		<classpath refid="all-java-execution.libraryclasspath" />
+		<classpath refid="all-hibernate-execution.libraryclasspath" />
+		<classpath refid="all-spring-execution.libraryclasspath" />
+	</taskdef>
+
+	<target description="Generate Schema for JAXB Annotated Classes" name="generate-schema">
+		<schemagen srcdir="./generated" destdir="<jaxb:schemasDir />" includesfile="<sw:configFile select="$model" alias="schema-gen-includes" projectPathRelative="true" />">
+			<classpath refid="all-jax-execution.libraryclasspath" />
+			<classpath refid="all-java-execution.libraryclasspath" />
+			<classpath refid="all-hibernate-execution.libraryclasspath" />
+			<classpath refid="all-spring-execution.libraryclasspath" />
+			<includesFile name="domaintypes.txt" />
+			<schema namespace="Domain" file="<jaxb:schemaLocation/>" />
+		</schemagen>
+	</target>
+</project>

@@ -1,0 +1,32 @@
+<%@ jet package="com.skyway.templates" class="BigDecimalRendererTemplate"%>
+
+package <sw:package select="$model" alias="BigDecimalRenderer"var="pkg"/>;
+<java:importsLocation package="{$pkg}"/>
+
+/**
+ * A simple renderer of Float values.
+ */
+public class <java:import>java.math.BigDecimal</java:import><java:import>com.google.gwt.text.shared.Renderer</java:import> extends <java:import>com.google.gwt.text.shared.AbstractRenderer</java:import><BigDecimal> {
+  private static <sw:javaType select="$model" alias="BigDecimalRenderer" package="false"/> INSTANCE;
+
+  /**
+   * @return the instance
+   */
+  public static Renderer<BigDecimal> instance() {
+    if (INSTANCE == null) {
+      INSTANCE = new <sw:javaType select="$model" alias="BigDecimalRenderer" package="false"/>();
+    }
+    return INSTANCE;
+  }
+
+  protected <sw:javaType select="$model" alias="BigDecimalRenderer" package="false"/>() {
+  }
+
+  public String render(BigDecimal object) {
+    if (object == null) {
+      return "";
+    }
+
+    return object.toString();
+  }
+}

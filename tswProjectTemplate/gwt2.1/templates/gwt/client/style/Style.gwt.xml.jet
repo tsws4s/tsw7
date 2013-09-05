@@ -1,0 +1,6 @@
+<%@ jet package="com.skyway.integration.google.webtoolkit.deploy.templates" class="StyleGWTXmlTemplate"%>
+
+<module>
+  <inherits name="com.google.gwt.resources.Resources"/>
+  <source path='client'/>
+</module>

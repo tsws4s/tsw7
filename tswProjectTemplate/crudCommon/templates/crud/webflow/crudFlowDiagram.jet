@@ -1,0 +1,569 @@
+<%@ jet 
+package="com.skyway.scaffolding.crud.templates.webflow" 
+class="CrudFlowDiagramTemplate" 
+%>
+<%@taglib prefix="jet" id="org.eclipse.jet.controlTags"%>  
+<%@taglib prefix="f" id="org.eclipse.jet.formatTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+<%@taglib prefix="gen" id="com.skyway.scaffolding.crud.common.generationTags"%>
+<?xml version="1.0" encoding="UTF-8"?>
+<notation:Diagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns="http://www.springframework.org/schema/webflow" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmi:id="_gliLoEY7Ed-dAt502QLQZA" type="spring-webflow" name="manage<jet:get select="lower-case($currentDataType/@name)"/>s.webflow_diagram" measurementUnit="Pixel">
+  <children xmi:type="notation:Node" xmi:id="_gliLoUY7Ed-dAt502QLQZA" type="flow">
+    <children xmi:type="notation:Node" xmi:id="_gliLokY7Ed-dAt502QLQZA" type="flowLabel"/>
+    <children xmi:type="notation:Node" xmi:id="_gliLo0Y7Ed-dAt502QLQZA" type="generalFlowCompartment">
+      <children xmi:type="notation:Node" xmi:id="_gliLpEY7Ed-dAt502QLQZA" type="flowSecurity">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_gliLpUY7Ed-dAt502QLQZA"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_gliLpkY7Ed-dAt502QLQZA" type="persistenceContext">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_gliLp0Y7Ed-dAt502QLQZA"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_gliLqEY7Ed-dAt502QLQZA" type="abstract">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_gliLqUY7Ed-dAt502QLQZA"/>
+      </children>
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_gliLrEY7Ed-dAt502QLQZA"/>
+      <styles xmi:type="notation:TitleStyle" xmi:id="_gliLrUY7Ed-dAt502QLQZA" showTitle="true"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_gliLrkY7Ed-dAt502QLQZA"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_gliLr0Y7Ed-dAt502QLQZA"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_gliLsEY7Ed-dAt502QLQZA" type="flowInputs">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_gliLsUY7Ed-dAt502QLQZA"/>
+      <styles xmi:type="notation:TitleStyle" xmi:id="_gliLskY7Ed-dAt502QLQZA" showTitle="true"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_gliLs0Y7Ed-dAt502QLQZA"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_gliLtEY7Ed-dAt502QLQZA"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_gliLtUY7Ed-dAt502QLQZA" type="flowOutputs">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_gliLtkY7Ed-dAt502QLQZA"/>
+      <styles xmi:type="notation:TitleStyle" xmi:id="_gliLt0Y7Ed-dAt502QLQZA" showTitle="true"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_gliLuEY7Ed-dAt502QLQZA"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_gliLuUY7Ed-dAt502QLQZA"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_gliLukY7Ed-dAt502QLQZA" type="flowVariables">
+      <children xmi:type="notation:Node" xmi:id="_lKp8oEY7Ed-dAt502QLQZA" type="variable">
+        <element xmi:type="VarType1" href="<jet:get select="$relativeWebFlowLocation" />/<sw:webRootFolder select="$project" />/WEB-INF/flows/<jet:get select="$flowName"/>/<jet:get select="$flowName"/>.xml#//@flow/@var.0"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_lKp8oUY7Ed-dAt502QLQZA"/>
+      </children>
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_gliLu0Y7Ed-dAt502QLQZA"/>
+      <styles xmi:type="notation:TitleStyle" xmi:id="_gliLvEY7Ed-dAt502QLQZA" showTitle="true"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_gliLvUY7Ed-dAt502QLQZA"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_gliLvkY7Ed-dAt502QLQZA"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_gliLv0Y7Ed-dAt502QLQZA" type="flowExceptions">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_gliLwEY7Ed-dAt502QLQZA"/>
+      <styles xmi:type="notation:TitleStyle" xmi:id="_gliLwUY7Ed-dAt502QLQZA" showTitle="true"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_gliLwkY7Ed-dAt502QLQZA"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_gliLw0Y7Ed-dAt502QLQZA"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_gliLxEY7Ed-dAt502QLQZA" type="beanImports">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_gliLxUY7Ed-dAt502QLQZA"/>
+      <styles xmi:type="notation:TitleStyle" xmi:id="_gliLxkY7Ed-dAt502QLQZA" showTitle="true"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_gliLx0Y7Ed-dAt502QLQZA"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_gliLyEY7Ed-dAt502QLQZA"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_gliLyUY7Ed-dAt502QLQZA" fillColor="12560536"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_gliLykY7Ed-dAt502QLQZA" x="30" y="30" width="125"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_h3zEwEY7Ed-dAt502QLQZA" type="viewState">
+    <children xmi:type="notation:Node" xmi:id="_h3zEw0Y7Ed-dAt502QLQZA" type="viewStateLabel"/>
+    <children xmi:type="notation:Node" xmi:id="_h3zExEY7Ed-dAt502QLQZA" type="viewStateProperties">
+      <children xmi:type="notation:Node" xmi:id="_h38OsEY7Ed-dAt502QLQZA" type="viewStateView">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_h38OsUY7Ed-dAt502QLQZA"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_h38OskY7Ed-dAt502QLQZA" type="model">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_h38Os0Y7Ed-dAt502QLQZA"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_h38OtEY7Ed-dAt502QLQZA" type="viewStateSecurity">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_h38OtUY7Ed-dAt502QLQZA"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_h38OtkY7Ed-dAt502QLQZA" type="redirect">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_h38Ot0Y7Ed-dAt502QLQZA"/>
+      </children>
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_h3zExUY7Ed-dAt502QLQZA"/>
+      <styles xmi:type="notation:TitleStyle" xmi:id="_h3zExkY7Ed-dAt502QLQZA" showTitle="true"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_h3zEx0Y7Ed-dAt502QLQZA"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_h3zEyEY7Ed-dAt502QLQZA"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_h38OuEY7Ed-dAt502QLQZA" type="viewStateVariables">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_h38OuUY7Ed-dAt502QLQZA"/>
+      <styles xmi:type="notation:TitleStyle" xmi:id="_h38OukY7Ed-dAt502QLQZA" showTitle="true"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_h38Ou0Y7Ed-dAt502QLQZA"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_h38OvEY7Ed-dAt502QLQZA"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_h38OvUY7Ed-dAt502QLQZA" type="viewStateExceptions">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_h38OvkY7Ed-dAt502QLQZA"/>
+      <styles xmi:type="notation:TitleStyle" xmi:id="_h38Ov0Y7Ed-dAt502QLQZA" showTitle="true"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_h38OwEY7Ed-dAt502QLQZA"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_h38OwUY7Ed-dAt502QLQZA"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_h3zEwUY7Ed-dAt502QLQZA" fillColor="10011046"/>
+    <element xmi:type="ViewStateType" href="<jet:get select="$relativeWebFlowLocation" />/<sw:webRootFolder select="$project" />/WEB-INF/flows/<jet:get select="$flowName"/>/<jet:get select="$flowName"/>.xml#list<jet:get select="uppercaseFirst($currentDataType/@name)"/>s"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_h3zEwkY7Ed-dAt502QLQZA" x="190" y="300" width="125"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_ZgQG0EZCEd-dAt502QLQZA" type="viewState">
+    <children xmi:type="notation:Node" xmi:id="_ZgQG00ZCEd-dAt502QLQZA" type="viewStateLabel"/>
+    <children xmi:type="notation:Node" xmi:id="_ZgQG1EZCEd-dAt502QLQZA" type="viewStateProperties">
+      <children xmi:type="notation:Node" xmi:id="_ZgQG2UZCEd-dAt502QLQZA" type="viewStateView">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_ZgQG2kZCEd-dAt502QLQZA"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_ZgQG20ZCEd-dAt502QLQZA" type="model">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_ZgQG3EZCEd-dAt502QLQZA"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_ZgQG3UZCEd-dAt502QLQZA" type="viewStateSecurity">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_ZgQG3kZCEd-dAt502QLQZA"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_ZgQG30ZCEd-dAt502QLQZA" type="redirect">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_ZgQG4EZCEd-dAt502QLQZA"/>
+      </children>
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_ZgQG1UZCEd-dAt502QLQZA"/>
+      <styles xmi:type="notation:TitleStyle" xmi:id="_ZgQG1kZCEd-dAt502QLQZA" showTitle="true"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_ZgQG10ZCEd-dAt502QLQZA"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_ZgQG2EZCEd-dAt502QLQZA"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_ZgQG4UZCEd-dAt502QLQZA" type="viewStateVariables">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_ZgQG4kZCEd-dAt502QLQZA"/>
+      <styles xmi:type="notation:TitleStyle" xmi:id="_ZgQG40ZCEd-dAt502QLQZA" showTitle="true"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_ZgQG5EZCEd-dAt502QLQZA"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_ZgQG5UZCEd-dAt502QLQZA"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_ZgQG5kZCEd-dAt502QLQZA" type="viewStateExceptions">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_ZgQG50ZCEd-dAt502QLQZA"/>
+      <styles xmi:type="notation:TitleStyle" xmi:id="_ZgQG6EZCEd-dAt502QLQZA" showTitle="true"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_ZgQG6UZCEd-dAt502QLQZA"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_ZgQG6kZCEd-dAt502QLQZA"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_ZgQG0UZCEd-dAt502QLQZA" fillColor="10011046"/>
+    <element xmi:type="ViewStateType" href="<jet:get select="$relativeWebFlowLocation" />/<sw:webRootFolder select="$project" />/WEB-INF/flows/<jet:get select="$flowName"/>/<jet:get select="$flowName"/>.xml#view<jet:get select="uppercaseFirst($currentDataType/@name)"/>"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_ZgQG0kZCEd-dAt502QLQZA" x="520" y="300" width="151"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_z8XZQEZCEd-dAt502QLQZA" type="viewState">
+    <children xmi:type="notation:Node" xmi:id="_z8XZQ0ZCEd-dAt502QLQZA" type="viewStateLabel"/>
+    <children xmi:type="notation:Node" xmi:id="_z8XZREZCEd-dAt502QLQZA" type="viewStateProperties">
+      <children xmi:type="notation:Node" xmi:id="_z8XZSUZCEd-dAt502QLQZA" type="viewStateView">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_z8XZSkZCEd-dAt502QLQZA"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_z8XZS0ZCEd-dAt502QLQZA" type="model">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_z8XZTEZCEd-dAt502QLQZA"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_z8XZTUZCEd-dAt502QLQZA" type="viewStateSecurity">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_z8XZTkZCEd-dAt502QLQZA"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_z8XZT0ZCEd-dAt502QLQZA" type="redirect">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_z8XZUEZCEd-dAt502QLQZA"/>
+      </children>
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_z8XZRUZCEd-dAt502QLQZA"/>
+      <styles xmi:type="notation:TitleStyle" xmi:id="_z8XZRkZCEd-dAt502QLQZA" showTitle="true"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_z8XZR0ZCEd-dAt502QLQZA"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_z8XZSEZCEd-dAt502QLQZA"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_z8XZUUZCEd-dAt502QLQZA" type="viewStateVariables">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_z8XZUkZCEd-dAt502QLQZA"/>
+      <styles xmi:type="notation:TitleStyle" xmi:id="_z8XZU0ZCEd-dAt502QLQZA" showTitle="true"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_z8XZVEZCEd-dAt502QLQZA"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_z8XZVUZCEd-dAt502QLQZA"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_z8XZVkZCEd-dAt502QLQZA" type="viewStateExceptions">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_z8XZV0ZCEd-dAt502QLQZA"/>
+      <styles xmi:type="notation:TitleStyle" xmi:id="_z8XZWEZCEd-dAt502QLQZA" showTitle="true"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_z8XZWUZCEd-dAt502QLQZA"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_z8XZWkZCEd-dAt502QLQZA"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_z8XZQUZCEd-dAt502QLQZA" fillColor="10011046"/>
+    <element xmi:type="ViewStateType" href="<jet:get select="$relativeWebFlowLocation" />/<sw:webRootFolder select="$project" />/WEB-INF/flows/<jet:get select="$flowName"/>/<jet:get select="$flowName"/>.xml#edit<jet:get select="uppercaseFirst($currentDataType/@name)"/>"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_z8XZQkZCEd-dAt502QLQZA" x="522" y="128" width="151" height="131"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_TzXnEEZDEd-dAt502QLQZA" type="detailTransitionContainer">
+    <children xmi:type="notation:Node" xmi:id="_TzXnE0ZDEd-dAt502QLQZA" type="detailTransitionLabel"/>
+    <children xmi:type="notation:Node" xmi:id="_TzXnFEZDEd-dAt502QLQZA" type="detailTransitionTypesCompartment">
+      <children xmi:type="notation:Node" xmi:id="_UkGgcEZDEd-dAt502QLQZA" type="evaluate">
+        <element xmi:type="EvaluateType" href="<jet:get select="$relativeWebFlowLocation" />/<sw:webRootFolder select="$project" />/WEB-INF/flows/<jet:get select="$flowName"/>/<jet:get select="$flowName"/>.xml#//@flow/@viewState.0/@transition.1/@evaluate.0"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_UkGgcUZDEd-dAt502QLQZA"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_7CdcIHKKEd-hzKwOtaZOWw" type="set">
+        <element xmi:type="SetType" href="<jet:get select="$relativeWebFlowLocation" />/<sw:webRootFolder select="$project" />/WEB-INF/flows/<jet:get select="$flowName"/>/<jet:get select="$flowName"/>.xml#//@flow/@viewState.0/@transition.1/@set.0"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_7CdcIXKKEd-hzKwOtaZOWw"/>
+      </children>
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_TzXnFUZDEd-dAt502QLQZA"/>
+      <styles xmi:type="notation:TitleStyle" xmi:id="_TzXnFkZDEd-dAt502QLQZA" showTitle="true"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_TzXnF0ZDEd-dAt502QLQZA"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_TzXnGEZDEd-dAt502QLQZA"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_TzXnGUZDEd-dAt502QLQZA" type="detailTransitionProperties">
+      <children xmi:type="notation:Node" xmi:id="_TzXnHkZDEd-dAt502QLQZA" type="detailTransitionSecurity">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_TzXnH0ZDEd-dAt502QLQZA"/>
+      </children>
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_TzXnGkZDEd-dAt502QLQZA"/>
+      <styles xmi:type="notation:TitleStyle" xmi:id="_TzXnG0ZDEd-dAt502QLQZA" showTitle="true"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_TzXnHEZDEd-dAt502QLQZA"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_TzXnHUZDEd-dAt502QLQZA"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_TzXnEUZDEd-dAt502QLQZA" fillColor="12632256"/>
+    <element xmi:type="ViewTransition" href="<jet:get select="$relativeWebFlowLocation" />/<sw:webRootFolder select="$project" />/WEB-INF/flows/<jet:get select="$flowName"/>/<jet:get select="$flowName"/>.xml#//@flow/@viewState.0/@transition.1"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_TzXnEkZDEd-dAt502QLQZA" x="340" y="160" width="145"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_4SGbsEZIEd-dAt502QLQZA" type="detailTransitionContainer">
+    <children xmi:type="notation:Node" xmi:id="_4SGbs0ZIEd-dAt502QLQZA" type="detailTransitionLabel"/>
+    <children xmi:type="notation:Node" xmi:id="_4SGbtEZIEd-dAt502QLQZA" type="detailTransitionTypesCompartment">
+      <children xmi:type="notation:Node" xmi:id="_7upbEEZIEd-dAt502QLQZA" type="evaluate">
+        <element xmi:type="EvaluateType" href="<jet:get select="$relativeWebFlowLocation" />/<sw:webRootFolder select="$project" />/WEB-INF/flows/<jet:get select="$flowName"/>/<jet:get select="$flowName"/>.xml#//@flow/@viewState.2/@transition.1/@evaluate.0"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_7upbEUZIEd-dAt502QLQZA"/>
+      </children>
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_4SGbtUZIEd-dAt502QLQZA"/>
+      <styles xmi:type="notation:TitleStyle" xmi:id="_4SGbtkZIEd-dAt502QLQZA" showTitle="true"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_4SGbt0ZIEd-dAt502QLQZA"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_4SGbuEZIEd-dAt502QLQZA"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_4SGbuUZIEd-dAt502QLQZA" type="detailTransitionProperties">
+      <children xmi:type="notation:Node" xmi:id="_4SGbvkZIEd-dAt502QLQZA" type="detailTransitionSecurity">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_4SGbv0ZIEd-dAt502QLQZA"/>
+      </children>
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_4SGbukZIEd-dAt502QLQZA"/>
+      <styles xmi:type="notation:TitleStyle" xmi:id="_4SGbu0ZIEd-dAt502QLQZA" showTitle="true"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_4SGbvEZIEd-dAt502QLQZA"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_4SGbvUZIEd-dAt502QLQZA"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_4SGbsUZIEd-dAt502QLQZA" fillColor="12632256"/>
+    <element xmi:type="ViewTransition" href="<jet:get select="$relativeWebFlowLocation" />/<sw:webRootFolder select="$project" />/WEB-INF/flows/<jet:get select="$flowName"/>/<jet:get select="$flowName"/>.xml#//@flow/@viewState.2/@transition.1"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_4SGbskZIEd-dAt502QLQZA" x="340" y="90" width="145"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_lJXI0UcPEd-2valkkpaj8A" type="onRenderView">
+    <children xmi:type="notation:Node" xmi:id="_lJqDwEcPEd-2valkkpaj8A" type="onRenderViewLabel"/>
+    <children xmi:type="notation:Node" xmi:id="_lJqDwUcPEd-2valkkpaj8A" type="eventHandlerCompartment">
+      <children xmi:type="notation:Node" xmi:id="_oDIyUEcPEd-2valkkpaj8A" type="evaluate">
+        <element xmi:type="EvaluateType" href="<jet:get select="$relativeWebFlowLocation" />/<sw:webRootFolder select="$project" />/WEB-INF/flows/<jet:get select="$flowName"/>/<jet:get select="$flowName"/>.xml#//@flow/@viewState.0/@onRender/@evaluate.0"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_oDIyUUcPEd-2valkkpaj8A"/>
+      </children>
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_lJqDwkcPEd-2valkkpaj8A"/>
+      <styles xmi:type="notation:TitleStyle" xmi:id="_lJqDw0cPEd-2valkkpaj8A" showTitle="true"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_lJqDxEcPEd-2valkkpaj8A"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_lJqDxUcPEd-2valkkpaj8A"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_lJXI0kcPEd-2valkkpaj8A" fillColor="8905185"/>
+    <element xmi:type="OnRenderType" href="<jet:get select="$relativeWebFlowLocation" />/<sw:webRootFolder select="$project" />/WEB-INF/flows/<jet:get select="$flowName"/>/<jet:get select="$flowName"/>.xml#//@flow/@viewState.0/@onRender"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_lJXI00cPEd-2valkkpaj8A" x="30" y="310" width="125"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_IZSPoEfTEd-9KshNOteTdQ" type="viewState">
+    <children xmi:type="notation:Node" xmi:id="_IZSPo0fTEd-9KshNOteTdQ" type="viewStateLabel"/>
+    <children xmi:type="notation:Node" xmi:id="_IZSPpEfTEd-9KshNOteTdQ" type="viewStateProperties">
+      <children xmi:type="notation:Node" xmi:id="_IZSPqUfTEd-9KshNOteTdQ" type="viewStateView">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_IZSPqkfTEd-9KshNOteTdQ"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_IZSPq0fTEd-9KshNOteTdQ" type="model">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_IZSPrEfTEd-9KshNOteTdQ"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_IZSPrUfTEd-9KshNOteTdQ" type="viewStateSecurity">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_IZSPrkfTEd-9KshNOteTdQ"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_IZSPr0fTEd-9KshNOteTdQ" type="redirect">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_IZSPsEfTEd-9KshNOteTdQ"/>
+      </children>
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_IZSPpUfTEd-9KshNOteTdQ"/>
+      <styles xmi:type="notation:TitleStyle" xmi:id="_IZSPpkfTEd-9KshNOteTdQ" showTitle="true"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_IZSPp0fTEd-9KshNOteTdQ"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_IZSPqEfTEd-9KshNOteTdQ"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_IZSPsUfTEd-9KshNOteTdQ" type="viewStateVariables">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_IZSPskfTEd-9KshNOteTdQ"/>
+      <styles xmi:type="notation:TitleStyle" xmi:id="_IZSPs0fTEd-9KshNOteTdQ" showTitle="true"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_IZSPtEfTEd-9KshNOteTdQ"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_IZSPtUfTEd-9KshNOteTdQ"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_IZSPtkfTEd-9KshNOteTdQ" type="viewStateExceptions">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_IZSPt0fTEd-9KshNOteTdQ"/>
+      <styles xmi:type="notation:TitleStyle" xmi:id="_IZSPuEfTEd-9KshNOteTdQ" showTitle="true"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_IZSPuUfTEd-9KshNOteTdQ"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_IZSPukfTEd-9KshNOteTdQ"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_IZSPoUfTEd-9KshNOteTdQ" fillColor="10011046"/>
+    <element xmi:type="ViewStateType" href="<jet:get select="$relativeWebFlowLocation" />/<sw:webRootFolder select="$project" />/WEB-INF/flows/<jet:get select="$flowName"/>/<jet:get select="$flowName"/>.xml#delete<jet:get select="uppercaseFirst($currentDataType/@name)"/>"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_IZSPokfTEd-9KshNOteTdQ" x="520" y="480" width="151"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_VsLCAEfTEd-9KshNOteTdQ" type="detailTransitionContainer">
+    <children xmi:type="notation:Node" xmi:id="_VsLCA0fTEd-9KshNOteTdQ" type="detailTransitionLabel"/>
+    <children xmi:type="notation:Node" xmi:id="_VsLCBEfTEd-9KshNOteTdQ" type="detailTransitionTypesCompartment">
+      <children xmi:type="notation:Node" xmi:id="_V-WXIEfTEd-9KshNOteTdQ" type="evaluate">
+        <element xmi:type="EvaluateType" href="<jet:get select="$relativeWebFlowLocation" />/<sw:webRootFolder select="$project" />/WEB-INF/flows/<jet:get select="$flowName"/>/<jet:get select="$flowName"/>.xml#//@flow/@viewState.3/@transition.0/@evaluate.0"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_V-WXIUfTEd-9KshNOteTdQ"/>
+      </children>
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_VsLCBUfTEd-9KshNOteTdQ"/>
+      <styles xmi:type="notation:TitleStyle" xmi:id="_VsLCBkfTEd-9KshNOteTdQ" showTitle="true"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_VsLCB0fTEd-9KshNOteTdQ"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_VsLCCEfTEd-9KshNOteTdQ"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_VsLCCUfTEd-9KshNOteTdQ" type="detailTransitionProperties">
+      <children xmi:type="notation:Node" xmi:id="_VsLCDkfTEd-9KshNOteTdQ" type="detailTransitionSecurity">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_VsLCD0fTEd-9KshNOteTdQ"/>
+      </children>
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_VsLCCkfTEd-9KshNOteTdQ"/>
+      <styles xmi:type="notation:TitleStyle" xmi:id="_VsLCC0fTEd-9KshNOteTdQ" showTitle="true"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_VsLCDEfTEd-9KshNOteTdQ"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_VsLCDUfTEd-9KshNOteTdQ"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_VsLCAUfTEd-9KshNOteTdQ" fillColor="12632256"/>
+    <element xmi:type="ViewTransition" href="<jet:get select="$relativeWebFlowLocation" />/<sw:webRootFolder select="$project" />/WEB-INF/flows/<jet:get select="$flowName"/>/<jet:get select="$flowName"/>.xml#//@flow/@viewState.3/@transition.0"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_VsLCAkfTEd-9KshNOteTdQ" x="340" y="512" width="145"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_zJ5VYEgBEd-g6f2cLcVW4g" type="detailTransitionContainer">
+    <children xmi:type="notation:Node" xmi:id="_zKCfUEgBEd-g6f2cLcVW4g" type="detailTransitionLabel"/>
+    <children xmi:type="notation:Node" xmi:id="_zKCfUUgBEd-g6f2cLcVW4g" type="detailTransitionTypesCompartment">
+      <children xmi:type="notation:Node" xmi:id="_ztNd0EgBEd-g6f2cLcVW4g" type="evaluate">
+        <element xmi:type="EvaluateType" href="<jet:get select="$relativeWebFlowLocation" />/<sw:webRootFolder select="$project" />/WEB-INF/flows/<jet:get select="$flowName"/>/<jet:get select="$flowName"/>.xml#//@flow/@viewState.0/@transition.0/@evaluate.0"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_ztNd0UgBEd-g6f2cLcVW4g"/>
+      </children>
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_zKCfUkgBEd-g6f2cLcVW4g"/>
+      <styles xmi:type="notation:TitleStyle" xmi:id="_zKCfU0gBEd-g6f2cLcVW4g" showTitle="true"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_zKCfVEgBEd-g6f2cLcVW4g"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_zKCfVUgBEd-g6f2cLcVW4g"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_zKCfVkgBEd-g6f2cLcVW4g" type="detailTransitionProperties">
+      <children xmi:type="notation:Node" xmi:id="_zKCfW0gBEd-g6f2cLcVW4g" type="detailTransitionSecurity">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_zKCfXEgBEd-g6f2cLcVW4g"/>
+      </children>
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_zKCfV0gBEd-g6f2cLcVW4g"/>
+      <styles xmi:type="notation:TitleStyle" xmi:id="_zKCfWEgBEd-g6f2cLcVW4g" showTitle="true"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_zKCfWUgBEd-g6f2cLcVW4g"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_zKCfWkgBEd-g6f2cLcVW4g"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_zJ5VYUgBEd-g6f2cLcVW4g" fillColor="12632256"/>
+    <element xmi:type="ViewTransition" href="<jet:get select="$relativeWebFlowLocation" />/<sw:webRootFolder select="$project" />/WEB-INF/flows/<jet:get select="$flowName"/>/<jet:get select="$flowName"/>.xml#//@flow/@viewState.0/@transition.0"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_zJ5VYkgBEd-g6f2cLcVW4g" x="342" y="308" width="145"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_caaOwEu8Ed-isc9CVP8NGA" type="detailTransitionContainer">
+    <children xmi:type="notation:Node" xmi:id="_caaOw0u8Ed-isc9CVP8NGA" type="detailTransitionLabel"/>
+    <children xmi:type="notation:Node" xmi:id="_caj_wEu8Ed-isc9CVP8NGA" type="detailTransitionTypesCompartment">
+      <children xmi:type="notation:Node" xmi:id="_dvMQYEu8Ed-isc9CVP8NGA" type="evaluate">
+        <element xmi:type="EvaluateType" href="<jet:get select="$relativeWebFlowLocation" />/<sw:webRootFolder select="$project" />/WEB-INF/flows/<jet:get select="$flowName"/>/<jet:get select="$flowName"/>.xml#//@flow/@viewState.0/@transition.2/@evaluate.0"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_dvMQYUu8Ed-isc9CVP8NGA"/>
+      </children>
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_caj_wUu8Ed-isc9CVP8NGA"/>
+      <styles xmi:type="notation:TitleStyle" xmi:id="_caj_wku8Ed-isc9CVP8NGA" showTitle="true"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_caj_w0u8Ed-isc9CVP8NGA"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_caj_xEu8Ed-isc9CVP8NGA"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_caj_xUu8Ed-isc9CVP8NGA" type="detailTransitionProperties">
+      <children xmi:type="notation:Node" xmi:id="_caj_yku8Ed-isc9CVP8NGA" type="detailTransitionSecurity">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_caj_y0u8Ed-isc9CVP8NGA"/>
+      </children>
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_caj_xku8Ed-isc9CVP8NGA"/>
+      <styles xmi:type="notation:TitleStyle" xmi:id="_caj_x0u8Ed-isc9CVP8NGA" showTitle="true"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_caj_yEu8Ed-isc9CVP8NGA"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_caj_yUu8Ed-isc9CVP8NGA"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_caaOwUu8Ed-isc9CVP8NGA" fillColor="12632256"/>
+    <element xmi:type="ViewTransition" href="<jet:get select="$relativeWebFlowLocation" />/<sw:webRootFolder select="$project" />/WEB-INF/flows/<jet:get select="$flowName"/>/<jet:get select="$flowName"/>.xml#//@flow/@viewState.0/@transition.2"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_caaOwku8Ed-isc9CVP8NGA" x="342" y="240" width="141"/>
+  </children>
+<jet:setVariable select="0" var="subflowIndex" />
+<jet:iterate select="$dataType/relationships" var="relationship">
+  <jet:setVariable select="$relationship/targetDataType" var="relatedType" />
+  <children xmi:type="notation:Node" xmi:id="<gen:subflowMetaData select="$relationship" metaDataAttribute="nodeId" />" type="subflowState">
+    <children xmi:type="notation:Node" xmi:id="_GlWBE2KTEd-rEukw0AFxBA" type="subflowStateLabel"/>
+    <children xmi:type="notation:Node" xmi:id="_GlWBFGKTEd-rEukw0AFxBA" type="subflowCompartment">
+      <children xmi:type="notation:Node" xmi:id="_GlWBGWKTEd-rEukw0AFxBA" type="subflow">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_GlWBGmKTEd-rEukw0AFxBA"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_GlWBG2KTEd-rEukw0AFxBA" type="subflowStateSecurity">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_GlWBHGKTEd-rEukw0AFxBA"/>
+      </children>
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_GlWBFWKTEd-rEukw0AFxBA"/>
+      <styles xmi:type="notation:TitleStyle" xmi:id="_GlWBFmKTEd-rEukw0AFxBA" showTitle="true"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_GlWBF2KTEd-rEukw0AFxBA"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_GlWBGGKTEd-rEukw0AFxBA"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_GlWBHWKTEd-rEukw0AFxBA" type="subflowInputs">
+      <children xmi:type="notation:Node" xmi:id="_GmZJ8GKTEd-rEukw0AFxBA" type="input">
+        <element xmi:type="Input" href="<jet:get select="$relativeWebFlowLocation" />/<sw:webRootFolder select="$project" />/WEB-INF/flows/<jet:get select="$flowName"/>/<jet:get select="$flowName"/>.xml#//@flow/@subflowState.<jet:get select="$subflowIndex" />/@input.0"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_GmZJ8WKTEd-rEukw0AFxBA"/>
+      </children>
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_GlWBHmKTEd-rEukw0AFxBA"/>
+      <styles xmi:type="notation:TitleStyle" xmi:id="_GlWBH2KTEd-rEukw0AFxBA" showTitle="true"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_GlWBIGKTEd-rEukw0AFxBA"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_GlWBIWKTEd-rEukw0AFxBA"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_GlWBImKTEd-rEukw0AFxBA" type="subflowOutputs">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_GlWBI2KTEd-rEukw0AFxBA"/>
+      <styles xmi:type="notation:TitleStyle" xmi:id="_GlWBJGKTEd-rEukw0AFxBA" showTitle="true"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_GlWBJWKTEd-rEukw0AFxBA"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_GlWBJmKTEd-rEukw0AFxBA"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_GlWBJ2KTEd-rEukw0AFxBA" type="subflowStateExceptions">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_GlWBKGKTEd-rEukw0AFxBA"/>
+      <styles xmi:type="notation:TitleStyle" xmi:id="_GlWBKWKTEd-rEukw0AFxBA" showTitle="true"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_GlWBKmKTEd-rEukw0AFxBA"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_GlWBK2KTEd-rEukw0AFxBA"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_GlWBEWKTEd-rEukw0AFxBA"/>
+    <element xmi:type="SubflowStateType" href="<jet:get select="$relativeWebFlowLocation" />/<sw:webRootFolder select="$project" />/WEB-INF/flows/<jet:get select="$flowName"/>/<jet:get select="$flowName"/>.xml#manage<jet:get select="$relationship/@name"/>s"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_GlWBEmKTEd-rEukw0AFxBA" x="<gen:subflowMetaData select="$relationship" metaDataAttribute="xLocation" />" y="<gen:subflowMetaData select="$relationship" metaDataAttribute="yLocation" />" width="125"/>
+  </children>
+  <jet:setVariable select="$subflowIndex+1" var="subflowIndex" />
+</jet:iterate>
+  <styles xmi:type="notation:DiagramStyle" xmi:id="_gliLy0Y7Ed-dAt502QLQZA"/>
+  <element xmi:type="FlowType" href="<jet:get select="$relativeWebFlowLocation" />/<sw:webRootFolder select="$project" />/WEB-INF/flows/<jet:get select="$flowName"/>/<jet:get select="$flowName"/>.xml#//@flow"/>
+  <edges xmi:type="notation:Edge" xmi:id="_vSLiEEZCEd-dAt502QLQZA" type="detailTransition" source="_ZgQG0EZCEd-dAt502QLQZA" target="_h3zEwEY7Ed-dAt502QLQZA">
+    <children xmi:type="notation:Node" xmi:id="_vSLiFEZCEd-dAt502QLQZA" type="transitionLabel">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_vSLiFUZCEd-dAt502QLQZA"/>
+    </children>
+    <styles xmi:type="notation:RoutingStyle" xmi:id="_vSLiEUZCEd-dAt502QLQZA" routing="Rectilinear"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_vSLiEkZCEd-dAt502QLQZA"/>
+    <element xmi:type="ViewTransition" href="<jet:get select="$relativeWebFlowLocation" />/<sw:webRootFolder select="$project" />/WEB-INF/flows/<jet:get select="$flowName"/>/<jet:get select="$flowName"/>.xml#//@flow/@viewState.1/@transition.0"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_vSLiE0ZCEd-dAt502QLQZA" points="[-75, 21, 214, 19]$[-280, 21, 9, 19]"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_vSVTEEZCEd-dAt502QLQZA" id="(0.928,0.5042735042735043)"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="_TzqiAEZDEd-dAt502QLQZA" type="detailTransition" source="_TzXnEEZDEd-dAt502QLQZA" target="_z8XZQEZCEd-dAt502QLQZA">
+    <children xmi:type="notation:Node" xmi:id="_TzqiBEZDEd-dAt502QLQZA" type="transitionLabel">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_TzqiBUZDEd-dAt502QLQZA"/>
+    </children>
+    <styles xmi:type="notation:RoutingStyle" xmi:id="_TzqiAUZDEd-dAt502QLQZA" routing="Rectilinear"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_TzqiAkZDEd-dAt502QLQZA"/>
+    <element xmi:type="ViewTransition" href="<jet:get select="$relativeWebFlowLocation" />/<sw:webRootFolder select="$project" />/WEB-INF/flows/<jet:get select="$flowName"/>/<jet:get select="$flowName"/>.xml#//@flow/@viewState.0/@transition.1"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_TzqiA0ZDEd-dAt502QLQZA" points="[0, 0, 0, 0]$[0, 0, 0, 0]"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="_Tz-EAEZDEd-dAt502QLQZA" type="detailTransition" source="_h3zEwEY7Ed-dAt502QLQZA" target="_TzXnEEZDEd-dAt502QLQZA">
+    <children xmi:type="notation:Node" xmi:id="_Tz-EBEZDEd-dAt502QLQZA" type="transitionLabel">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_Tz-EBUZDEd-dAt502QLQZA"/>
+    </children>
+    <styles xmi:type="notation:RoutingStyle" xmi:id="_Tz-EAUZDEd-dAt502QLQZA" routing="Rectilinear"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_Tz-EAkZDEd-dAt502QLQZA"/>
+    <element xmi:type="ViewTransition" href="<jet:get select="$relativeWebFlowLocation" />/<sw:webRootFolder select="$project" />/WEB-INF/flows/<jet:get select="$flowName"/>/<jet:get select="$flowName"/>.xml#//@flow/@viewState.0/@transition.1"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_Tz-EA0ZDEd-dAt502QLQZA" points="[-12, -58, -81, 124]$[-12, -182, -81, 0]$[7, -182, -62, 0]"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="_kISAAEZDEd-dAt502QLQZA" type="detailTransition" source="_z8XZQEZCEd-dAt502QLQZA" target="_h3zEwEY7Ed-dAt502QLQZA">
+    <children xmi:type="notation:Node" xmi:id="_kISABEZDEd-dAt502QLQZA" type="transitionLabel">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_kISABUZDEd-dAt502QLQZA"/>
+    </children>
+    <styles xmi:type="notation:RoutingStyle" xmi:id="_kISAAUZDEd-dAt502QLQZA" routing="Rectilinear"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_kISAAkZDEd-dAt502QLQZA"/>
+    <element xmi:type="ViewTransition" href="<jet:get select="$relativeWebFlowLocation" />/<sw:webRootFolder select="$project" />/WEB-INF/flows/<jet:get select="$flowName"/>/<jet:get select="$flowName"/>.xml#//@flow/@viewState.2/@transition.0"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_kISAA0ZDEd-dAt502QLQZA" points="[55, -95, 297, -173]$[55, -155, 297, -233]$[-313, -155, -71, -233]$[-313, 77, -71, -1]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_kIbxAEZDEd-dAt502QLQZA" id="(0.128,0.7304347826086957)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_kIbxAUZDEd-dAt502QLQZA" id="(0.872,0.008547008547008548)"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="_4SQMsEZIEd-dAt502QLQZA" type="detailTransition" source="_4SGbsEZIEd-dAt502QLQZA" target="_h3zEwEY7Ed-dAt502QLQZA">
+    <children xmi:type="notation:Node" xmi:id="_4SQMtEZIEd-dAt502QLQZA" type="transitionLabel">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_4SQMtUZIEd-dAt502QLQZA"/>
+    </children>
+    <styles xmi:type="notation:RoutingStyle" xmi:id="_4SQMsUZIEd-dAt502QLQZA" routing="Rectilinear"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_4SQMskZIEd-dAt502QLQZA"/>
+    <element xmi:type="ViewTransition" href="<jet:get select="$relativeWebFlowLocation" />/<sw:webRootFolder select="$project" />/WEB-INF/flows/<jet:get select="$flowName"/>/<jet:get select="$flowName"/>.xml#//@flow/@viewState.2/@transition.1"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_4SQMs0ZIEd-dAt502QLQZA" points="[-62, 5, 78, -237]$[-142, 5, -2, -237]$[-142, 184, -2, -58]"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="_4SZWoEZIEd-dAt502QLQZA" type="detailTransition" source="_z8XZQEZCEd-dAt502QLQZA" target="_4SGbsEZIEd-dAt502QLQZA">
+    <children xmi:type="notation:Node" xmi:id="_4SZWpEZIEd-dAt502QLQZA" type="transitionLabel">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_4SZWpUZIEd-dAt502QLQZA"/>
+    </children>
+    <styles xmi:type="notation:RoutingStyle" xmi:id="_4SZWoUZIEd-dAt502QLQZA" routing="Rectilinear"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_4SZWokZIEd-dAt502QLQZA"/>
+    <element xmi:type="ViewTransition" href="<jet:get select="$relativeWebFlowLocation" />/<sw:webRootFolder select="$project" />/WEB-INF/flows/<jet:get select="$flowName"/>/<jet:get select="$flowName"/>.xml#//@flow/@viewState.2/@transition.1"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_4SZWo0ZIEd-dAt502QLQZA" points="[0, 0, 0, 0]$[0, 0, 0, 0]"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="_lKGvsEcPEd-2valkkpaj8A" type="eventEdge" source="_h3zEwEY7Ed-dAt502QLQZA" target="_lJXI0UcPEd-2valkkpaj8A">
+    <children xmi:type="notation:Node" xmi:id="_lKGvtEcPEd-2valkkpaj8A" type="eventEdgeLabel">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_lKGvtUcPEd-2valkkpaj8A"/>
+    </children>
+    <styles xmi:type="notation:RoutingStyle" xmi:id="_lKGvsUcPEd-2valkkpaj8A" routing="Rectilinear"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_lKGvskcPEd-2valkkpaj8A"/>
+    <element xmi:type="OnRenderType" href="<jet:get select="$relativeWebFlowLocation" />/<sw:webRootFolder select="$project" />/WEB-INF/flows/<jet:get select="$flowName"/>/<jet:get select="$flowName"/>.xml#//@flow/@viewState.0/@onRender"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_lKGvs0cPEd-2valkkpaj8A" points="[-7, -11, 220, 319]$[-227, -330, 0, 0]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_lKGvtkcPEd-2valkkpaj8A" id="(0.056,0.2564102564102564)"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="_Vsd88EfTEd-9KshNOteTdQ" type="detailTransition" source="_VsLCAEfTEd-9KshNOteTdQ" target="_h3zEwEY7Ed-dAt502QLQZA">
+    <children xmi:type="notation:Node" xmi:id="_Vsd89EfTEd-9KshNOteTdQ" type="transitionLabel">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_Vsd89UfTEd-9KshNOteTdQ"/>
+    </children>
+    <styles xmi:type="notation:RoutingStyle" xmi:id="_Vsd88UfTEd-9KshNOteTdQ" routing="Rectilinear"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_Vsd88kfTEd-9KshNOteTdQ"/>
+    <element xmi:type="ViewTransition" href="<jet:get select="$relativeWebFlowLocation" />/<sw:webRootFolder select="$project" />/WEB-INF/flows/<jet:get select="$flowName"/>/<jet:get select="$flowName"/>.xml#//@flow/@viewState.3/@transition.0"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_Vsd880fTEd-9KshNOteTdQ" points="[-72, 0, 88, 180]$[-160, 0, 0, 180]$[-160, -121, 0, 59]"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="_Vsd89kfTEd-9KshNOteTdQ" type="detailTransition" source="_IZSPoEfTEd-9KshNOteTdQ" target="_VsLCAEfTEd-9KshNOteTdQ">
+    <children xmi:type="notation:Node" xmi:id="_Vsd8-kfTEd-9KshNOteTdQ" type="transitionLabel">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_Vsd8-0fTEd-9KshNOteTdQ"/>
+    </children>
+    <styles xmi:type="notation:RoutingStyle" xmi:id="_Vsd890fTEd-9KshNOteTdQ" routing="Rectilinear"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_Vsd8-EfTEd-9KshNOteTdQ"/>
+    <element xmi:type="ViewTransition" href="<jet:get select="$relativeWebFlowLocation" />/<sw:webRootFolder select="$project" />/WEB-INF/flows/<jet:get select="$flowName"/>/<jet:get select="$flowName"/>.xml#//@flow/@viewState.3/@transition.0"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_Vsd8-UfTEd-9KshNOteTdQ" points="[0, 0, 0, 0]$[0, 0, 0, 0]"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="_zKMQUEgBEd-g6f2cLcVW4g" type="detailTransition" source="_zJ5VYEgBEd-g6f2cLcVW4g" target="_ZgQG0EZCEd-dAt502QLQZA">
+    <children xmi:type="notation:Node" xmi:id="_zKVaQEgBEd-g6f2cLcVW4g" type="transitionLabel">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_zKVaQUgBEd-g6f2cLcVW4g"/>
+    </children>
+    <styles xmi:type="notation:RoutingStyle" xmi:id="_zKMQUUgBEd-g6f2cLcVW4g" routing="Rectilinear"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_zKMQUkgBEd-g6f2cLcVW4g"/>
+    <element xmi:type="ViewTransition" href="<jet:get select="$relativeWebFlowLocation" />/<sw:webRootFolder select="$project" />/WEB-INF/flows/<jet:get select="$flowName"/>/<jet:get select="$flowName"/>.xml#//@flow/@viewState.0/@transition.0"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_zKMQU0gBEd-g6f2cLcVW4g" points="[0, 0, 0, 0]$[0, 0, 0, 0]"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="_zKfLQEgBEd-g6f2cLcVW4g" type="detailTransition" source="_h3zEwEY7Ed-dAt502QLQZA" target="_zJ5VYEgBEd-g6f2cLcVW4g">
+    <children xmi:type="notation:Node" xmi:id="_zKfLREgBEd-g6f2cLcVW4g" type="transitionLabel">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_zKfLRUgBEd-g6f2cLcVW4g"/>
+    </children>
+    <styles xmi:type="notation:RoutingStyle" xmi:id="_zKfLQUgBEd-g6f2cLcVW4g" routing="Rectilinear"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_zKfLQkgBEd-g6f2cLcVW4g"/>
+    <element xmi:type="ViewTransition" href="<jet:get select="$relativeWebFlowLocation" />/<sw:webRootFolder select="$project" />/WEB-INF/flows/<jet:get select="$flowName"/>/<jet:get select="$flowName"/>.xml#//@flow/@viewState.0/@transition.0"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_zKfLQ0gBEd-g6f2cLcVW4g" points="[0, 0, 0, 0]$[0, 0, 0, 0]"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="_PWN_sEu8Ed-isc9CVP8NGA" type="detailTransition" source="_IZSPoEfTEd-9KshNOteTdQ" target="_h3zEwEY7Ed-dAt502QLQZA">
+    <children xmi:type="notation:Node" xmi:id="_PWN_tEu8Ed-isc9CVP8NGA" type="transitionLabel">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_PWN_tUu8Ed-isc9CVP8NGA"/>
+    </children>
+    <styles xmi:type="notation:RoutingStyle" xmi:id="_PWN_sUu8Ed-isc9CVP8NGA" routing="Rectilinear"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_PWN_sku8Ed-isc9CVP8NGA"/>
+    <element xmi:type="ViewTransition" href="<jet:get select="$relativeWebFlowLocation" />/<sw:webRootFolder select="$project" />/WEB-INF/flows/<jet:get select="$flowName"/>/<jet:get select="$flowName"/>.xml#//@flow/@viewState.3/@transition.1"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_PWN_s0u8Ed-isc9CVP8NGA" points="[-38, 94, 209, 168]$[-336, 94, -89, 168]$[-336, -67, -89, 7]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_PWN_tku8Ed-isc9CVP8NGA" id="(0.25165562913907286,0.034782608695652174)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_PWN_t0u8Ed-isc9CVP8NGA" id="(0.968,0.9401709401709402)"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="_caj_zEu8Ed-isc9CVP8NGA" type="detailTransition" source="_caaOwEu8Ed-isc9CVP8NGA" target="_z8XZQEZCEd-dAt502QLQZA">
+    <children xmi:type="notation:Node" xmi:id="_caj_0Eu8Ed-isc9CVP8NGA" type="transitionLabel">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_caj_0Uu8Ed-isc9CVP8NGA"/>
+    </children>
+    <styles xmi:type="notation:RoutingStyle" xmi:id="_caj_zUu8Ed-isc9CVP8NGA" routing="Rectilinear"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_caj_zku8Ed-isc9CVP8NGA"/>
+    <element xmi:type="ViewTransition" href="<jet:get select="$relativeWebFlowLocation" />/<sw:webRootFolder select="$project" />/WEB-INF/flows/<jet:get select="$flowName"/>/<jet:get select="$flowName"/>.xml#//@flow/@viewState.0/@transition.2"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_caj_z0u8Ed-isc9CVP8NGA" points="[0, 0, 0, 0]$[0, 0, 0, 0]"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="_catJsEu8Ed-isc9CVP8NGA" type="detailTransition" source="_h3zEwEY7Ed-dAt502QLQZA" target="_caaOwEu8Ed-isc9CVP8NGA">
+    <children xmi:type="notation:Node" xmi:id="_catJtEu8Ed-isc9CVP8NGA" type="transitionLabel">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_catJtUu8Ed-isc9CVP8NGA"/>
+    </children>
+    <styles xmi:type="notation:RoutingStyle" xmi:id="_catJsUu8Ed-isc9CVP8NGA" routing="Rectilinear"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_catJsku8Ed-isc9CVP8NGA"/>
+    <element xmi:type="ViewTransition" href="<jet:get select="$relativeWebFlowLocation" />/<sw:webRootFolder select="$project" />/WEB-INF/flows/<jet:get select="$flowName"/>/<jet:get select="$flowName"/>.xml#//@flow/@viewState.0/@transition.2"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_catJs0u8Ed-isc9CVP8NGA" points="[50, -58, -110, 46]$[50, -110, -110, -6]$[90, -110, -70, -6]"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="_BFU3gEu9Ed-isc9CVP8NGA" type="detailTransition" source="_h3zEwEY7Ed-dAt502QLQZA" target="_IZSPoEfTEd-9KshNOteTdQ">
+    <children xmi:type="notation:Node" xmi:id="_BFU3hEu9Ed-isc9CVP8NGA" type="transitionLabel">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_BFU3hUu9Ed-isc9CVP8NGA"/>
+    </children>
+    <styles xmi:type="notation:RoutingStyle" xmi:id="_BFU3gUu9Ed-isc9CVP8NGA" routing="Rectilinear"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_BFU3gku9Ed-isc9CVP8NGA"/>
+    <element xmi:type="ViewTransition" href="<jet:get select="$relativeWebFlowLocation" />/<sw:webRootFolder select="$project" />/WEB-INF/flows/<jet:get select="$flowName"/>/<jet:get select="$flowName"/>.xml#//@flow/@viewState.0/@transition.3"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_BFU3g0u9Ed-isc9CVP8NGA" points="[19, 6, -267, -82]$[19, 87, -267, -1]$[243, 87, -43, -1]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_BFU3hku9Ed-isc9CVP8NGA" id="(0.696,0.9487179487179487)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_BFU3h0u9Ed-isc9CVP8NGA" id="(0.2847682119205298,0.16521739130434782)"/>
+  </edges>
+<jet:setVariable select="1" var="viewToSubflowTransitionIndex" />
+<jet:setVariable select="0" var="subflowIndex" />
+<jet:iterate select="$dataType/relationships" var="relationship">
+  <jet:setVariable select="$relationship/targetDataType" var="relatedType" />
+  <edges xmi:type="notation:Edge" xmi:id="_GmZJ8mKTEd-rEukw0AFxBA" type="detailTransition" source="_ZgQG0EZCEd-dAt502QLQZA" target="<gen:subflowMetaData select="$relationship" metaDataAttribute="nodeId" />">
+    <children xmi:type="notation:Node" xmi:id="_GmZJ9mKTEd-rEukw0AFxBA" type="transitionLabel">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_GmZJ92KTEd-rEukw0AFxBA"/>
+    </children>
+    <styles xmi:type="notation:RoutingStyle" xmi:id="_GmZJ82KTEd-rEukw0AFxBA" routing="Rectilinear"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_GmZJ9GKTEd-rEukw0AFxBA"/>
+    <element xmi:type="ViewTransition" href="<jet:get select="$relativeWebFlowLocation" />/<sw:webRootFolder select="$project" />/WEB-INF/flows/<jet:get select="$flowName"/>/<jet:get select="$flowName"/>.xml#//@flow/@viewState.1/@transition.<jet:get select="$viewToSubflowTransitionIndex" />"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_GmZJ9WKTEd-rEukw0AFxBA" points="<gen:subflowMetaData select="$relationship" metaDataAttribute="bendpointsToSubflow" />"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="_GmiT4GKTEd-rEukw0AFxBA" type="detailTransition" source="<gen:subflowMetaData select="$relationship" metaDataAttribute="nodeId" />" target="_ZgQG0EZCEd-dAt502QLQZA">
+    <children xmi:type="notation:Node" xmi:id="_GmiT5GKTEd-rEukw0AFxBA" type="transitionLabel">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_GmiT5WKTEd-rEukw0AFxBA"/>
+    </children>
+    <styles xmi:type="notation:RoutingStyle" xmi:id="_GmiT4WKTEd-rEukw0AFxBA" routing="Rectilinear"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_GmiT4mKTEd-rEukw0AFxBA"/>
+    <element xmi:type="Transition" href="<jet:get select="$relativeWebFlowLocation" />/<sw:webRootFolder select="$project" />/WEB-INF/flows/<jet:get select="$flowName"/>/<jet:get select="$flowName"/>.xml#//@flow/@subflowState.<jet:get select="$subflowIndex" />/@transition.0"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_GmiT42KTEd-rEukw0AFxBA" points="<gen:subflowMetaData select="$relationship" metaDataAttribute="bendpointsFromSubflow" />"/>
+  </edges>
+  <jet:setVariable select="$viewToSubflowTransitionIndex+1" var="viewToSubflowTransitionIndex" />
+  <jet:setVariable select="$subflowIndex+1" var="subflowIndex" />
+</jet:iterate>
+</notation:Diagram>

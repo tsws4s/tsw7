@@ -1,0 +1,8 @@
+<%@ jet 
+package="com.skyway.scaffolding.crud.templates.method" 
+class="LoadCrudServiceImplementationTemplate" 
+%>
+<%@taglib prefix="jet" id="org.eclipse.jet.controlTags"%>  
+<%@taglib prefix="f" id="org.eclipse.jet.formatTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+return <jet:get select="lowercaseFirst($dataType/dataStore/@name)"/>.findAll<jet:get select="$dataType/@name"/>s();

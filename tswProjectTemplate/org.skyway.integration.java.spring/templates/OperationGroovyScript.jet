@@ -1,0 +1,55 @@
+<%@ jet 
+package="org.skyway.integration.java.spring.jet.core" 
+class="OperationGroovyScriptTemplate" 
+%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+<c:setVariable select="'false'" var="useMethodOnAccess" />
+<c:setVariable select="true()" var="declareVar_toSearch" />
+package <sw:package alias="groovyscript" select="$model" var="pkg"/>;
+<java:importsLocation package="{$pkg}"/>
+import <sw:javaType alias="groovyinterface" select="$model" package="true" />;
+
+/**
+<sw:documentation select="$model" format=" * " />
+ * 
+<sw:generated />
+ */
+<sw:variableStorageReset scope="class" />
+<c:setVariable select="$model" var="currentOperation" />
+class <sw:javaType alias="groovyscript" select="$model" /> implements <sw:javaType alias="groovyinterface" select="$model" package="false" /> {
+	
+	/**
+	* 
+	<sw:generated />
+	*/
+	Object model;
+	
+	
+	<sw:anchorSegment anchorId="actionVariables" />
+	
+	/**
+	* 
+	<sw:generated />
+	*/
+	public Object getModel() {
+		return model;
+	}
+	
+	/**
+	* 
+	<sw:generated />
+	*/
+	public void setModel(Object model)	{
+		this.model = model;
+	}
+	
+	<sw:setInGroovyScript value="true" />
+	<swspr:getRequestMapping select="$currentOperation" var="requestMapping" />
+	<c:include template="templates/operation/OperationDefinition.jet" />
+	
+	<sw:anchorSegment anchorId="afterStepMethods" />
+	<sw:setInGroovyScript value="false" />
+}

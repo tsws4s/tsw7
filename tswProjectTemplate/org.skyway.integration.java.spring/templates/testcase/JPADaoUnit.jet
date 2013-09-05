@@ -1,0 +1,87 @@
+<%@ jet 
+package="org.skyway.integration.java.spring.jet.test"
+class="JPADaoUnitTemplate" 
+%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+
+package <sw:package alias="test" select="$model" var="pkg"/>;
+<sw:javaType alias="test" select="$model" package="true" var="fullyQualifiedClassName" emit="false"/>
+<java:importsLocation package="{$pkg}"/>
+<java:impliedImport name="{$fullyQualifiedClassName}"/>
+
+/**
+ * Class used to test the basic Data Store Functionality
+ *
+<sw:generated />
+<sw:auxiliaryModelComponent />
+ */
+<sw:variableStorageReset scope="class" />
+<swspr:springContexts select="$model" var="springContexts" contextTypes="all" />
+
+@<java:import>org.junit.runner.RunWith</java:import>(<java:import>org.springframework.test.context.junit4.SpringJUnit4ClassRunner</java:import>.class)
+@<java:import>org.springframework.test.context.TestExecutionListeners</java:import>({ <java:import>org.springframework.test.context.support.DependencyInjectionTestExecutionListener</java:import>.class, <java:import>org.springframework.test.context.support.DirtiesContextTestExecutionListener</java:import>.class, <java:import>org.springframework.test.context.transaction.TransactionalTestExecutionListener</java:import>.class })
+@<java:import>org.springframework.transaction.annotation.Transactional</java:import>
+@<java:import>org.springframework.test.context.ContextConfiguration</java:import>(locations={ 
+			<c:iterate select="$springContexts" var="springContext" delimiter=",">"<swspr:springContextPath select="$springContext" pathFormat="fileProjectRelative" />"
+			</c:iterate>})
+public class <sw:javaType alias="test" select="$model" /> {
+	 	/**
+		 * The DAO being tested, injected by Spring
+		 *
+		 <sw:generated />
+		 */
+ 		private <java:import><sw:javaType select="$model" package="true" alias="interface" /></java:import> dataStore;
+ 	
+	 	/**
+		 * Instantiates a new <sw:javaType alias="test" select="$model" />.
+		 *
+		 <sw:generated />
+		 */
+		public <sw:javaType alias="test" select="$model" />() {			
+		}
+		
+		<c:iterate select="$model/dataTypes" var="datatype">		
+			/**
+			* Method to test <c:get select="$datatype/name" /> domain object.
+			*
+			<sw:generated />
+			*/
+			@<java:import>org.springframework.test.annotation.Rollback</java:import>(false)
+			@<java:import>org.junit.Test</java:import>					
+			public void <c:get select="$datatype/name" /> ()  {
+				<java:import><sw:javaType select="$datatype" package="true"/></java:import>	instance = new <java:import><sw:javaType select="$datatype" package="true"/></java:import>();			
+			
+			
+				// Test create				
+				// TODO: Populate instance for create.  The store will fail if the primary key fields are blank.				
+				
+				// store the object
+				dataStore.store(instance);
+				
+				// Test update
+				// TODO: Modify non-key domain object values for update
+								
+				// update the object
+				dataStore.store(instance);
+				
+				// Test delete
+				dataStore.remove (instance);
+				
+			}					
+		</c:iterate>
+		
+		/**
+		 * Method to allow Spring to inject the DAO that will be tested
+		 *
+		<sw:generated />
+		*/
+		@<java:import>org.springframework.beans.factory.annotation.Autowired</java:import>
+		public void setDataStore (<java:import><sw:javaType select="$model" package="true" alias="interface" /></java:import> dataStore) {
+			this.dataStore = dataStore;
+		}
+}
+
+

@@ -1,0 +1,33 @@
+<%@ jet package="com.skyway.templates" class="ObjectProxyRendererTemplate"%>
+<%@taglib prefix="swgwt" id="com.skyway.integration.google.webtoolkit.common.skywayGWTCodeGenTags"%>
+
+package <sw:package select="$model" alias="ObjectProxyRenderer"var="pkg"/>;
+<java:importsLocation package="{$pkg}"/>
+
+
+public class <sw:javaType select="$model" alias="ObjectProxyRenderer" package="false"/> extends <java:import><swgwt:getRequestFactoryPackage suffix="gwt"/>.ui.client.ProxyRenderer</java:import><<sw:javaType select="$model" alias="ObjectProxy" emitIncludes="true" package="true"/>> {
+  private static <sw:javaType select="$model" alias="ObjectProxyRenderer" package="false"/> INSTANCE;
+
+  public static <sw:javaType select="$model" alias="ObjectProxyRenderer" package="false"/> instance() {
+    if (INSTANCE == null) {
+      INSTANCE = new <sw:javaType select="$model" alias="ObjectProxyRenderer" package="false"/>();
+    }
+
+    return INSTANCE;
+  }
+
+  protected <sw:javaType select="$model" alias="ObjectProxyRenderer" package="false"/>() {
+    super(new String[] {"id"});
+  }
+
+  public String render(<sw:javaType select="$model" alias="ObjectProxy" package="false"/> object) {
+    if (object == null) {
+      return "";
+    }
+    
+    <swgwt:getPropertiesWithAction select="$model" var="pickerFields" action="PICKER" defaultToPrimaryKeys="true"/>	
+    
+  
+    return " (" + <c:iterate select='$pickerFields' var='propertyselection' delimiter='+ "-" + '><c:setVariable select="$propertyselection/Property" var="field"/>object.get<sw:getVariableName select="$field" capitalize="true"/>()</c:iterate> + ")";
+  }
+}

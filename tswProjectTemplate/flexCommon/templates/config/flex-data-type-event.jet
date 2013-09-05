@@ -1,0 +1,30 @@
+<%@ jet 
+package="com.skyway.integration.service.flex.jet.config" 
+class="FlexDataTypeEventTemplate" 
+%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+<%@taglib prefix="persistence" id="org.skyway.integration.data.persistence.skywayPersistenceTags"%>
+<%@taglib prefix="jaxb" id="com.skyway.integration.data.xml.skywayJAXBTags"%>
+package <sw:package select="$model" var="pkg"/>
+{
+	import flash.events.Event;
+
+	public class <sw:javaType select="$model" package="false"/>Event extends Event
+	{
+		public static const <c:get select="upper-case($model/@name)" />_CREATED:String = "<c:get select="lowercaseFirst($model/@name)" />Created";
+		public static const <c:get select="upper-case($model/@name)" />_UPDATED:String = "<c:get select="lowercaseFirst($model/@name)" />Updated";
+		public static const <c:get select="upper-case($model/@name)" />_DELETED:String = "<c:get select="lowercaseFirst($model/@name)" />Deleted";
+		public static const <c:get select="upper-case($model/@name)" />_CANCELLED:String = "<c:get select="lowercaseFirst($model/@name)" />Cancelled";
+	
+		public var <c:get select="lowercaseFirst($model/@name)" />Var:<sw:javaType select="$model" package="false"/>;
+		
+		public function <sw:javaType select="$model" package="false"/>Event(type:String, <c:get select="lowercaseFirst($model/@name)" />Input:<sw:javaType select="$model" package="false"/>, bubbles:Boolean = true, cancelable:Boolean = false)
+   		{
+   			this.<c:get select="lowercaseFirst($model/@name)" />Var = <c:get select="lowercaseFirst($model/@name)" />Input;
+			super(type, bubbles, cancelable);
+		}
+	}
+}

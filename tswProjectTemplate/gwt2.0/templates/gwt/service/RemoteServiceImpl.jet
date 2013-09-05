@@ -1,0 +1,344 @@
+<%@ jet 
+package="com.skyway.integration.google.webtoolkit.deploy.templates" 
+class="RemoteServiceImplTemplate" 
+%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+<%@taglib prefix="persistence" id="org.skyway.integration.data.persistence.skywayPersistenceTags"%>
+<%@taglib prefix="swspr" id="org.skyway.integration.java.spring.skywaySpringCodeGenTags"%>
+<%@taglib prefix="swgwt" id="com.skyway.integration.google.webtoolkit.common.skywayGWTCodeGenTags"%>
+
+package <sw:package select="$model" alias="gwtserviceimpl" var="pkg"/>;
+<java:importsLocation package="{$pkg}"/>
+<java:impliedImport name="{$fullyQualifiedClassName}"/>
+
+
+<sw:getVariableName select="$model" var="domainObjName" emit="false"/>
+<sw:getVariableName select="$model" uncapitalize="true" var="lowerDomainObjName" emit="false"/>
+<swgwt:getGWTDataType select="$model" var="gwtDataType"/>
+<swgwt:implementGWTService select="$model" var="implType"/>
+
+/**
+ * Remote Service implementation for CRUD based operations for <sw:javaType select="$model" package="false"/>
+ * @see <sw:javaType select="$model" package="true"/>
+ <sw:generated />
+ */
+public class <sw:javaType select="$model" alias="gwtserviceimpl" package="false"/> extends <java:import>com.google.gwt.user.server.rpc.RemoteServiceServlet</java:import> implements <java:import><sw:javaType select="$model" alias="gwtservice" package="true"/></java:import> {
+		
+	/**
+	 * Default constructor.
+	<sw:generated />
+ 	 */
+	public <sw:javaType select="$model" alias="gwtserviceimpl" package="false"/>() {
+		java.util.Date defaultValue = null;
+		java.util.Calendar defaultCalendarValue = null;
+		java.math.BigDecimal defaultBigDecimalValue = null;
+		
+		<java:import>org.apache.commons.beanutils.converters.DateConverter</java:import> dateConverter = new DateConverter(defaultValue);
+		<java:import>org.apache.commons.beanutils.converters.CalendarConverter</java:import> calendarConverter = new CalendarConverter (defaultCalendarValue);
+		<java:import>org.apache.commons.beanutils.converters.BigDecimalConverter</java:import> bigDecimalConverter = new BigDecimalConverter (defaultBigDecimalValue);
+			
+		<java:import>org.apache.commons.beanutils.ConvertUtils</java:import>.register(dateConverter, java.util.Date.class);
+		ConvertUtils.register(calendarConverter, java.util.Calendar.class);
+		ConvertUtils.register(bigDecimalConverter, java.math.BigDecimal.class);
+	}
+
+	/**
+	 * Default execute method for Actions passed to this Service
+	 * See the MVP approach and the use of the Command Pattern GWT Best Practices
+	 *
+	<sw:generated />
+	 */
+	 @SuppressWarnings("unchecked")
+	public <T extends <java:import><sw:javaType select="$model/project" alias="gwtresponse" package="true"/></java:import>> T execute(<java:import><sw:javaType select="$model/project" alias="gwtaction" package="true"/></java:import><T> action) throws <sw:javaType select="$model/project" alias="gwtcrudexception" package="false"/>{
+		if (action instanceof <java:import><sw:javaType select="$model" alias="gwtdelete" package="true"/></java:import>)
+			return (T)execute ((<sw:javaType select="$model" alias="gwtdelete" package="false"/>)action);
+		else if (action instanceof <java:import><sw:javaType select="$model" alias="gwtload" package="true"/></java:import>)
+			return (T)execute ((<sw:javaType select="$model" alias="gwtload" package="false"/>)action);
+		else if (action instanceof <java:import><sw:javaType select="$model" alias="gwtstore" package="true"/></java:import>)
+			return (T)execute ((<sw:javaType select="$model" alias="gwtstore" package="false"/>)action);
+	<c:iterate select="$model/relationships" var="relationship">
+	<c:setVariable select="$relationship/targetDataType" var="dataType" />
+		else if (action instanceof <java:import><sw:javaType select="$dataType" alias="gwtaddtorelated" package="true"/></java:import>)
+			return (T)execute ((<sw:javaType select="$dataType" alias="gwtaddtorelated" package="false"/><<java:import><sw:javaType select="$model" alias="gwtdatatypeid" package="true"/></java:import>>)action);
+		else if (action instanceof <java:import><sw:javaType select="$dataType" alias="gwtloadrelated" package="true"/></java:import>)
+			return (T)execute ((<sw:javaType select="$dataType" alias="gwtloadrelated" package="false"/><<java:import><sw:javaType select="$model" alias="gwtdatatypeid" package="true"/></java:import>>)action);
+		else if (action instanceof <java:import><sw:javaType select="$dataType" alias="gwtremovefromrelated" package="true"/></java:import>)
+			return (T)execute ((<sw:javaType select="$dataType" alias="gwtremovefromrelated" package="false"/><<java:import><sw:javaType select="$model" alias="gwtdatatypeid" package="true"/></java:import>>)action);
+	
+	</c:iterate>
+	
+		throw new <java:import><sw:javaType select="$model/project" alias="gwtcrudexception" package="true"/></java:import> ("Invalid Action, no handler specified:" + action); 
+	}
+	
+	/**
+	 * Get the DataUtil handler to convert Objects from GWT DTOs to their persisted version, and back
+	<sw:generated />
+	*/
+	private <java:import><sw:javaType select="$model" alias="gwtdataconversion" package="true"/></java:import> dataUtils() {
+		<c:choose>
+		<c:when test="$gwtDataType/dao">
+		return new <sw:javaType select="$model" alias="gwtdataconversion" package="false"/>(getDAO());
+		</c:when>
+		<c:otherwise>
+		return new <sw:javaType select="$model" alias="gwtdataconversion" package="false"/>();
+		</c:otherwise>
+		</c:choose>
+	}
+	
+	/**
+	 * Default implementation loads all <c:get select="$DomainObjName"/>
+	<sw:generated />
+	 */
+	private <java:import><sw:javaType select="$model" alias="gwtloadresponse" package="true"/></java:import> execute (<sw:javaType select="$model" alias="gwtload" package="true"/> action) throws <sw:javaType select="$model/project" alias="gwtcrudexception" package="false"/>{
+	<c:choose>
+	<c:when test="$implType = 'SERVICE'">
+		return new <sw:javaType select="$model" alias="gwtloadresponse" package="false"/> (dataUtils().toGWT(getService().load<c:get select="$domainObjName"/>s()));	</c:when>
+	<c:when test="$implType = 'DAO'">
+		return new <sw:javaType select="$model" alias="gwtloadresponse" package="false"/> (dataUtils().toGWT(getDAO().findAll<c:get select="$domainObjName"/>s()));	</c:when>
+	<c:otherwise>
+		// TODO - No Service or DAO layer generated for <c:get select="$DomainObjName"/>, implement this method
+		throw new <sw:javaType select="$model/project" alias="gwtcrudexception" package="false"/> ("The <sw:javaType select="$model" alias="gwtload" package="false"/> handler in <sw:javaType select="$model" alias="gwtserviceimpl" package="false"/> has not been implemented yet.");
+	</c:otherwise>
+	</c:choose>
+	}
+	
+	/**
+	<sw:generated />
+	*/
+	private <java:import><sw:javaType select="$model" alias="gwtdeleteresponse" package="true"/></java:import> execute (<sw:javaType select="$model" alias="gwtdelete" package="true"/> action) throws <sw:javaType select="$model/project" alias="gwtcrudexception" package="false"/> {
+	<c:choose>
+	<c:when test="$implType = 'SERVICE'">
+		try {
+			for (<java:import><sw:javaType select="$model" alias="gwtdatatype" package="true"/></java:import> <c:get select="$lowerDomainObjName"/>: action.get<c:get select="$domainObjName"/>s()) {
+				getService().delete<c:get select="$domainObjName"/>(dataUtils().toPersisted(<c:get select="$lowerDomainObjName"/>));
+			}
+		}
+		catch (javax.persistence.EntityExistsException ex) {
+			throw new <sw:javaType select="$model/project" alias="gwtcrudexception" package="false"/> ("Unable to delete this <c:get select="$domainObjName"/>, it may be associated with a another record", ex);
+		}
+		catch (Exception e) {
+			throw new <sw:javaType select="$model/project" alias="gwtcrudexception" package="false"/> ("Unable to delete this <c:get select="$domainObjName"/>", e);
+		}
+		return new <sw:javaType select="$model" alias="gwtdeleteresponse" package="false"/>(action.get<c:get select="$domainObjName"/>s());
+	</c:when>
+	<c:when test="$implType = 'DAO'">
+		try {
+			<sw:javaType select="$gwtDataType/dao" alias="interface"/> dao = getDAO();
+	
+			for (<java:import><sw:javaType select="$model" alias="gwtdatatype" package="true"/></java:import> <c:get select="$lowerDomainObjName"/>: action.get<c:get select="$domainObjName"/>s()) {
+				dao.remove(dataUtils().toPersisted(<c:get select="$lowerDomainObjName"/>));
+			}
+			
+			dao.flush();
+		}
+		catch (javax.persistence.EntityExistsException ex) {
+			throw new <sw:javaType select="$model/project" alias="gwtcrudexception" package="false"/> ("Unable to delete this <c:get select="$domainObjName"/>, it may be associated with a another record", ex);
+		}
+		catch (Exception e) {
+			throw new <sw:javaType select="$model/project" alias="gwtcrudexception" package="false"/> ("Unable to delete this <c:get select="$domainObjName"/>", e);
+		}
+		return new <sw:javaType select="$model" alias="gwtdeleteresponse" package="false"/>(action.get<c:get select="$domainObjName"/>s());	
+	</c:when>
+	<c:otherwise>
+		// TODO - No Service or DAO layer generated for <c:get select="$DomainObjName"/>, implement this method
+		throw new <sw:javaType select="$model/project" alias="gwtcrudexception" package="false"/> ("The <sw:javaType select="$model" alias="gwtdelete" package="false"/> handler in <sw:javaType select="$model" alias="gwtserviceimpl" package="false"/> has not been implemented yet.");
+	</c:otherwise>
+	</c:choose>
+	}
+	
+	/**
+	<sw:generated />
+	*/
+	private <java:import><sw:javaType select="$model" alias="gwtstoreresponse" package="true"/></java:import> execute (<sw:javaType select="$model" alias="gwtstore" package="true"/> action) throws <sw:javaType select="$model/project" alias="gwtcrudexception" package="false"/> {
+	<c:choose>
+	<c:when test="$implType = 'SERVICE'">
+		<sw:javaType select="$model" alias="primary" package="true"/> persisted<c:get select="$domainObjName"/> = dataUtils().toPersisted(action.get<c:get select="$domainObjName"/>());
+		try {
+			getService().save<c:get select="$domainObjName"/>(persisted<c:get select="$domainObjName"/>);
+		}
+		catch (Exception ex) {
+			throw new <sw:javaType select="$model/project" alias="gwtcrudexception" package="false"/> ("Unable to store this <c:get select="$domainObjName"/>", ex);
+		}
+		return new <sw:javaType select="$model" alias="gwtstoreresponse" package="false"/>(action.get<c:get select="$domainObjName"/>());
+	</c:when>
+	<c:when test="$implType = 'DAO'">
+		<sw:javaType select="$model" alias="primary" package="true"/> persisted<c:get select="$domainObjName"/> = dataUtils().toPersisted(action.get<c:get select="$domainObjName"/>());
+		<sw:javaType select="$gwtDataType/dao" alias="interface"/> dao = getDAO();
+	
+		try {
+			dao.store(persisted<c:get select="$domainObjName"/>);
+			dao.flush();
+		}
+		catch (Exception ex) {
+			throw new <sw:javaType select="$model/project" alias="gwtcrudexception" package="false"/> ("Unable to store this <c:get select="$domainObjName"/>", ex);
+		}
+		return new <sw:javaType select="$model" alias="gwtstoreresponse" package="false"/>(action.get<c:get select="$domainObjName"/>());
+	</c:when>
+	<c:otherwise>
+		// TODO - No Service or DAO layer generated for <c:get select="$DomainObjName"/>, implement this method
+		throw new <sw:javaType select="$model/project" alias="gwtcrudexception" package="false"/> ("The <sw:javaType select="$model" alias="gwtstore" package="false"/> handler in <sw:javaType select="$model" alias="gwtserviceimpl" package="false"/> has not been implemented yet.");
+	</c:otherwise>
+	</c:choose>
+	}
+
+<c:if test="$implType = 'SERVICE'">
+	/**
+	 * 
+	<sw:generated />
+	 */
+	public <java:import><sw:javaType select="$gwtDataType/service" alias="interface" package="true"/></java:import> getService() {
+	
+		<java:import>javax.servlet.http.HttpServletRequest</java:import> request = getThreadLocalRequest();
+		<java:import>org.springframework.web.context.WebApplicationContext</java:import> context= <java:import>org.springframework.web.servlet.support.RequestContextUtils</java:import>.getWebApplicationContext(request, getServletContext());
+		<sw:javaType select="$gwtDataType/service" alias="interface" package="false"/> service;
+		
+		service = (<sw:javaType select="$gwtDataType/service" alias="interface" package="false"/>)context.getBean("<c:get select="$domainObjName"/>Service");
+		
+		return service;
+	}
+</c:if>	
+	
+<c:if test="$gwtDataType/dao">
+	/**
+	 * 
+	<sw:generated />
+	 */
+	public <java:import><sw:javaType select="$gwtDataType/dao" alias="interface" package="true"/></java:import> getDAO() {
+		<java:import>javax.servlet.http.HttpServletRequest</java:import> request = getThreadLocalRequest();
+		<java:import>org.springframework.web.context.WebApplicationContext</java:import> context= <java:import>org.springframework.web.servlet.support.RequestContextUtils</java:import>.getWebApplicationContext(request, getServletContext());
+		<sw:javaType select="$gwtDataType/dao" alias="interface" package="false"/> dao;
+		
+		dao = (<sw:javaType select="$gwtDataType/dao" alias="interface" package="false"/>)context.getBean("<c:get select="$domainObjName"/>DAO");
+		
+		return dao;
+	}
+</c:if>
+	
+<persistence:getOneRelationshipPerTargetType select="$model" var="perDataTypeRelationships"/>
+<c:iterate select="$perDataTypeRelationships" var="relationship">
+<swgwt:getRelationshipsWithTargetType select="$model" relationship="$relationship" var="relationshipsByName"/>
+<c:setVariable select="$relationship/targetDataType" var="dataType" />
+<sw:getVariableName select="$dataType" uncapitalize="true" var="dataTypeName" emit="false"/>
+<sw:getVariableName select="$dataType" uncapitalize="false" var="DataTypeName" emit="false"/>
+<sw:getVariableName select="$relationship" capitalize="true" var="relationshipName" emit="false"/>
+<sw:relationshipCardinality select="$relationship" var="cardinality" />
+<sw:getPrimaryKeyFields select="$model" var="primaryKeyFields"/>
+<sw:getPrimaryKeyFields select="$dataType" var="relatedPrimaryKeyFields"/>
+<persistence:isRelationshipOwner select="$relationship" var="isOwner"/>
+<swgwt:getGWTDataType select="$dataType" var="relatedGwtDataType"/>
+	
+	/**
+	<sw:generated />
+	*/
+	private <java:import><sw:javaType select="$dataType" alias="gwtaddtorelatedresponse" package="true"/></java:import> execute (<java:import><sw:javaType select="$dataType" alias="gwtaddtorelated" package="true"/></java:import><<sw:javaType select="$model" alias="gwtdatatypeid" package="true"/>> action) throws <sw:javaType select="$model/project" alias="gwtcrudexception" package="false"/>  {
+	<c:choose>
+	<c:when test="$implType = 'SERVICE' and $relatedGwtDataType/dao">
+		<java:import><sw:javaType select="$dataType" alias="gwtdataconversion" package="true"/></java:import> dataUtils = new <sw:javaType select="$dataType" alias="gwtdataconversion" package="false"/>(get<sw:getVariableName select="$relationship" capitalize="true"/>DAO());
+		<sw:javaType select="$model"/>Service service = getService();
+			
+		try {
+			<c:iterate select="$relationshipsByName" var="relationshipByName">
+			if (action.getRelationshipName().equals("<c:get select="$relationshipByName/@name"/>")) {
+				for (<java:import><sw:javaType select="$dataType" alias="gwtdatatype" package="true"/></java:import> <c:get select="$dataTypeName"/>: action.get<c:get select="$DataTypeName"/>s()) {
+					service.save<c:get select="$domainObjName"/><f:uc length="1"><c:get select="$relationshipByName/@name"/></f:uc>(<c:iterate select="$primaryKeyFields" var="field" delimiter=","><c:include template="templates/gwt/service/ActionMethodParameter.jet" /></c:iterate>, dataUtils.toPersisted(<c:get select="$dataTypeName"/>));
+				}
+			}
+			</c:iterate>
+		}
+		catch (javax.persistence.EntityExistsException ex) {
+			throw new <sw:javaType select="$model/project" alias="gwtcrudexception" package="false"/> ("Unable to add <c:get select="$dataTypeName"/>s to <c:get select="$domainObjName"/>, these <c:get select="$dataTypeName"/>(s) may already be associated with a different <c:get select="$domainObjName"/>", ex);
+		}
+		catch (Exception e) {
+			throw new <sw:javaType select="$model/project" alias="gwtcrudexception" package="false"/> ("Unable to add <c:get select="$dataTypeName"/>s to <c:get select="$domainObjName"/>", e);
+		}
+		
+		return new <sw:javaType select="$dataType" alias="gwtaddtorelatedresponse" package="false"/>();
+	</c:when>	
+	<c:otherwise>
+		// TODO - No Service or DAO layer generated for <c:get select="$DomainObjName"/>, implement this method
+		throw new <sw:javaType select="$model/project" alias="gwtcrudexception" package="false"/> ("The <sw:javaType select="$dataType" alias="gwtaddtorelated" package="false"/> handler in <sw:javaType select="$model" alias="gwtserviceimpl" package="false"/> has not been implemented yet.");
+	</c:otherwise>
+	</c:choose>
+	}
+	
+	/**
+	<sw:generated />
+	*/
+	private <java:import><sw:javaType select="$dataType" alias="gwtremovefromrelatedresponse" package="true"/></java:import> execute (<java:import><sw:javaType select="$dataType" alias="gwtremovefromrelated" package="true"/></java:import><<sw:javaType select="$model" alias="gwtdatatypeid" package="true"/>> action) throws <sw:javaType select="$model/project" alias="gwtcrudexception" package="false"/>  {
+	<c:choose>
+	<c:when test="$implType = 'SERVICE' and $relatedGwtDataType/dao">
+		<sw:javaType select="$model"/>Service service = getService();
+			
+		try {
+			<c:iterate select="$relationshipsByName" var="relationshipByName">
+			if (action.getRelationshipName().equals("<c:get select="$relationshipByName/@name"/>")) {
+				for (<java:import><sw:javaType select="$dataType" alias="gwtdatatype" package="true"/></java:import> <c:get select="$dataTypeName"/>: action.get<c:get select="$DataTypeName"/>s()) {
+					service.delete<c:get select="$domainObjName"/><f:uc length="1"><c:get select="$relationshipByName/@name"/></f:uc>(<c:iterate select="$primaryKeyFields" var="field" delimiter=","><c:include template="templates/gwt/service/ActionMethodParameter.jet" /></c:iterate>, <c:iterate select="$relatedPrimaryKeyFields" var="field" delimiter=","><c:include template="templates/gwt/service/DTOMethodParameter.jet" /></c:iterate>);
+				}
+			}
+			</c:iterate>
+		}
+		catch (javax.persistence.EntityExistsException ex) {
+			throw new <sw:javaType select="$model/project" alias="gwtcrudexception" package="false"/> ("Unable to add <c:get select="$dataTypeName"/>s to <c:get select="$domainObjName"/>, these <c:get select="$dataTypeName"/>(s) may already be associated with a different <c:get select="$domainObjName"/>", ex);
+		}
+		catch (Exception e) {
+			throw new <sw:javaType select="$model/project" alias="gwtcrudexception" package="false"/> ("Unable to add <c:get select="$dataTypeName"/>s to <c:get select="$domainObjName"/>", e);
+		}
+		
+		return new <sw:javaType select="$dataType" alias="gwtremovefromrelatedresponse" package="false"/>();
+	</c:when>	
+	<c:otherwise>
+		// TODO - No Service or DAO layer generated for <c:get select="$DomainObjName"/>, implement this method
+		throw new <sw:javaType select="$model/project" alias="gwtcrudexception" package="false"/> ("The <sw:javaType select="$dataType" alias="gwtremovefromrelated" package="false"/> handler in <sw:javaType select="$model" alias="gwtserviceimpl" package="false"/> has not been implemented yet.");
+	</c:otherwise>
+	</c:choose>
+	}
+	
+	/**
+	<sw:generated />
+	 */
+	private <java:import><sw:javaType select="$dataType" alias="gwtloadrelatedresponse" package="true"/></java:import> execute(<java:import><sw:javaType select="$dataType" alias="gwtloadrelated" package="true"/></java:import><<sw:javaType select="$model" alias="gwtdatatypeid" package="false"/>> action) throws <sw:javaType select="$model/project" alias="gwtcrudexception" package="false"/> {
+	<c:choose>
+	<c:when test="$implType = 'SERVICE' and $relatedGwtDataType/dao">
+		<sw:getPrimaryKeyFields select="$model" var="primaryKeyFields"/>
+		<sw:javaType select="$model" alias="primary" package="true"/> persisted<c:get select="$domainObjName"/> = getDAO().find<c:get select="$domainObjName"/>ByPrimaryKey (<c:iterate select="$primaryKeyFields" var="field" delimiter=","><c:include template="templates/gwt/service/ActionMethodParameter.jet" /></c:iterate>);
+		<java:import><sw:javaType select="$dataType" alias="gwtdataconversion" package="true"/></java:import> dataUtils = new <sw:javaType select="$dataType" alias="gwtdataconversion" package="false"/>(get<sw:getVariableName select="$relationship" capitalize="true"/>DAO());
+		<java:import><sw:javaType select="$dataType" alias="gwtloadrelatedresponse" package="true"/></java:import> response = null;
+		
+		<c:iterate select="$relationshipsByName" var="relationshipByName">
+		if (action.getRelationshipName().equals("<c:get select="$relationshipByName/@name"/>")) {
+			response = new <java:import><sw:javaType select="$dataType" alias="gwtloadrelatedresponse" package="true"/></java:import>(dataUtils.toGWT(persisted<c:get select="$domainObjName"/>.get<f:uc length="1"><c:get select="$relationshipByName/@name"/></f:uc>()));
+		}
+		</c:iterate>
+	
+		return response;
+	</c:when>
+	<c:otherwise>
+		// TODO - No Service or DAO layer generated for <c:get select="$DomainObjName"/>, implement this method
+		throw new <sw:javaType select="$model/project" alias="gwtcrudexception" package="false"/> ("The <sw:javaType select="$dataType" alias="gwtloadrelated" package="false"/> handler in <sw:javaType select="$model" alias="gwtserviceimpl" package="false"/> has not been implemented yet.");
+	</c:otherwise>
+	</c:choose>
+	}
+	
+	<c:if test="$relatedGwtDataType/dao">
+	/**
+	 * 
+	<sw:generated />
+	 */
+	public <java:import><sw:javaType select="$relatedGwtDataType/dao" alias="interface" package="true"/></java:import> get<sw:getVariableName select="$relationship" capitalize="true"/>DAO() {
+		HttpServletRequest request = getThreadLocalRequest();
+		WebApplicationContext context= RequestContextUtils.getWebApplicationContext(request, getServletContext());
+		<sw:javaType select="$dataType"/>DAO dao;
+		
+		dao = (<sw:javaType select="$relatedGwtDataType/dao" alias="interface" package="false"/>)context.getBean("<sw:javaType select="$dataType"/>DAO");
+		
+		return dao;
+	}
+	</c:if>
+	</c:iterate>
+}
+
+

@@ -1,0 +1,9 @@
+<%@ jet package="com.skyway.templates" class="InjectorWrapperTemplate"%>
+
+package <sw:package select="$model" alias="InjectorWrapper"var="pkg"/>;
+<java:importsLocation package="{$pkg}"/>
+
+public interface <sw:javaType select="$model" alias="InjectorWrapper" package="false"/> {
+
+    ScaffoldInjector getInjector();
+}

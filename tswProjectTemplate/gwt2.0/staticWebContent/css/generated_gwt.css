@@ -1,0 +1,165 @@
+#contentarea{width:1040px;margin:auto;}
+a.button {background: transparent url('../../images/button.gif') no-repeat scroll top right;
+    color: #444;display: block;float: left;font: normal 12px arial, sans-serif;
+    height: 22px;margin: 0 10px 10px 0;padding-right: 6px; /* sliding doors padding */
+    text-decoration: none;}
+a.button span {background: transparent url('../../images/button_span.gif') no-repeat;
+    display: block;line-height: 22px;padding: 0 0 2px 6px;*padding-top:0px;}
+a.button span img{padding-top:3px;margin-right:4px;border:0px;vertical-align:top;*padding-top:0px;}
+a.button:hover{background: transparent url('../../images/button_hover.gif') no-repeat scroll top right;
+    color: #444;display: block;float: left;font: normal 12px arial, sans-serif;
+    height: 22px;margin-bottom: 10px;padding-right: 6px; /* sliding doors padding */
+    text-decoration: none;}
+a.button span:hover{background: transparent url('../../images/button_span_hover.gif') no-repeat;
+    display: block;line-height: 22px;padding: 0 0 2px 6px;}
+.footer a{color:#828282;}
+.footer a:hover{color:#000;}
+/*
+ * ScrollTable
+ */
+.gwt-ScrollTable {
+  border-color: #aaa;
+  border-style: solid;
+  border-width: 1px 0px 1px 1px;
+}
+
+.gwt-ScrollTable .headerWrapper {
+  background: #8bd url(../../images/thbg.gif) repeat-x bottom left;
+}
+
+.gwt-ScrollTable .footerWrapper {
+  border-top: 1px solid #aaa;
+  background: #8bd url(../images/bg_header_gradient.gif) repeat-x bottom left;
+}
+
+.gwt-ScrollTable .dataTable td,
+.gwt-ScrollTable .headerTable td,
+.gwt-ScrollTable .footerTable td {
+  border-color: #aaa;
+  border-style: solid;
+  border-width: 0px 1px 1px 0px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.gwt-ScrollTable .dataTable td table tbody tr td,
+.gwt-ScrollTable .headerTable td table tbody tr td,
+.gwt-ScrollTable .footerTable td table tbody tr td {
+  border-width: 0px 0px 0px 0px;
+}
+
+.gwt-ScrollTable .headerTable td,
+.gwt-ScrollTable .footerTable td {
+  color: #000;
+  cursor: pointer;
+}
+	
+.gwt-ScrollTable .dataTable tr.highlighted {
+  background: #C3D9FF;
+}
+
+.gwt-ScrollTable .dataTable td.highlighted {
+  background: #FFFFAA;
+  cursor: hand;
+  cursor: pointer;
+}
+
+.gwt-ScrollTable .dataTable tr.selected td {
+  background: #7AA5D6;
+}
+
+/**
+ * Applied to the options at the bottom of the page.
+ */
+.gwt-PagingOptions {
+  background: #e8eef7;
+  border: 1px solid #aaa;
+  border-top: none;
+}
+
+.gwt-PagingOptions .errorMessage {
+	color: red;
+}
+
+.pagingOptionsFirstPage,
+.pagingOptionsLastPage,
+.pagingOptionsNextPage,
+.pagingOptionsPrevPage {
+  cursor: hand;
+  cursor: pointer;
+}
+
+.gwt-InlineCellEditor {
+  border: 3px solid #7AA5D6;
+  padding: 4px;
+  background: white;
+  overflow: auto;
+}
+.gwt-InlineCellEditor .accept {
+  cursor: pointer;
+  cursor: hand;
+}
+.gwt-InlineCellEditor .cancel {
+  cursor: pointer;
+  cursor: hand;
+}
+
+/** Applied to AbstractOptions */
+.AbstractOption-Label {
+  font-weight: bold;
+  text-align: right;
+}
+
+.gwt-MenuBarButton{
+	width:100px;
+	margin-top:5px;
+	margin-bottom:5px;
+	margin-left:10px;
+	margin-right:10px;
+}
+
+.gwt-CrudEditTab{
+	width:100px;
+}
+
+.gwt-CrudPickerList{
+	width:300px;
+	height:300px;
+}
+
+.gwt-TextBox-invalid {
+	background-color:#ffffff; 
+	border:1px solid #ff0000; 
+	color:#ff0000;
+}
+
+input[type="text"].gwt-TextBox-invalid , input[type="password"].gwt-TextBox-invalid  {
+	background-color:#ffcccc; 
+	border:1px solid #ff0000; 
+	color:#ff0000;
+}
+
+#viewTable .gwt-TimePicker tbody tr td {
+	border:0;
+	padding:1px 1px 1px 1px;
+}
+
+#viewTable .gwt-TimePicker .gwt-ValueSpinner tbody tr td {
+	border:0;
+	padding:1px 1px 1px 1px;
+}
+
+#viewTable .gwt-TimePicker .gwt-ValueSpinner .arrows tbody tr td img {
+	border-right:0;
+	padding-right:0;
+}
+
+#GWTMenuBar{
+	float:left;
+}
+
+#GWTAppRegion{
+	float:left;
+	padding:10px;
+	border-left:1px solid #ccc;
+}

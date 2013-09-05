@@ -1,0 +1,32 @@
+<%@ jet package="com.skyway.templates" class="CharRendererTemplate"%>
+
+package <sw:package select="$model" alias="CharRenderer"var="pkg"/>;
+<java:importsLocation package="{$pkg}"/>
+
+/**
+ * A simple renderer of Character values.
+ */
+public class Char<java:import>com.google.gwt.text.shared.Renderer</java:import> extends <java:import>com.google.gwt.text.shared.AbstractRenderer</java:import><Character> {
+  private static <sw:javaType select="$model" alias="CharRenderer" package="false"/> INSTANCE;
+
+  /**
+   * @return the instance
+   */
+  public static Renderer<Character> instance() {
+    if (INSTANCE == null) {
+      INSTANCE = new <sw:javaType select="$model" alias="CharRenderer" package="false"/>();
+    }
+    return INSTANCE;
+  }
+
+  protected <sw:javaType select="$model" alias="CharRenderer" package="false"/>() {
+  }
+
+  public String render(Character object) {
+    if (object == null) {
+      return "";
+    }
+
+    return object.toString();
+  }
+}

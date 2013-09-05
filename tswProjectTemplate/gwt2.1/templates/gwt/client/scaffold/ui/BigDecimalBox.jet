@@ -1,0 +1,15 @@
+<%@ jet package="com.skyway.templates" class="BigDecimalBoxTemplate"%>
+
+package <sw:package select="$model" alias="BigDecimalBox"var="pkg"/>;
+<java:importsLocation package="{$pkg}"/>
+
+/**
+ * A <java:import>com.google.gwt.user.client.ui.ValueBox</java:import> that uses {@link <java:import>java.math.BigDecimal</java:import>Parser} and {@link BigDecimalRenderer}.
+ */
+public class <sw:javaType select="$model" alias="BigDecimalBox" package="false"/> extends ValueBox<BigDecimal> {
+
+  public <sw:javaType select="$model" alias="BigDecimalBox" package="false"/>() {
+    super(<java:import>com.google.gwt.dom.client.Document</java:import>.get().createTextInputElement(), BigDecimalRenderer.instance(),
+        BigDecimalParser.instance());
+  }
+}

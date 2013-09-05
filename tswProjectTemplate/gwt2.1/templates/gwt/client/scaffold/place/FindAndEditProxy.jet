@@ -1,0 +1,41 @@
+<%@ jet package="com.skyway.templates" class="FindAndEditProxyTemplate"%>
+<%@taglib prefix="swgwt" id="com.skyway.integration.google.webtoolkit.common.skywayGWTCodeGenTags"%>
+
+package <sw:package select="$model" alias="FindAndEditProxy"var="pkg"/>;
+<java:importsLocation package="{$pkg}"/>
+
+/**
+ * Extends {@link AbstractProxyEditActivity} to work from a {@link EntityProxyId}
+ * 
+ * @param <P> the type of proxy to find and edit
+ */
+public abstract class <sw:javaType select="$model" alias="FindAndEditProxy" package="false"/><P extends <java:import><swgwt:getRequestFactoryPackage/>.shared.EntityProxy</java:import>> extends
+    AbstractProxyEditActivity<P> {
+
+  private final <java:import><swgwt:getRequestFactoryPackage/>.shared.RequestFactory</java:import> factory;
+  private final <java:import><swgwt:getRequestFactoryPackage/>.shared.EntityProxyId</java:import><P> proxyId;
+  private P proxy;
+
+  public <sw:javaType select="$model" alias="FindAndEditProxy" package="false"/>(EntityProxyId<P> proxyId, RequestFactory factory,
+      ProxyEditView<P, ?> view, <java:import>com.google.gwt.place.shared.PlaceController</java:import> placeController) {
+    super(view, placeController);
+    this.proxyId = proxyId;
+    this.factory = factory;
+  }
+
+  @Override
+  public void start(final <java:import>com.google.gwt.user.client.ui.AcceptsOneWidget</java:import> display, final <java:import>com.google.gwt.event.shared.EventBus</java:import> eventBus) {
+    factory.find(proxyId).with(view.createEditorDriver().getPaths()).fire(new <java:import><swgwt:getRequestFactoryPackage/>.shared.Receiver</java:import><P>() {
+      @Override
+      public void onSuccess(P response) {
+        proxy = response;
+        <sw:javaType select="$model" alias="FindAndEditProxy" package="false"/>.super.start(display, eventBus);
+      }
+    });
+  }
+
+  @Override
+  protected P getProxy() {
+    return proxy;
+  }
+}

@@ -1,0 +1,26 @@
+<%@ jet 
+package="com.skyway.integration.google.appengine.jet" 
+class="AppEngineWebTemplate" 
+%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+<?xml version="1.0" encoding="utf-8"?>
+<appengine-web-app xmlns="http://appengine.google.com/ns/1.0">
+	<application></application>
+	<version>1</version>
+	<sessions-enabled>true</sessions-enabled>
+	
+	<!-- Configure serving/caching of GWT files -->
+	<static-files>
+		<include path="**" />
+
+		<!-- The following line requires App Engine 1.3.2 SDK -->
+		<include path="**.nocache.*" expiration="0s" />
+
+		<include path="**.cache.*" expiration="365d" />
+		<exclude path="**.gwt.rpc" />
+	</static-files>
+
+</appengine-web-app>

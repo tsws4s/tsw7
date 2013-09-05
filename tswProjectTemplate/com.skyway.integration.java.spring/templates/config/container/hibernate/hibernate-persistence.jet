@@ -1,0 +1,30 @@
+<%@ jet 
+package="com.skyway.integration.java.spring.jet.config.hibernate" 
+class="HibernatePersistenceTemplate" 
+%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+<%@taglib prefix="persistence" id="org.skyway.integration.data.persistence.skywayPersistenceTags"%>
+<%@taglib prefix="swsprjee" id="com.skyway.integration.java.spring.skywaySpringJeeCodeGenTags"%>
+	<sw:jtaValue var="jtaValue" />
+	<sw:persistenceProviderValue var="ppValue" />
+	<persistence:getAllPersistenceUnits select="$model" var="persistenceUnits" />
+	<c:iterate select="$persistenceUnits" var="puDetail">
+		<persistence-unit name="<c:get select="$puDetail/persistenceUnitName" />" <c:if test="toBoolean($jtaValue)">transaction-type="JTA"</c:if> >
+			<description>generated-persistence-unit</description>
+			<c:choose>
+				<c:when test="$ppValue = 'DATANUCLEUS'">
+					<provider>org.datanucleus.jpa.PersistenceProviderImpl</provider>
+				</c:when>
+				<c:otherwise>
+					<provider>org.hibernate.ejb.HibernatePersistence</provider>
+				</c:otherwise>
+			</c:choose>
+      		<c:iterate select="$puDetail/dataTypes" var="dataType">
+      			<class><sw:javaType select="$dataType" package="true"/></class>
+	  		</c:iterate>
+   			<exclude-unlisted-classes>true</exclude-unlisted-classes>
+		</persistence-unit>
+	</c:iterate>

@@ -1,0 +1,10 @@
+<%@ jet package="com.skyway.templates" class="MobileInjectorTemplate"%>
+
+package <sw:package select="$model" alias="MobileInjector"var="pkg"/>;
+<java:importsLocation package="{$pkg}"/>
+
+@<java:import>com.google.gwt.inject.client.GinModules</java:import>(value = {ScaffoldModule.class})
+public interface <sw:javaType select="$model" alias="MobileInjector" package="false"/> extends ScaffoldInjector {
+
+    <sw:javaType select="$model" alias="ScaffoldMobileApp" package="true"/>  getScaffoldApp();
+}

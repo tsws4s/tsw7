@@ -1,0 +1,99 @@
+<%@ jet package="com.skyway.templates" class="ScaffoldDesktopAppTemplate"%>
+<%@taglib prefix="swgwt" id="com.skyway.integration.google.webtoolkit.common.skywayGWTCodeGenTags"%>
+
+package <sw:package select="$model" alias="ScaffoldDesktopApp"var="pkg"/>;
+<java:importsLocation package="{$pkg}"/>
+
+
+/**
+ * Application for browsing entities.
+ */
+public class <sw:javaType select="$model" alias="ScaffoldDesktopApp" package="false"/> extends ScaffoldApp {
+
+    private static final <java:import>java.util.logging.Logger</java:import> log = Logger.getLogger(Scaffold.class.getName());
+
+    private final ScaffoldDesktopShell shell;
+    private final <sw:javaType select="$model" alias="ApplicationRequestFactory" emitIncludes="true" package="true"/>  requestFactory;
+    private final <java:import>com.google.gwt.event.shared.EventBus</java:import> eventBus;
+    private final <java:import>com.google.gwt.place.shared.PlaceController</java:import> placeController;
+    private final <sw:javaType select="$model" alias="PlaceHistoryFactory" package="true" emitIncludes="true"/> placeHistoryFactory;
+    private final <sw:javaType select="$model" alias="ApplicationMasterActivities" package="true" emitIncludes="true"/> applicationMasterActivities;
+    private final <sw:javaType select="$model" alias="ApplicationDetailsActivities" package="true" emitIncludes="true"/> applicationDetailsActivities;
+
+    @<java:import>com.google.inject.Inject</java:import>
+    public <sw:javaType select="$model" alias="ScaffoldDesktopApp" package="false"/>(ScaffoldDesktopShell shell, ApplicationRequestFactory requestFactory, EventBus eventBus,
+                              PlaceController placeController, PlaceHistoryFactory placeHistoryFactory,
+                              ApplicationMasterActivities applicationMasterActivities,
+                              ApplicationDetailsActivities applicationDetailsActivities) {
+        this.shell = shell;
+        this.requestFactory = requestFactory;
+        this.eventBus = eventBus;
+        this.placeController = placeController;
+        this.placeHistoryFactory = placeHistoryFactory;
+        this.applicationMasterActivities = applicationMasterActivities;
+        this.applicationDetailsActivities = applicationDetailsActivities;
+    }
+
+    public void run() {
+
+        /* Add handlers, setup activities */
+
+        init();
+
+        /* Hide the loading message */
+
+        <java:import>com.google.gwt.dom.client.Element</java:import> loading = <java:import>com.google.gwt.dom.client.Document</java:import>.get().getElementById("loading");
+        loading.getParentElement().removeChild(loading);
+
+        /* And show the user the shell */
+
+        <java:import>com.google.gwt.user.client.ui.RootLayoutPanel</java:import>.get().add(shell);
+
+    }
+
+    private void init() {
+
+        <java:import>com.google.gwt.core.client.GWT</java:import>.setUncaughtExceptionHandler(new GWT.UncaughtExceptionHandler() {
+	    public void onUncaughtException(Throwable e) {
+	        <java:import>com.google.gwt.user.client.Window</java:import>.alert("Error: " + e.getMessage());
+	        log.log(<java:import>java.util.logging.Level</java:import>.SEVERE, e.getMessage(), e);
+	    }
+        });
+
+        if (<java:import>com.google.gwt.logging.client.LogConfiguration</java:import>.loggingIsEnabled()) {
+          // Add remote logging handler
+          <java:import><swgwt:getRequestFactoryPackage suffix="gwt"/>.client.RequestFactoryLogHandler</java:import>.<java:import><swgwt:getRequestFactoryPackage/>.shared.LoggingRequest</java:import>Provider provider = new RequestFactoryLogHandler.LoggingRequestProvider() {
+              public LoggingRequest getLoggingRequest() {
+                return requestFactory.loggingRequest();
+              }
+            };
+          Logger.getLogger("").addHandler(
+              new RequestFactoryLogHandler(provider, Level.WARNING,
+                                           new <java:import>java.util.ArrayList</java:import><String>()));
+        }
+
+        <java:import>com.google.gwt.activity.shared.CachingActivityMapper</java:import> cached = new CachingActivityMapper(applicationMasterActivities);
+        <sw:javaType select="$model" alias="ProxyPlaceToListPlace" package="true" emitIncludes="true"/> proxyPlaceToListPlace = new ProxyPlaceToListPlace();
+        <java:import>com.google.gwt.activity.shared.ActivityMapper</java:import> masterActivityMap = new <java:import> com.google.gwt.activity.shared.FilteredActivityMapper</java:import>(proxyPlaceToListPlace, cached);
+        final <java:import>com.google.gwt.activity.shared.ActivityManager</java:import> masterActivityManager = new ActivityManager(masterActivityMap, eventBus);
+
+        masterActivityManager.setDisplay(shell.getMasterPanel());
+
+        <sw:javaType select="$model" alias="ProxyListPlacePicker" package="true" emitIncludes="true"/> proxyListPlacePicker = new <sw:javaType select="$model" alias="ProxyListPlacePicker"/>(placeController, proxyPlaceToListPlace);
+        <java:import>com.google.gwt.user.client.ui.HasConstrainedValue</java:import><<sw:javaType select="$model" alias="ProxyListPlace" package="true" emitIncludes="true"/>> listPlacePickerView = shell.getPlacesBox();
+        listPlacePickerView.setAcceptableValues(getTopPlaces());
+        proxyListPlacePicker.register(eventBus, listPlacePickerView);
+
+        final ActivityManager detailsActivityManager = new ActivityManager(applicationDetailsActivities, eventBus);
+
+        detailsActivityManager.setDisplay(shell.getDetailsPanel());
+
+        /* Browser history integration */
+        <sw:javaType select="$model" alias="ScaffoldPlaceHistoryMapper" package="true" emitIncludes="true"/> mapper = GWT.create(ScaffoldPlaceHistoryMapper.class);
+        mapper.setFactory(placeHistoryFactory);
+        <java:import>com.google.gwt.place.shared.PlaceHistoryHandler</java:import> placeHistoryHandler = new PlaceHistoryHandler(mapper);
+        <sw:javaType select="$model" alias="ProxyListPlace" package="true" emitIncludes="true"/> defaultPlace = getTopPlaces().iterator().next();
+        placeHistoryHandler.register(placeController, eventBus, defaultPlace);
+        placeHistoryHandler.handleCurrentHistory();
+    }
+}

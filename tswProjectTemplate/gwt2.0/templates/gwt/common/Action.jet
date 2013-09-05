@@ -1,0 +1,22 @@
+<%@ jet 
+package="com.skyway.integration.google.webtoolkit.deploy.templates" 
+class="ActionTemplate" 
+%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+
+package <sw:package select="$model" alias="gwtaction" var="pkg"/>;
+
+<java:importsLocation package="{$pkg}"/>
+
+/**
+* A common interface implemented by all Actions (a.k.a Commands) in the application.  
+* This application uses a command pattern to communicate with the server and the Action is parameterized with the Response object
+* that is returned from the Remote Service.
+<sw:generated />
+*/
+public interface <sw:javaType select="$model" alias="gwtaction" package="false"/><T extends <java:import><sw:javaType select="$model/project" alias="gwtresponse" package="true"/></java:import>> {
+
+}

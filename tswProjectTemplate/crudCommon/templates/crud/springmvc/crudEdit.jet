@@ -1,0 +1,89 @@
+<%@ jet 
+package="com.skyway.scaffolding.crud.templates.springmvc" 
+class="CrudEditTemplate" 
+%>
+<%@taglib prefix="jet" id="org.eclipse.jet.controlTags"%>  
+<%@taglib prefix="f" id="org.eclipse.jet.formatTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+<%@taglib prefix="gen" id="com.skyway.scaffolding.crud.common.generationTags"%>
+<\%@page language="java" isELIgnored="false" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
+<jsp:directive.include file="/WEB-INF/sitemesh-decorators/include.jsp"/>
+<fmt:setBundle basename="bundles.<jet:get select="lower-case($dataType/@name)"/>-resources"/>
+<html>
+<head>
+<title>Edit <fmt:message key="<jet:get select="lower-case($dataType/@name)"/>.title"/></title>
+</head>
+<body>
+	<div class="panel-wrapper">
+		<div class="panel">
+		<form:form action="${pageContext.request.contextPath}/save<jet:get select="$dataType/@name" />" method="POST" modelAttribute="<jet:get select="lower-case($dataType/@name)" />" name="parentform">
+						<div class="tabs">
+							<ul>
+								<li class="active"><a href="#" rel="tab-01-content">
+							<c:choose>
+								<c:when test='${newFlag}' >
+									&nbsp;&nbsp;<fmt:message key="navigation.new"/> <fmt:message key="<jet:get select="lower-case($dataType/@name)"/>.title"/>
+								</c:when>
+								<c:otherwise>
+									&nbsp;&nbsp;<fmt:message key="navigation.edit"/> <fmt:message key="<jet:get select="lower-case($dataType/@name)"/>.title"/>
+								<form:hidden id="<jet:get select="lower-case($dataType/@name)"/>_<jet:get select="lower-case($dataType/@name)"/>Id" path="<jet:get select="lower-case($dataType/@name)"/>Id"/>
+								</c:otherwise>
+							</c:choose>
+								</a></li>
+							</ul>
+							<div class="collapse">collapse</div>
+						</div>
+						
+						<div class="tabs-content">
+						<!-- ## Panel Content  -->
+	<div id="tab-01-content" class="active">	
+
+				<jet:setVariable select="lower-case($dataType/@name)" var="currentDataTypeName" />
+				<jet:setVariable select="$dataType" var="currentDataType" />
+				<jet:iterate select="$dataType/fields" var="field">
+					<gen:isFieldDisplayable select="$field" var="displayable" />
+					<gen:getDefaultFieldPattern select="$field" var="pattern" />
+					<jet:if test="$displayable" >
+<div class="group fixed">
+	<label>
+		<fmt:message key="<jet:get select="$currentDataTypeName" />.<jet:get select="lower-case($field/@name)" />.title"/>:
+	</label> 
+
+						<jet:choose>
+							<jet:when test="string($field/@primaryKey) = 'true'">
+							<c:choose>
+								<c:when test='${newFlag}' >
+									<jet:include template="templates/crud/common/crudEditField.jet" />
+								</c:when>
+								<c:otherwise>
+									<jet:include template="templates/crud/common/crudViewField.jet" />
+									<form:hidden id="<jet:get select="$currentDataTypeName" />_<jet:get select="$field/@name" />" path="<jet:get select="$field/@name" />"/>
+								</c:otherwise>
+							</c:choose>
+							</jet:when>
+							<jet:otherwise>
+								<jet:include template="templates/crud/common/crudEditField.jet" />
+							</jet:otherwise>
+						</jet:choose>
+</div>
+					</jet:if>
+				</jet:iterate>
+
+</div>
+						<!-- ## / Panel Content  -->
+						</div>
+										
+<div style="padding-left:200px;padding-top:7px;padding-bottom:7px;background-color:rgb(239, 239, 239);">						
+	<input class="button-green submit" id="save" type="submit" value="Save <jet:get select="$dataType/@name" />"/>
+ 	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 	<a class="button-pink" href="${pageContext.request.contextPath}/index<jet:get select="$dataType/@name" />">Cancel <img alt="" src="css/images/icons/icon-cancel-white.png"></a>
+</div>	
+
+					
+			</form:form>
+					</div>
+				<div class="shadow"></div>
+</div>	
+
+</body>
+</html>

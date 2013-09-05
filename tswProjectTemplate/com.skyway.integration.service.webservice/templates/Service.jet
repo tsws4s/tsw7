@@ -1,0 +1,71 @@
+<%@ jet 
+package="com.skyway.integration.service.webservice.jet.service" 
+class="ServiceTemplate" 
+%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+<%@taglib prefix="swspr" id="org.skyway.integration.java.spring.skywaySpringCodeGenTags"%>
+<%@taglib prefix="jaxws" id="com.skyway.integration.service.webservice.skywayJAXWSTags"%>
+
+<%@taglib prefix="f" id="org.eclipse.jet.formatTags"%>
+//**********************************************************
+// <sw:javaType select="$model" />
+// 
+// Author: TODO: update developer's name in comment header
+// Creation date: <f:formatNow pattern="MM/dd/yyyy" />
+//
+// Copyright (C) 2013  Team Sportsware
+//*********************************************************
+
+<c:setVariable select="'false'" var="useMethodOnAccess" />
+package <sw:package select="$model" var="pkg"/>;
+<sw:javaType select="$model" package="true" var="fullyQualifiedClassName" emit="false"/>
+<java:importsLocation package="{$pkg}"/>
+<java:impliedImport name="{$fullyQualifiedClassName}"/>
+
+<sw:variableStorageReset />
+<jaxws:getWebService service="$model" var="webService" />
+/**
+<sw:documentation select="$model" format=" * " />
+<sw:modelCoreReference select="$model" />
+<sw:generated />
+ */
+<sw:variableStorageReset scope="class" />
+<sw:getModelExtension select="$model" extension="servicebean" var="beanDetail" />
+<sw:interfaces select="$model" var="interfaces" />
+<swspr:scope select="$beanDetail" />
+@<java:import>org.springframework.stereotype.Service</java:import>("<swspr:componentID select="$model" alias="interface" />")
+<c:include template="templates/common/spring/ClassTransactionAnnotation.jet" />
+public class <sw:javaType select="$model" /> <sw:extends select="$model"/> implements 
+	<java:import><sw:javaType alias="interface" select="$model" package="true"/></java:import>
+	<c:iterate select="$interfaces" var="interface">
+		, <java:import><c:get select="$interface" /></java:import>
+	</c:iterate>
+	<c:if test="$webService">
+		, <java:import><jaxws:serviceEndPointName select="$model" package="true"/></java:import>
+	</c:if>	{
+	<c:iterate select="$model/variables" var="variable">
+	
+		<c:include template="templates/variables/VariableDeclaration.jet" />
+	</c:iterate>
+ 	
+	<sw:anchorSegment anchorId="actionVariables" />
+	
+	/**
+	 * Instantiates a new <sw:javaType select="$model" />.
+	 *
+	 <sw:modelReference select="$model" />	 
+	 <sw:auxiliaryModelComponent />
+ 	 */
+	public <sw:javaType select="$model" />() {
+	}
+ 	<c:iterate select="$model/operations" var="currentOperation">
+ 	
+		<c:include template="templates/operation/Operation.jet" />
+		<c:include template="templates/OperationWrapper.jet" />
+	</c:iterate>
+	
+	<sw:anchorSegment anchorId="afterStepMethods" />
+}

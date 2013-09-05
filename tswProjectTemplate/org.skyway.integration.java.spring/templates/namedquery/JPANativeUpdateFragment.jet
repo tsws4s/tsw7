@@ -1,0 +1,33 @@
+<%@ jet 
+package="org.skyway.integration.java.spring.jet.query" 
+class="JPANativeUpdateFragmentTemplate" 
+%>
+
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="f" id="org.eclipse.jet.formatTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+
+/**
+ * <c:get select="upper-case($namedQuery/@queryType)" /> Query - <sw:methodName select="$namedQuery"/>
+<sw:documentation select="$namedQuery" format=" * " />
+<sw:modelReference select="$namedQuery" suffix="NativeUpdate" />
+ */
+<sw:variableStorageReset scope="method" />
+<sw:getModelExtension select="$namedQuery" extension="namedquerybean" var="beanDetail" />
+<c:include template="templates/common/spring/MethodTransactionAnnotation.jet" />
+public int <sw:methodName select="$namedQuery" />(<c:iterate select="$namedQuery/inputs" var="input" delimiter=","><sw:declareMethodVariable select="$input"><sw:javaType select="$input" package="true" /></sw:declareMethodVariable></c:iterate>) throws <java:import>org.springframework.dao.DataAccessException</java:import>{
+	<java:import>javax.persistence.Query</java:import> query  = getEntityManager().createNamedQuery("<c:get select="$namedQuery/@name" />"); //$NON-NLS-1$
+		
+	<c:include template="templates/common/java/UserCode.jet" />
+	<c:if test="$namedQuery/inputs and $namedQuery/queryText/variablePaths" >
+		<c:setVariable var="parameterPosition" select="1" />
+		<c:iterate select="$namedQuery/queryText/variablePaths" var="inputVariable" >
+			query.setParameter(<c:get select="$parameterPosition" />, <sw:getVariable select="$inputVariable" useMethod="false" />);
+			<c:setVariable var="parameterPosition" select="$parameterPosition + 1" />
+		</c:iterate>
+	</c:if>
+	
+	return query.executeUpdate();	
+}

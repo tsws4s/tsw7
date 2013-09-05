@@ -1,0 +1,21 @@
+<%@ jet 
+package="com.skyway.integration.google.webtoolkit.deploy.templates" 
+class="MessagesPropertiesTemplate" 
+%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="f" id="org.eclipse.jet.formatTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+<%@taglib prefix="swgwt" id="com.skyway.integration.google.webtoolkit.common.skywayGWTCodeGenTags"%>
+<swgwt:getGWTDataType select="$model" var="gwtDataType"/>
+ellipsis=...
+newTitle=New <c:get select="$gwtDataType.display"/>
+<c:iterate select="$gwtDataType/properties" var="propertyselection">
+<c:setVariable select="$propertyselection/Property" var="field"/>
+<sw:getVariableName select="$field"/>=<swgwt:getVariableName select="$propertyselection"/>
+</c:iterate>
+closeTabsMessage=Please close a tab or two before opening any more tabs.
+deleteConfirmation=Are you sure you want to delete the selected <sw:getVariableName select="$model" uncapitalize="true"/>?
+breakRelationshipConfirmation=Are you sure you want to remove this <sw:getVariableName select="$model" uncapitalize="true"/>?
+invalidEditorMessage=Please enter valid values for all required fields and try again.

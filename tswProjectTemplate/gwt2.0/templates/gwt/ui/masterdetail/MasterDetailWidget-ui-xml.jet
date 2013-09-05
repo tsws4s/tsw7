@@ -1,0 +1,28 @@
+<%@ jet 
+package="com.skyway.integration.google.webtoolkit.deploy.templates" 
+class="MasterDetailWidgetUiXmlTemplate" 
+%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+<%@taglib prefix="swgwt" id="com.skyway.integration.google.webtoolkit.common.skywayGWTCodeGenTags"%>
+<swgwt:getGWTDataType select="$model" var="gwtDataType"/>
+<ui:UiBinder
+  ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
+  ui:generateKeys="com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator"
+  ui:generateLocales="default"
+  xmlns:ui='urn:ui:com.google.gwt.uibinder'
+  xmlns:dp='urn:import:com.google.gwt.user.datepicker.client'
+  xmlns:gc='urn:import:<sw:package select="$model/project" alias="gwtaction"/>'
+  xmlns:<sw:getVariableName select="$model" uncapitalize="true"/>='urn:import:<sw:package select="$model" alias="gwteditwidget"/>'
+  xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+  <ui:style src='../<sw:javaType select="$model" alias="gwtcss" package="false"/>.css'/>
+
+  <g:FlowPanel>
+  <g:Label ui:field="titleLabel" addStyleNames="{style.gwt-Crud-Type-Title}"><c:get select="$gwtDataType/display"/>s</g:Label>
+  <g:Button addStyleNames="{style.gwt-CrudSectionNewButton}" ui:field="newButton"><ui:msg description="newButton">New <c:get select="$gwtDataType/display"/>...</ui:msg></g:Button>
+  <<sw:getVariableName select="$model" uncapitalize="true"/>:<sw:javaType select="$model" alias="gwttable" package="false"/> showActions="true" ui:field="<sw:getVariableName select="$model" uncapitalize="true"/>Table" addStyleNames="{style.gwt-CrudEditSelectionList}"/>
+  <g:TabLayoutPanel addStyleNames="{style.gwt-CrudEditTabs}" ui:field="editingTabs" barUnit="PX" barHeight="45"/>
+  </g:FlowPanel>
+</ui:UiBinder>

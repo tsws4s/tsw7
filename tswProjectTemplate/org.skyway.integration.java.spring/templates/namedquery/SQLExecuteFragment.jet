@@ -1,0 +1,23 @@
+<%@ jet 
+package="org.skyway.integration.java.spring.jet.query" 
+class="SQLExecuteFragmentTemplate" 
+%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="f" id="org.eclipse.jet.formatTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+/**
+ * <c:get select="upper-case($namedQuery/@queryType)" /> Query - <sw:methodName select="$namedQuery"/>
+<sw:documentation select="$namedQuery" format=" * " />
+<sw:modelReference select="$namedQuery" suffix="SQLExecute" />
+ */
+<sw:variableStorageReset scope="method" />
+<sw:getModelExtension select="$namedQuery" extension="namedquerybean" var="beanDetail" />
+<c:include template="templates/common/spring/MethodTransactionAnnotation.jet" />
+public void <sw:methodName select="$namedQuery" />() throws <java:import>org.springframework.dao.DataAccessException</java:import>{
+	String sqlText = <sw:encodeVariableText select="$namedQuery/@queryText" encoding="sql" />; 
+	
+	<c:include template="templates/common/java/UserCode.jet" />
+	getJdbcTemplate().execute(sqlText);
+}

@@ -1,0 +1,16 @@
+<%@ jet 
+package="org.skyway.integration.java.spring.jet.test"
+class="CreateMockSessionUnitTemplate" 
+%>
+/**
+ * Creates a "session-scope" to run JUnit tests (allows access to session-scoped beans).
+<sw:generated />
+ */
+@Override
+protected void customizeBeanFactory(<java:import>org.springframework.beans.factory.support.DefaultListableBeanFactory</java:import> beanFactory) {
+	super.customizeBeanFactory(beanFactory);
+	beanFactory.registerScope("session", new <java:import>org.springframework.web.context.request.SessionScope</java:import>());
+	<java:import>org.springframework.mock.web.MockHttpServletRequest</java:import> request = new MockHttpServletRequest();
+	<java:import>org.springframework.web.context.request.ServletRequestAttributes</java:import> attributes = new ServletRequestAttributes(request);
+	<java:import>org.springframework.web.context.request.RequestContextHolder</java:import>.setRequestAttributes(attributes);
+}

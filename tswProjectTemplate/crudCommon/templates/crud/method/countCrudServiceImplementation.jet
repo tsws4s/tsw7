@@ -1,0 +1,21 @@
+<%@ jet 
+package="com.skyway.scaffolding.crud.templates.method" 
+class="CountCrudServiceImplementationTemplate" 
+%>
+<%@taglib prefix="jet" id="org.eclipse.jet.controlTags"%>  
+<%@taglib prefix="f" id="org.eclipse.jet.formatTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+<jet:setVariable select="0" var="count"/>
+<jet:iterate select="$dataType/fields" var="field" >
+	<jet:if test="$field/@primaryKey = 'true'">
+		<jet:setVariable select="$count + 1" var="count" />
+	</jet:if>
+</jet:iterate>
+<jet:choose>
+<jet:when test="$count > 1">
+	return ((Long)<jet:get select="lowercaseFirst($dataType/@name)"/>DAO.createQuerySingleResult("select count(*) from <jet:get select="uppercaseFirst($dataType/@name)"/> o").getSingleResult()).intValue();
+</jet:when>
+<jet:otherwise>
+	return ((Long)<jet:get select="lowercaseFirst($dataType/@name)"/>DAO.createQuerySingleResult("select count(o) from <jet:get select="uppercaseFirst($dataType/@name)"/> o").getSingleResult()).intValue();
+</jet:otherwise>
+</jet:choose>

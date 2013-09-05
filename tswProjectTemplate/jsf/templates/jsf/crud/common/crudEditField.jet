@@ -1,0 +1,26 @@
+<%@ jet 
+package="com.skyway.scaffolding.crud.templates.common" 
+class="CrudEditFieldTemplate" 
+%>
+<%@taglib prefix="jet" id="org.eclipse.jet.controlTags"%>  
+<%@taglib prefix="f" id="org.eclipse.jet.formatTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+<%@taglib prefix="gen" id="com.skyway.scaffolding.crud.common.generationTags"%>
+						<gen:isCalendarField select="$field" var="isCalendarField" />
+						<jet:choose>
+							<jet:when test="$field/dataType/@type = 'BOOLEAN'">
+							<h:selectBooleanCheckbox id="<jet:get select="lower-case($dataType/@name)"/>_<jet:get select="lower-case($field/@name)" />" value="#{<jet:get select="$currentDataTypeName"/>.<jet:get select="lowercaseFirst($field/@name)" />}" required="<jet:get select="string($field/@primaryKey)" />" label="<jet:get select="lower-case($dataType/@name)"/>_<jet:get select="lower-case($field/@name)" />" />
+							</jet:when>
+							<jet:when test="$field/dataType/@type = 'DATE'">
+							<p:calendar id="<jet:get select="lower-case($dataType/@name)"/>_<jet:get select="lower-case($field/@name)" />" value="#{<jet:get select="$currentDataTypeName"/>.<jet:get select="lowercaseFirst($field/@name)" />}" required="<jet:get select="string($field/@primaryKey)" />" <jet:if test="$isCalendarField"> converter="primefacesCalendarConverter"</jet:if> />
+							</jet:when>
+							<jet:when test="$field/dataType/@type = 'TIME'">
+							<h:inputText id="<jet:get select="lower-case($dataType/@name)"/>_<jet:get select="lower-case($field/@name)" />" value="#{<jet:get select="$currentDataTypeName"/>.<jet:get select="lowercaseFirst($field/@name)" />}" required="<jet:get select="string($field/@primaryKey)" />" label="<jet:get select="lower-case($dataType/@name)"/>_<jet:get select="lower-case($field/@name)" />" converter="timeConverterFor<jet:choose><jet:when test="$isCalendarField">Calendar</jet:when><jet:otherwise>Date</jet:otherwise></jet:choose>" />
+							</jet:when>
+							<jet:when test="$field/dataType/@type = 'DATETIME'">
+							<h:inputText id="<jet:get select="lower-case($dataType/@name)"/>_<jet:get select="lower-case($field/@name)" />" value="#{<jet:get select="$currentDataTypeName"/>.<jet:get select="lowercaseFirst($field/@name)" />}" required="<jet:get select="string($field/@primaryKey)" />" label="<jet:get select="lower-case($dataType/@name)"/>_<jet:get select="lower-case($field/@name)" />" converter="dateTimeConverterFor<jet:choose><jet:when test="$isCalendarField">Calendar</jet:when><jet:otherwise>Date</jet:otherwise></jet:choose>" />
+							</jet:when>
+							<jet:otherwise>
+							<h:inputText id="<jet:get select="lower-case($dataType/@name)"/>_<jet:get select="lower-case($field/@name)" />" value="#{<jet:get select="$currentDataTypeName"/>.<jet:get select="lowercaseFirst($field/@name)" />}" required="<jet:get select="string($field/@primaryKey)" />" label="<jet:get select="lower-case($dataType/@name)"/>_<jet:get select="lower-case($field/@name)" />" />
+							</jet:otherwise>
+						</jet:choose>

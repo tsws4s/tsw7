@@ -1,0 +1,277 @@
+<%@ jet package="com.skyway.templates" class="AbstractProxyListActivityTemplate"%>
+<%@taglib prefix="swgwt" id="com.skyway.integration.google.webtoolkit.common.skywayGWTCodeGenTags"%>
+
+package <sw:package select="$model" alias="AbstractProxyListActivity"var="pkg"/>;
+<java:importsLocation package="{$pkg}"/>
+
+/**
+ * Abstract activity for displaying a list of {@link EntityProxy}. These
+ * activities are not re-usable. Once they are stopped, they cannot be
+ * restarted.
+ * <p>
+ * Subclasses must:
+ * 
+ * <ul>
+ * <li>provide a {@link Proxy<java:import>java.util.List</java:import>View}
+ * <li>implement method to request a full count
+ * <li>implement method to find a range of entities
+ * <li>respond to "show details" commands
+ * </ul>
+ * <p>
+ * Only the properties required by the view will be requested.
+ * 
+ * @param <P> the type of {@link EntityProxy} listed
+ */
+public abstract class AbstractProxyList<java:import>com.google.gwt.activity.shared.Activity</java:import><P extends <java:import><swgwt:getRequestFactoryPackage/>.shared.EntityProxy</java:import>>
+    implements Activity, ProxyListView.Delegate<P> {
+
+  /**
+   * This mapping allows us to update individual rows as records change.
+   */
+  private final <java:import>java.util.Map</java:import><<java:import><swgwt:getRequestFactoryPackage/>.shared.EntityProxyId</java:import><P>, Integer> idToRow = new <java:import>java.util.HashMap</java:import><EntityProxyId<P>, Integer>();
+  private final Map<EntityProxyId<P>, P> idToProxy = new HashMap<EntityProxyId<P>, P>();
+
+  private final <java:import>com.google.gwt.place.shared.PlaceController</java:import> placeController;
+  private final <java:import>com.google.gwt.view.client.SingleSelectionModel</java:import><P> selectionModel;
+  private final Class<P> proxyClass;
+
+  private <java:import>com.google.gwt.event.shared.HandlerRegistration</java:import> rangeChangeHandler;
+  private ProxyListView<P> view;
+  private <java:import>com.google.gwt.user.client.ui.AcceptsOneWidget</java:import> display;
+
+  public <sw:javaType select="$model" alias="AbstractProxyListActivity" package="false"/>(PlaceController placeController,
+      ProxyListView<P> view, Class<P> proxyType) {
+    this.view = view;
+    this.placeController = placeController;
+    this.proxyClass = proxyType;
+    view.setDelegate(this);
+
+    final <java:import>com.google.gwt.view.client.HasData</java:import><P> hasData = view.asHasData();
+    rangeChangeHandler = hasData.addRangeChangeHandler(new <java:import>com.google.gwt.view.client.RangeChangeEvent</java:import>.Handler() {
+      public void onRangeChange(RangeChangeEvent event) {
+        <sw:javaType select="$model" alias="AbstractProxyListActivity" package="false"/>.this.onRangeChanged(hasData);
+      }
+    });
+
+    // Inherit the view's key provider
+    <java:import>com.google.gwt.view.client.ProvidesKey</java:import><P> keyProvider = ((<java:import>com.google.gwt.user.cellview.client.AbstractHasData</java:import><P>) hasData).getKeyProvider();
+    selectionModel = new SingleSelectionModel<P>(keyProvider);
+    hasData.setSelectionModel(selectionModel);
+
+    selectionModel.addSelectionChangeHandler(new <java:import>com.google.gwt.view.client.SelectionChangeEvent</java:import>.Handler() {
+      public void onSelectionChange(SelectionChangeEvent event) {
+        P selectedObject = selectionModel.getSelectedObject();
+        if (selectedObject != null) {
+          showDetails(selectedObject);
+        }
+      }
+    });
+  }
+
+  public void createClicked() {
+    placeController.goTo(new ProxyPlace(proxyClass));
+  }
+
+  public ProxyListView<P> getView() {
+    return view;
+  }
+
+  public String mayStop() {
+    return null;
+  }
+
+  public void onCancel() {
+    onStop();
+  }
+
+  /**
+   * Called by the table as it needs data.
+   */
+  public void onRangeChanged(HasData<P> listView) {
+    final <java:import>com.google.gwt.view.client.Range</java:import> range = listView.getVisibleRange();
+
+    final <java:import><swgwt:getRequestFactoryPackage/>.shared.Receiver</java:import><List<P>> callback = new Receiver<List<P>>() {
+      @Override
+      public void onSuccess(List<P> values) {
+        if (view == null) {
+          // This activity is dead
+          return;
+        }
+        idToRow.clear();
+        idToProxy.clear();
+        for (int i = 0, row = range.getStart(); i < values.size(); i++, row++) {
+          P proxy = values.get(i);
+          @SuppressWarnings("unchecked")
+          // Why is this cast needed?
+          EntityProxyId<P> proxyId = (EntityProxyId<P>) proxy.stableId();
+          idToRow.put(proxyId, row);
+          idToProxy.put(proxyId, proxy);
+        }
+        getView().asHasData().setRowData(range.getStart(), values);
+        if (display != null) {
+          display.setWidget(getView());
+        }
+      }
+    };
+
+    fireRange<java:import><swgwt:getRequestFactoryPackage/>.shared.Request</java:import>(range, callback);
+  }
+
+  public void onStop() {
+    view.setDelegate(null);
+    view = null;
+    rangeChangeHandler.removeHandler();
+    rangeChangeHandler = null;
+  }
+
+  /**
+   * Select the given record, or clear the selection if called with null or an
+   * id we don't know.
+   */
+  public void select(EntityProxyId<P> proxyId) {
+    /*
+     * The selectionModel will not flash if we put it back to the same state it
+     * is already in, so we can keep this code simple.
+     */
+
+    // Clear the selection
+    P selected = selectionModel.getSelectedObject();
+    if (selected != null) {
+      selectionModel.setSelected(selected, false);
+    }
+
+    // Select the new proxy, if it's relevant
+    if (proxyId != null) {
+      P selectMe = idToProxy.get(proxyId);
+      selectionModel.setSelected(selectMe, true);
+    }
+  }
+
+  public void start(AcceptsOneWidget display, <java:import>com.google.gwt.event.shared.EventBus</java:import> eventBus) {
+    view.setDelegate(this);
+    <java:import><swgwt:getRequestFactoryPackage/>.shared.EntityProxyChange</java:import>.registerForProxyType(eventBus, proxyClass,
+        new EntityProxyChange.Handler<P>() {
+          public void onProxyChange(EntityProxyChange<P> event) {
+            update(event.get<java:import><swgwt:getRequestFactoryPackage/>.shared.WriteOperation</java:import>(), event.getProxyId());
+          }
+        });
+    eventBus.addHandler(<java:import>com.google.gwt.place.shared.PlaceChangeEvent</java:import>.TYPE, new PlaceChangeEvent.Handler() {
+      public void onPlaceChange(PlaceChangeEvent event) {
+        updateSelection(event.getNewPlace());
+      }
+    });
+    this.display = display;
+    init();
+    updateSelection(placeController.getWhere());
+  }
+
+  public void update(WriteOperation writeOperation, EntityProxyId<P> proxyId) {
+    switch (writeOperation) {
+      case UPDATE:
+        update(proxyId);
+        break;
+
+      case DELETE:
+        init();
+        break;
+
+      case PERSIST:
+        /*
+         * If you would like to jump to the last page when a new item is added to the list, uncomment the call to getLastPage() and remove the call to init().
+         */
+        //getLastPage();
+        init();
+        break;
+    }
+  }
+
+  protected abstract Request<List<P>> createRangeRequest(Range range);
+
+  protected abstract void fireCountRequest(Receiver<Integer> callback);
+
+  /**
+   * Called when the user chooses a record to view. This default implementation
+   * sends the {@link PlaceController} to an appropriate {@link ProxyPlace}.
+   * 
+   * @param record the chosen record
+   */
+  protected void showDetails(P record) {
+    placeController.goTo(new ProxyPlace(record.stableId(), ProxyPlace.Operation.DETAILS));
+  }
+
+  @SuppressWarnings("unchecked")
+  private EntityProxyId<P> cast(ProxyPlace proxyPlace) {
+    return (EntityProxyId<P>) proxyPlace.getProxyId();
+  }
+
+  private void fireRangeRequest(final Range range,
+      final Receiver<List<P>> callback) {
+    createRangeRequest(range).with(getView().getPaths()).fire(callback);
+  }
+
+  private void getLastPage() {
+    fireCountRequest(new Receiver<Integer>() {
+      @Override
+      public void onSuccess(Integer response) {
+        if (view == null) {
+          // This activity is dead
+          return;
+        }
+        HasData<P> table = getView().asHasData();
+        int rows = response.intValue();
+        table.setRowCount(rows, true);
+        if (rows > 0) {
+          int pageSize = table.getVisibleRange().getLength();
+          int remnant = rows % pageSize;
+          if (remnant == 0) {
+            table.setVisibleRange(rows - pageSize, pageSize);
+          } else {
+            table.setVisibleRange(rows - remnant, pageSize);
+          }
+        }
+        onRangeChanged(table);
+      }
+    });
+  }
+
+  private void init() {
+    fireCountRequest(new Receiver<Integer>() {
+      @Override
+      public void onSuccess(Integer response) {
+        if (view == null) {
+          // This activity is dead
+          return;
+        }
+        getView().asHasData().setRowCount(response.intValue(), true);
+        onRangeChanged(view.asHasData());
+      }
+    });
+  }
+
+  private void update(EntityProxyId<P> proxyId) {
+    final Integer row = idToRow.get(proxyId);
+    if (row == null) {
+      return;
+    }
+    fireRangeRequest(new Range(row, 1), new Receiver<List<P>>() {
+      @Override
+      public void onSuccess(List<P> response) {
+        getView().asHasData().setRowData(row,
+            <java:import>java.util.Collections</java:import>.singletonList(response.get(0)));
+      }
+    });
+  }
+
+  private void updateSelection(<java:import>com.google.gwt.place.shared.Place</java:import> newPlace) {
+    if (newPlace instanceof ProxyPlace) {
+      ProxyPlace proxyPlace = (ProxyPlace) newPlace;
+      if (proxyPlace.getOperation() != ProxyPlace.Operation.CREATE
+          && proxyPlace.getProxyClass().equals(proxyClass)) {
+        select(cast(proxyPlace));
+        return;
+      }
+    }
+
+    select(null);
+  }
+}

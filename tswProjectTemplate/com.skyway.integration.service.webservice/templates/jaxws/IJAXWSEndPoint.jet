@@ -1,0 +1,63 @@
+<%@ jet 
+package="com.skyway.integration.service.webservice.jet.jaxws" 
+class="JAXWSEndPointTemplate" 
+%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+<%@taglib prefix="jaxws" id="com.skyway.integration.service.webservice.skywayJAXWSTags"%>
+
+
+package <sw:package alias="wsendpoint" select="$model" var="pkg"/>;
+<sw:javaType alias="interface" select="$model" package="true" var="fullyQualifiedClassName" emit="false"/>
+<java:importsLocation package="{$pkg}"/>
+<java:impliedImport name="{$fullyQualifiedClassName}"/>
+
+import javax.jws.soap.*;
+import javax.xml.ws.*;
+import javax.jws.*;
+
+
+<jaxws:getWebService service="$model" var="webService" />
+
+/**
+<sw:documentation select="$model" format=" * " />
+<sw:generated />
+ */
+<jaxws:webService select="$webService" />
+public interface <jaxws:serviceEndPointName select="$model" /> {
+
+ 	<c:iterate select="$model/operations" var="currentOperation">
+		<sw:getCollectionSize collection="$currentOperation/inputs" var="inputsSize" />
+		<sw:getCollectionSize collection="$currentOperation/outputs" var="outputsSize" />
+ 		<jaxws:getWebMethod webService="$webService" operation="$currentOperation" var="webMethod" />
+ 		<c:if test="$webMethod">
+		/**
+		 <sw:documentation select="$currentOperation" format=" * " />
+		 <sw:generated />
+ 	 	 */
+ 		<jaxws:soapBinding select="$webMethod/soapBinding" />
+ 		<jaxws:responseWrapper select="$webMethod/responseWrapper" />
+ 		<jaxws:requestWrapper select="$webMethod/requestWrapper" />
+ 		<jaxws:webResult select="$webMethod/webResult" />
+ 	 	<jaxws:webMethod select="$webMethod" />
+		<c:choose>
+			<c:when test="$outputsSize <= 1" >
+				public <java:import><sw:operationReturnType select="$currentOperation" package="true"/></java:import> <sw:methodName select="$currentOperation" /> (
+					<c:include template="templates/jaxws/InputParameters.jet" />
+				) <sw:throwsList select="$currentOperation" />;
+			</c:when>
+			<c:otherwise>
+				/**
+				 <sw:generated />
+				 */
+				public void <sw:methodName select="$currentOperation" /> (
+					<c:include template="templates/jaxws/InputParameters.jet" /><c:if test="$inputsSize > 0">, </c:if> 
+					<c:include template="templates/jaxws/OutputParameters.jet" />
+				) <sw:throwsList select="$currentOperation" />;
+			</c:otherwise>
+		</c:choose>
+		</c:if>
+	</c:iterate>
+}

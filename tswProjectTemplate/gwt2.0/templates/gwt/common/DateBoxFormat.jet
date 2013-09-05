@@ -1,0 +1,110 @@
+<%@ jet 
+package="com.skyway.integration.google.webtoolkit.deploy.templates" 
+class="DateBoxFormatTemplate" 
+%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+
+package <sw:package select="$model" alias="gwtdateboxformat" var="pkg"/>;
+
+<java:importsLocation package="{$pkg}"/>
+
+/**
+ * Defines DateBox.Format instances that can be used to format DateBoxes with formats other than the Default which is both Date and Time
+ * This class takes the concepts from the DefaultFormat defined in DateBox but allows the DateTimeFormat to be passed in. 
+ <sw:generated />
+ */
+public class <sw:javaType select="$model" alias="gwtdateboxformat" package="false"/> implements <java:import>com.google.gwt.user.datepicker.client.DateBox</java:import>.Format{
+	/**
+	 * The DateTimeFormat
+	 <sw:generated />
+	 */
+	private <java:import>com.google.gwt.i18n.client.DateTimeFormat</java:import> format;
+	
+	/**
+	 * Error Style
+	 <sw:generated />
+	 */
+	private static final String DATE_BOX_FORMAT_ERROR = "dateBoxFormatError";
+	
+	/**
+	 * A Medium Date format suitable for using with DateBox.setFormat()
+	 <sw:generated />
+	 */
+	public final static DateBoxFormat MEDIUM_DATE = new DateBoxFormat (DateTimeFormat.getMediumDateFormat());
+	
+	/**
+	 * Default Constructor uses Medium Date Time format
+	 <sw:generated />
+	 */
+	public <sw:javaType select="$model" alias="gwtdateboxformat" package="false"/> () {
+		format = DateTimeFormat.getMediumDateTimeFormat();
+	}
+	
+	/**
+	 * Allows the DateTimeFormat to be passed in and wraps it so that it can be used with DateBox
+	 <sw:generated />
+	 * @param format
+	 */
+	public <sw:javaType select="$model" alias="gwtdateboxformat" package="false"/> (DateTimeFormat format) {
+		this.format = format;
+	}
+
+	/**
+	 <sw:generated />
+	 * @param box
+	 * @param date
+	 * @return
+	 */
+    public String format(DateBox box, <java:import>java.util.Date</java:import> date) {
+      if (date == null) {
+        return "";
+      } else {
+        return format.format(date);
+      }
+    }
+
+    /**
+     * Gets the date time format.
+     <sw:generated />
+     * @return the date time format
+     */
+    public DateTimeFormat getDateTimeFormat() {
+      return format;
+    }
+
+ 	/**
+     * Parses the date
+     <sw:generated />
+     * @return the date that was parsed
+     */
+    @SuppressWarnings("deprecation")
+    public Date parse(DateBox dateBox, String dateText, boolean reportError) {
+      Date date = null;
+      try {
+        if (dateText.length() > 0) {
+          date = format.parse(dateText);
+        }
+      } catch (IllegalArgumentException exception) {
+        try {
+          date = new Date(dateText);
+        } catch (IllegalArgumentException e) {
+          if (reportError) {
+            dateBox.addStyleName(DATE_BOX_FORMAT_ERROR);
+          }
+          return null;
+        }
+      }
+      return date;
+    }
+
+ 	/**
+     * Resets the DateBox state
+     <sw:generated />
+     */
+    public void reset(DateBox dateBox, boolean abandon) {
+      dateBox.removeStyleName(DATE_BOX_FORMAT_ERROR);
+    }
+}

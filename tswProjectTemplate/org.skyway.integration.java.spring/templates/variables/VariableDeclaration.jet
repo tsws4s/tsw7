@@ -1,0 +1,34 @@
+<%@ jet 
+package="org.skyway.integration.java.spring.jet.variables" 
+class="VariableDeclarationTemplate" 
+%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="f" id="org.eclipse.jet.formatTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+<%@taglib prefix="swspr" id="org.skyway.integration.java.spring.skywaySpringCodeGenTags"%>
+<sw:getVariableDetail select="$variable" core="variableCore" isExternal="isExternal" alias="aliasName" hasInitialValue="hasInitialValue"/>
+<c:choose>
+	<c:when test="$aliasName = 'primary' or $aliasName = ''">
+
+/**
+<sw:documentation select="$variable" format=" * "/>
+<sw:modelReference select="$variable" />
+ */
+<sw:modifiers select="$variable" /> <sw:declareClassVariable select="$variable"><sw:javaType package="true" select="$variable" alias="{$aliasName}" emitIncludes="true" /></sw:declareClassVariable><c:if test="$hasInitialValue = 'true'"> = <sw:initialValue select="$variable"/></c:if>;
+	</c:when>
+	<c:otherwise>
+		<sw:getVariableName select="$variable" var="variableName" emit="false" />
+		<sw:insertSegment anchorId="actionVariables" segmentCore="$variableCore" coreAlias="{$aliasName}" coreName="{$variableName}">
+
+/**
+<sw:documentation select="$variable" format=" * "/>
+<sw:modelReference select="$variable" />
+ */
+@<java:import>org.springframework.beans.factory.annotation.Autowired</java:import>
+<sw:modifiers select="$variable" /> <sw:javaType alias="{$aliasName}" package="true" select="$variableCore" emitIncludes="true" /> <c:get select="$variableName" />;
+		</sw:insertSegment>
+	</c:otherwise>
+</c:choose>
+	

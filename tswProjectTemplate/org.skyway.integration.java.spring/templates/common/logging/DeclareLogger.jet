@@ -1,0 +1,14 @@
+<%@ jet 
+package="org.skyway.integration.java.spring.jet.common" 
+class="DeclareLoggerTemplate" 
+%>
+
+<%@taglib prefix="java" id="org.eclipse.jet.javaTags"%>
+
+	/**
+	 * The SLF4J logging class.
+	 <sw:generated />
+	 <sw:auxiliaryModelComponent />
+	 */
+	private transient <java:import>org.slf4j.Logger</java:import> logger = <java:import>org.slf4j.LoggerFactory</java:import>.getLogger(getClass());
+	

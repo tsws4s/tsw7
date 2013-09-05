@@ -1,0 +1,86 @@
+<%@ jet 
+package="org.skyway.integration.java.spring.jet.core" 
+class="DataTypeKeyTemplate" 
+%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+
+package <sw:package select="$model" var="pkg" alias="key" />;
+<sw:javaType alias="key" select="$model" package="true" var="fullyQualifiedClassName" emit="false"/>
+<java:importsLocation package="{$pkg}"/>
+<java:impliedImport name="{$fullyQualifiedClassName}"/>
+
+<c:if test="$model/dataStore">
+import javax.persistence.*;
+</c:if>
+
+/**
+<sw:documentation select="$model" format=" * " />
+<sw:modelCoreReference select="$model" />
+<sw:generated />
+<sw:auxiliaryModelComponent />
+ */
+<sw:variableStorageReset scope="class" />
+public class <sw:javaType alias="key" select="$model" /> implements <java:import>java.io.Serializable</java:import> {
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 <sw:generated />
+ 	 */
+	public <sw:javaType alias="key" select="$model" /> ()	{
+	}
+	
+	<c:iterate select="$model/fields" var="field">
+		<c:if test="$field/@primaryKey = 'true'">
+	/**
+	 <sw:modelReference select="$field" />
+ 	 */
+ 	 <persistence:temporal select="$field"/>
+		
+		<persistence:column select="$field" dataType="$model" />
+		
+		<persistence:basic select="$field" dataType="$model" />
+		
+		<persistence:lob select="$field" dataType="$model" />
+		
+		<persistence:id select="$field" />
+		public <sw:declareClassVariable select="$field"><java:import><sw:javaType select="$field" package="true"/></java:import></sw:declareClassVariable>;
+		</c:if>
+	</c:iterate>
+	
+	<c:iterate select="$model/fields" var="field">
+		<c:if test="$field/@primaryKey = 'true'">
+		/**
+		<sw:documentation select="$field" format=" * " />
+		<sw:generated />
+		 */
+		public void set<sw:getVariableName select="$field" capitalize="true"/>(<java:import><sw:javaType select="$field" package="true"/></java:import> <sw:getVariableName select="$field"/>) {
+			this.<sw:getVariableName select="$field"/> = <sw:getVariableName select="$field"/>;
+		}
+		
+		/**
+		<sw:documentation select="$field" format=" * " />
+		<sw:generated />
+		 */
+		public <java:import><sw:javaType select="$field" package="true"/></java:import> get<sw:getVariableName select="$field" capitalize="true"/>() {
+			return this.<sw:getVariableName select="$field"/>;
+		}
+		</c:if>
+	</c:iterate>
+	
+	<c:setVariable select="'key'" var="equalsTypeAlias" />
+	<c:include template="templates/common/jpa/HashCodeAndEquals.jet" />
+	
+	@Override
+	public String toString()	{
+		StringBuilder sb = new StringBuilder ("<sw:javaType alias="key" select="$model" />");
+		<c:iterate select="$model/fields" var="field">
+			<c:if test="$field/@primaryKey = 'true'">
+				sb.append(" <sw:getVariableName select="$field" capitalize="false" />: ").append(get<sw:getVariableName select="$field" capitalize="true"/>());
+			</c:if>
+		</c:iterate>
+		return sb.toString();
+	}
+}

@@ -1,0 +1,31 @@
+<%@ jet 
+package="org.skyway.integration.java.spring.jet.operation" 
+class="OperationVariableDeclarations"
+%>
+<%@taglib prefix="java" id="org.eclipse.jet.javaTags" %>
+<%@taglib prefix="ws"   id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c"    id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="f"    id="org.eclipse.jet.formatTags"%>
+<%@taglib prefix="sw"   id="org.skyway.integration.java.skywayCodeGenTags"%>
+<c:iterate select="$currentOperation/constants" var="constant">
+	final <sw:declareMethodVariable select="$constant"><java:import><sw:javaType package="true" select="$constant"/></java:import></sw:declareMethodVariable> = <sw:initialValue select="$constant"/>;
+</c:iterate>
+<c:iterate select="$currentOperation/variables" var="variable">
+	<sw:getVariableDetail select="$variable" isExternal="isExternal" alias="aliasName" hasInitialValue="hasInitialValue"/>
+ 	<c:choose>
+		<c:when test="$isExternal = 'true' && $hasInitialValue = 'false'">
+			<sw:declareMethodVariable select="$variable"><java:import><sw:javaType package="true" select="$variable" alias="{$aliasName}"/></java:import></sw:declareMethodVariable>;
+		</c:when>
+		<c:when test="$isExternal = 'true' && $hasInitialValue = 'true'">
+			<sw:declareMethodVariable select="$variable"><java:import><sw:javaType package="true" select="$variable" alias="{$aliasName}"/></java:import></sw:declareMethodVariable> = <sw:initialValue select="$variable"/>;
+		</c:when>
+		<c:otherwise>
+			<sw:declareMethodVariable select="$variable"><java:import><sw:javaType package="true" select="$variable" alias="{$aliasName}"/></java:import></sw:declareMethodVariable> = <sw:initialValue select="$variable"/>;
+		</c:otherwise>
+	</c:choose>
+</c:iterate>
+<sw:stepVariableAnchor anchorId="{$currentOperation/@name}_Variables" />
+
+<c:if test="$currentOperation/entryPoint">
+	<c:include template="templates/common/java/UserCode.jet" />
+</c:if>

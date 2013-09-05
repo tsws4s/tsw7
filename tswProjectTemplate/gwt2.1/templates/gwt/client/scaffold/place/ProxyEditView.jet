@@ -1,0 +1,35 @@
+<%@ jet package="com.skyway.templates" class="ProxyEditViewTemplate"%>
+<%@taglib prefix="swgwt" id="com.skyway.integration.google.webtoolkit.common.skywayGWTCodeGenTags"%>
+
+package <sw:package select="$model" alias="ProxyEditView"var="pkg"/>;
+<java:importsLocation package="{$pkg}"/>
+
+/**
+ * Implemented by views that edit {@link <java:import><swgwt:getRequestFactoryPackage/>.shared.EntityProxy</java:import>}s.
+ * 
+ * @param <P> the type of the proxy
+ * @param <V> the type of this <sw:javaType select="$model" alias="ProxyEditView" package="false"/>, required to allow
+ *          {@link #createEditorDriver()} to be correctly typed
+ */
+public interface <sw:javaType select="$model" alias="ProxyEditView" package="false"/><P extends EntityProxy, V extends <sw:javaType select="$model" alias="ProxyEditView" package="false"/><P, V>>
+    extends <java:import>com.google.gwt.user.client.ui.IsWidget</java:import>, <java:import>com.google.gwt.editor.client.HasEditorErrors</java:import><P> {
+
+  /**
+   * @return a new {@link <java:import><swgwt:getRequestFactoryPackage suffix="gwt"/>.client.RequestFactoryEditorDriver</java:import>} initialized to run this
+   *         editor
+   */
+  RequestFactoryEditorDriver<P, V> createEditorDriver();
+
+  /**
+   * Implemented by the owner of the view.
+   */
+  interface Delegate {
+    void cancelClicked();
+
+    void saveClicked();
+  }
+
+  void setDelegate(Delegate delegate);
+
+  void setEnabled(boolean b);
+}

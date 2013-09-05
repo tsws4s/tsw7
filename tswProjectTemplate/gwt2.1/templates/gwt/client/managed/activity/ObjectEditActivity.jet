@@ -1,0 +1,58 @@
+<%@ jet package="com.skyway.templates" class="ObjectEditActivityTemplate"%>
+<%@taglib prefix="swgwt" id="com.skyway.integration.google.webtoolkit.common.skywayGWTCodeGenTags"%>
+
+package <sw:package select="$model" alias="ObjectEditActivity"var="pkg"/>;
+<java:importsLocation package="{$pkg}"/>
+<sw:getVariableName select="$model" uncapitalize="true" var="domainObjName" emit="false"/> <sw:getVariableName select="$model" uncapitalize="false" var="DomainObjName" emit="false"/>
+
+/**
+ * An activity that requests all info on an Object, allows the user to edit
+ * it, and persists the results.
+ */
+public class <sw:javaType select="$model" alias="ObjectEditActivity" package="false"/> extends <java:import>com.google.gwt.app.place.AbstractRecordEditActivity</java:import><<sw:javaType select="$model" alias="ObjectProxy" emitIncludes="true" package="true"/>> {
+	private static <java:import>com.google.gwt.app.place.RecordEditView</java:import><<sw:javaType select="$model" alias="ObjectProxy" emitIncludes="true" package="true"/>> defaultView;
+
+	private static RecordEditView<<sw:javaType select="$model" alias="ObjectProxy" package="true"/>> getDefaultView() {
+		if (defaultView == null) {
+			defaultView = new <sw:javaType select="$model" alias="ObjectEditView" package="true"/>();
+		}
+		return defaultView;
+	}
+
+	private final <sw:javaType select="$model/project" alias="ApplicationRequestFactory" package="true"/> requests;
+		
+	/**
+	 * Creates an activity that uses the default singleton view instance.
+	 */
+	public <sw:javaType select="$model" alias="ObjectEditActivity" package="false"/>(<sw:javaType select="$model" alias="ObjectProxy" emitIncludes="true" package="true"/> proxy, <sw:javaType select="$model/project" alias="ApplicationRequestFactory" emitIncludes="true" package="true"/> requests, <java:import>com.google.gwt.place.shared.PlaceController</java:import> placeController,boolean creating) {
+		this(getDefaultView(), proxy, requests, placeController, creating);
+	}
+
+	/**
+	 * Creates an activity that uses its own view instance.
+	 */
+	public <sw:javaType select="$model" alias="ObjectEditActivity" package="false"/>(RecordEditView<<sw:javaType select="$model" alias="ObjectProxy" emitIncludes="true" package="true"/>> view, <sw:javaType select="$model" alias="ObjectProxy" emitIncludes="true" package="true"/> proxy, ApplicationRequestFactory requests, PlaceController placeController, boolean creating) {
+		super(view, proxy, <sw:javaType select="$model" alias="ObjectProxy" emitIncludes="true" package="true"/>.class, creating, requests, placeController);
+		this.requests = requests;
+	}
+
+	 @Override
+    public void start(Display display, <java:import>com.google.gwt.event.shared.EventBus</java:import> eventBus) {
+    
+        super.start(display, eventBus);
+    }
+
+
+	@Override
+	protected <java:import><swgwt:getRequestFactoryPackage/>.shared.RecordRequest</java:import><<sw:javaType select="$model" alias="ObjectProxy" emitIncludes="true" package="true"/>> getFindRequest(<java:import>com.google.gwt.valuestore.shared.Value</java:import><String> id) {
+	    return requests.<c:get select="$domainObjName"/>Request().find<c:get select="$DomainObjName"/>(id);
+	}
+
+	protected <java:import><swgwt:getRequestFactoryPackage/>.shared.RequestObject</java:import><Void> getPersistRequest(<sw:javaType select="$model" alias="ObjectProxy" emitIncludes="true" package="true"/> record) {
+	    return requests.<c:get select="$domainObjName"/>Request().persist(record);
+	}
+
+    private <sw:javaType select="$model" alias="ObjectEditView" emitIncludes="true" package="true"/> get<c:get select="$DomainObjName"/>EditView() {
+        return ((<sw:javaType select="$model" alias="ObjectEditView" emitIncludes="true" package="true"/>) getView());
+    }
+}

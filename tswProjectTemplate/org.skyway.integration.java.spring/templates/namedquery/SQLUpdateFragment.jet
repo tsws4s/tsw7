@@ -1,0 +1,23 @@
+<%@ jet 
+package="org.skyway.integration.java.spring.jet.query" 
+class="SQLUpdateFragmentTemplate" 
+%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="f" id="org.eclipse.jet.formatTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+/**
+ * <c:get select="upper-case($namedQuery/@queryType)" /> Query - <sw:methodName select="$namedQuery"/>
+<sw:documentation select="$namedQuery" format=" * " />
+<sw:modelReference select="$namedQuery" suffix="SQLUpdate" />
+ */
+<sw:variableStorageReset scope="method" />
+<sw:getModelExtension select="$namedQuery" extension="namedquerybean" var="beanDetail" />
+<c:include template="templates/common/spring/MethodTransactionAnnotation.jet" />
+public int <sw:methodName select="$namedQuery" />(<c:iterate select="$namedQuery/inputs" var="input" delimiter=","><sw:declareMethodVariable select="$input"><sw:javaType select="$input" package="true" /></sw:declareMethodVariable></c:iterate>) throws <java:import>org.springframework.dao.DataAccessException</java:import>{
+	String sqlText = <sw:encodeVariableText select="$namedQuery/@queryText" encoding="sql" />; 
+	
+	<c:include template="templates/common/java/UserCode.jet" />
+	return getSimpleJdbcTemplate().update(sqlText<c:if test="$namedQuery/queryText/variablePaths">, <c:iterate select="$namedQuery/queryText/variablePaths" var="inputVariable" delimiter=","><sw:getVariable select="$inputVariable" useMethod="false"  /></c:iterate></c:if>);
+}

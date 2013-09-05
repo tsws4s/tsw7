@@ -1,0 +1,12 @@
+<%@ jet 
+package="org.skyway.integration.java.spring.jet.common" 
+class="GetLoggerMethodTemplate" 
+%>
+<%@taglib prefix="java" id="org.eclipse.jet.javaTags"%>
+	/**
+	 <sw:generated />
+	 <sw:auxiliaryModelComponent />
+	 */
+	public Logger getLogger() {
+		return logger;
+	}

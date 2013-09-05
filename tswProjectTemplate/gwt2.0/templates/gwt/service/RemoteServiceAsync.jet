@@ -1,0 +1,17 @@
+<%@ jet 
+package="com.skyway.integration.google.webtoolkit.deploy.templates" 
+class="RemoteServiceAsyncTemplate" 
+%>
+
+package <sw:package select="$model" alias="gwtserviceasync" var="pkg"/>;
+<java:importsLocation package="{$pkg}"/>
+<java:impliedImport name="{$fullyQualifiedClassName}"/>
+
+/**
+ * Remote Async Service for CRUD based operations for <sw:javaType select="$model" package="false"/>
+ * @see <sw:javaType select="$model" package="true"/>
+<sw:generated />
+ */
+public interface <sw:javaType select="$model" alias="gwtserviceasync" package="false"/> extends <java:import><sw:javaType select="$model/project" alias="gwtactionservice" package="true"/></java:import> {
+ 	public <T extends <java:import><sw:javaType select="$model/project" alias="gwtresponse" package="true"/></java:import>> void execute (<java:import><sw:javaType select="$model/project" alias="gwtaction" package="true"/></java:import><T> action, <java:import>com.google.gwt.user.client.rpc.AsyncCallback</java:import><T> callback);
+}

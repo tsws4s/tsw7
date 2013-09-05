@@ -1,0 +1,86 @@
+<%@ jet package="com.skyway.templates" class="ObjectEditActivityWrapperTemplate"%>
+<%@taglib prefix="swgwt" id="com.skyway.integration.google.webtoolkit.common.skywayGWTCodeGenTags"%>
+
+package <sw:package select="$model" alias="ObjectEditActivityWrapper"var="pkg"/>;
+<java:importsLocation package="{$pkg}"/>
+
+public class <sw:javaType select="$model" alias="ObjectEditActivityWrapper" package="false"/> implements <java:import>com.google.gwt.activity.shared.Activity</java:import>,
+    <sw:javaType select="$model/project" alias="IsScaffoldMobileActivity" package="true" emitIncludes="true"/> {
+
+  /**
+   * The view used by this activity.
+   *
+   */
+  public interface View<V extends <sw:javaType select="$model/project" alias="ProxyEditView" package="true" emitIncludes="true"/><<sw:javaType select="$model" alias="ObjectProxy" package="true" emitIncludes="true"/>, V>>
+      extends <sw:javaType select="$model/project" alias="ProxyEditView" package="false"/><<sw:javaType select="$model" alias="ObjectProxy" package="false"/>, V> {
+    
+    <c:iterate select="$model/relationships" var="relationship">
+	<c:setVariable select="$relationship/targetDataType" var="dataType" />
+	void set<sw:getVariableName select="$relationship" capitalize="true"/>PickerValues(<java:import>java.util.Collection</java:import><<sw:javaType select="$dataType" alias="ObjectProxy" package="true" emitIncludes="true"/>> values);
+    </c:iterate>
+  }
+
+  private final <java:import><swgwt:getRequestFactoryPackage/>.shared.EntityProxyId</java:import><<sw:javaType select="$model" alias="ObjectProxy" package="false"/>> proxyId;
+  private final <sw:javaType select="$model/project" alias="ApplicationRequestFactory" package="true" emitIncludes="true"/> requests;
+  private final View<?> view;
+  private final Activity wrapped;
+
+  public <sw:javaType select="$model" alias="ObjectEditActivityWrapper" package="false"/>(ApplicationRequestFactory requests,
+        View<?> view, Activity activity, EntityProxyId<<sw:javaType select="$model" alias="ObjectProxy" package="true" emitIncludes="true"/>> proxyId) {
+    this.requests = requests;
+    this.view = view;
+    this.wrapped = activity;
+    this.proxyId = proxyId;
+  }
+
+  public <java:import>com.google.gwt.place.shared.Place</java:import> getBackButtonPlace() {
+    return (proxyId == null) ? new <sw:javaType select="$model/project" alias="ProxyListPlace" package="true" emitIncludes="true"/>(<sw:javaType select="$model" alias="ObjectProxy" package="false"/>.class) :
+      new <sw:javaType select="$model/project" alias="ProxyPlace" package="false"/>(proxyId, <sw:javaType select="$model/project" alias="ProxyPlace" package="true" emitIncludes="true"/>.Operation.DETAILS);
+  }
+
+  public String getBackButtonText() {
+    return "Cancel";
+  }
+
+  public Place getEditButtonPlace() {
+    return null;
+  }
+
+  public String getTitleText() {
+    return (proxyId == null) ? "New <c:get select="$DomainObjName"/>" : "Edit <c:get select="$DomainObjName"/>";
+  }
+
+  public boolean hasEditButton() {
+    return false;
+  }
+
+  public String mayStop() {
+    return wrapped.mayStop();
+  }
+
+  public void onCancel() {
+    wrapped.onCancel();
+  }
+
+  public void onStop() {
+    wrapped.onStop();
+  }
+
+  public void start(<java:import>com.google.gwt.user.client.ui.AcceptsOneWidget</java:import> display, <java:import>com.google.gwt.event.shared.EventBus</java:import> eventBus) {
+ <c:iterate select="$model/relationships" var="relationship"><c:setVariable select="$relationship/targetDataType" var="dataType" />
+ <sw:getVariableName select="$dataType" uncapitalize="true" var="domainObjName" emit="false"/> <sw:getVariableName select="$dataType" uncapitalize="false" var="DomainObjName" emit="false"/>
+    view.set<sw:getVariableName select="$relationship" capitalize="true"/>PickerValues(<java:import>java.util.Collections</java:import>.<<sw:javaType select="$dataType" alias="ObjectProxy" package="false"/>> emptyList());
+    requests.<c:get select="$domainObjName"/>Request().findAll<c:get select="$DomainObjName"/>s(0, 50).with(
+        <sw:javaType select="$dataType" alias="ObjectProxyRenderer" package="true" emitIncludes="true"/>.instance().getPaths()).fire(
+            new <java:import><swgwt:getRequestFactoryPackage/>.shared.Receiver</java:import><<java:import>java.util.List</java:import><<sw:javaType select="$dataType" alias="ObjectProxy" package="false"/>>>() {
+                public void onSuccess(List<<sw:javaType select="$dataType" alias="ObjectProxy" package="false"/>> response) {
+                    List<<sw:javaType select="$dataType" alias="ObjectProxy" package="true" emitIncludes="true"/>> values = new <java:import>java.util.ArrayList</java:import><<sw:javaType select="$dataType" alias="ObjectProxy" package="false"/>>();
+                    values.add(null);
+                    values.addAll(response);
+                    view.set<sw:getVariableName select="$relationship" capitalize="true"/>PickerValues(values);
+            }
+    });
+   </c:iterate> 
+    wrapped.start(display, eventBus);
+  }
+}

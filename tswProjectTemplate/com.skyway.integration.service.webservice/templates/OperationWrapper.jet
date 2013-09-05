@@ -1,0 +1,34 @@
+<%@ jet 
+package="com.skyway.integration.service.webservice.jet.jaxws" 
+class="OperationWrapperTemplate" 
+%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+<%@taglib prefix="jaxws" id="com.skyway.integration.service.webservice.skywayJAXWSTags"%>
+<sw:getCollectionSize collection="$currentOperation/inputs" var="inputsSize" />
+<sw:getCollectionSize collection="$currentOperation/outputs" var="outputsSize" />
+<c:if test="$webService"><c:if test="$outputsSize > 1" >
+
+		/**
+		<sw:documentation select="$currentOperation" format=" * " />
+		<sw:generated />
+	 	<sw:auxiliaryModelComponent />
+	 	 */
+		public void <sw:methodName select="$currentOperation" />(
+		<c:include template="templates/jaxws/InputParameters.jet" /><c:if test="$inputsSize > 0">, </c:if> 
+		<c:include template="templates/jaxws/OutputParameters.jet" />
+		) <sw:throwsList select="$currentOperation" />{
+			<java:import><sw:operationReturnType select="$currentOperation" package="true"/></java:import> output = <sw:methodName select="$currentOperation" />(<c:setVariable select="true()" var="methodCall" /><c:include template="templates/jaxws/InputParameters.jet" /><c:setVariable select="false()" var="methodCall" />);
+					
+			if (output != null){
+				<c:iterate select="$currentOperation/outputs" var="output">
+					<c:if test="$output/variablePath">
+						<sw:getVariableName select="$output" />.value = output.get<sw:getVariableName select="$output" capitalize="true"/>();
+					</c:if>
+				</c:iterate>
+			}
+		}
+	</c:if>
+</c:if>

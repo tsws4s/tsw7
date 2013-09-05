@@ -1,0 +1,14 @@
+<%@ jet 
+package="com.skyway.scaffolding.crud.templates.method" 
+class="ListCrudControllerRelationshipImplementationTemplate" 
+%>
+<%@taglib prefix="jet" id="org.eclipse.jet.controlTags"%>  
+<%@taglib prefix="f" id="org.eclipse.jet.formatTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+<jet:setVariable select="0" var="keyCount" />
+ModelAndView mav = new ModelAndView();
+
+mav.addObject("<jet:get select="lower-case($dataType/@name)"/>",<jet:get select="lowercaseFirst($dataType/dataStore/@name)"/>.find<jet:get select="$dataType/@name"/>ByPrimaryKey(<jet:iterate select="$dataType/fields" var="field" ><jet:if test="$field/@primaryKey = 'true'"><jet:if test="$keyCount > 0">, </jet:if><jet:get select="$field/@name" />Key<jet:setVariable select="$keyCount+1" var="keyCount" /></jet:if></jet:iterate>));
+mav.setViewName("<jet:get select="lower-case($dataType/@name)"/>/<jet:get select="lower-case($relationship/@name)"/>/list<jet:get select="uppercaseFirst($relationship/@name)"/>.jsp");
+
+return mav;

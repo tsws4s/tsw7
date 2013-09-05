@@ -1,0 +1,89 @@
+<%@ jet 
+package="com.skyway.integration.java.spring.jet.config.security" 
+class="SecurityContextTemplate" 
+%>
+<%@taglib prefix="swspr" id="org.skyway.integration.java.spring.skywaySpringCodeGenTags"%>
+<%@taglib prefix="swsprjee" id="com.skyway.integration.java.spring.skywaySpringJeeCodeGenTags"%>
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security" 
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context" 
+	xmlns:lang="http://www.springframework.org/schema/lang"<swspr:compareSpringSecurityVersion select="$model" version="3" compareType="<" var="springSecurity2" />
+	<swspr:compareSpringVersion select="$model" version="3.1" compareType=">=" var="spring31" />
+    	<c:choose>
+    		<c:when test="toBoolean($springSecurity2)" >
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+    	http://www.springframework.org/schema/security 
+        http://www.springframework.org/schema/security/spring-security-2.0.1.xsd
+      	http://www.springframework.org/schema/context 
+      	http://www.springframework.org/schema/context/spring-context-2.5.xsd">
+    		</c:when>
+    		<c:when test="toBoolean($spring31)" >
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+    	http://www.springframework.org/schema/security 
+		http://www.springframework.org/schema/security/spring-security-3.1.xsd
+      	http://www.springframework.org/schema/context 
+      	http://www.springframework.org/schema/context/spring-context-3.1.xsd">
+    		</c:when>
+    		<c:otherwise >
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+    	http://www.springframework.org/schema/security 
+		http://www.springframework.org/schema/security/spring-security-3.0.xsd
+      	http://www.springframework.org/schema/context 
+      	http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+    		</c:otherwise>
+    	</c:choose>
+<swsprjee:springJeeProjectVar select="$model" var="springJeeProject" />
+<c:if test="$springJeeProject/securitySettings/@enabled = 'true'">	
+	<http auto-config="true" <c:if test="$springJeeProject/securitySettings/accessDeniedView/@text" >access-denied-page="<c:get select="$springJeeProject/securitySettings/accessDeniedView/@text" />"</c:if>>
+		<c:if test="$springJeeProject/securitySettings/loginView/@text">
+		<intercept-url pattern='<c:get select="$springJeeProject/securitySettings/loginView/@text" />' <c:if test="toBoolean($springSecurity2)">filters='none'</c:if>/>
+		</c:if>
+		<c:iterate select="$springJeeProject/securitySettings/securedUrlPatterns" var="urlPattern">
+		<intercept-url pattern="<c:get select="$urlPattern/@urlPattern" />" <c:choose><c:when test="$urlPattern/@secured = 'true'">access="<c:get select="$urlPattern/@access" />" /></c:when><c:otherwise>filters='none' /></c:otherwise></c:choose>
+		</c:iterate>
+		<form-login <c:if test="$springJeeProject/securitySettings/loginView/@text">login-page="<c:get select="$springJeeProject/securitySettings/loginView/@text" />" </c:if><c:if test="$springJeeProject/securitySettings/loginFailureView/@text">authentication-failure-url="<c:get select="$springJeeProject/securitySettings/loginFailureView/@text" />" </c:if><c:if test="$springJeeProject/securitySettings/loginSuccessView/@text">always-use-default-target="<c:get select="$springJeeProject/securitySettings/@alwaysUseDefaultTarget" />" default-target-url="<c:get select="$springJeeProject/securitySettings/loginSuccessView/@text" />"</c:if> /> 
+		<c:if test="$springJeeProject/securitySettings/logoutSuccessView/@text">
+		<logout logout-success-url="<c:get select="$springJeeProject/securitySettings/logoutSuccessView/@text" />" invalidate-session="true" />
+		</c:if>
+		<c:if test="$springJeeProject/securitySettings/@useOtherSecurity = 'false' and $springJeeProject/securitySettings/@useInMemorySecurity = 'false'">
+		<remember-me key="<c:get select="$model/name" />RMKey" user-service-ref="userDetailsService" />
+		</c:if>
+	</http>
+	
+	<c:choose>
+		<c:when test="$springJeeProject/securitySettings/@useDbSecurity = 'true'">
+	<c:include template="templates/security/db-authentication-provider-context.jet" />
+		</c:when>	
+		<c:when test="$springJeeProject/securitySettings/@useLdapSecurity = 'true'">
+	<c:include template="templates/security/ldap-authentication-provider-context.jet" />
+		</c:when>
+		<c:when test="$springJeeProject/securitySettings/@useInMemorySecurity = 'true'">
+	<c:include template="templates/security/in-memory-authentication-provider-context.jet" />
+		</c:when>
+	</c:choose>
+	
+	<c:if test="$springJeeProject/securitySettings/@enabled = 'true'">
+		<swsprjee:springJeeProjectSecuritySynchronizer select="$model" />
+	<!-- ******************************************************************** -->
+	<!-- Apply security for all beans where security was set -->
+	<!-- ******************************************************************** -->
+	<global-method-security >
+		<c:iterate select="$springJeeProject/securitySettings/securedServices" var="service">
+			<c:if test="$service/@secured = 'true'">
+		<protect-pointcut expression="execution(* <sw:javaType select="$service/service" alias="interface" package="true"/>.*(..))" access="<c:get select="$service/@access" />"/>
+			</c:if>
+		</c:iterate>
+		<c:iterate select="$springJeeProject/securitySettings/securedDataStores" var="dataStore">
+			<c:if test="$dataStore/@secured = 'true'">
+		<protect-pointcut expression="execution(* <sw:javaType select="$dataStore/dataStore" alias="interface" package="true"/>.*(..))" access="<c:get select="$dataStore/@access" />"/>
+			</c:if>
+		</c:iterate>
+	</global-method-security>
+	</c:if>
+</c:if>	
+</beans:beans>

@@ -1,0 +1,93 @@
+<%@ jet 
+package="com.skyway.integration.google.webtoolkit.deploy.templates" 
+class="IntegerBoxTemplate" 
+%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+
+package <sw:package select="$model" alias="gwtaction" var="pkg"/>;
+
+<java:importsLocation package="{$pkg}"/>
+
+/**
+* A widget that can be used as a Integer value provider and used to format Numeric data.
+* Future versions of GWT will have a replacement widget for this widget.
+* 
+<sw:generated />
+*/
+public class <sw:javaType select="$model" alias="gwtintegerbox" package="false"/> extends <java:import>com.google.gwt.user.client.ui.Composite</java:import> implements <java:import>com.google.gwt.user.client.ui.HasValue</java:import><Integer> {
+	/**
+    * The NumberFormat used to formet text in the Box, and for parsing
+	<sw:generated />
+    */
+	private final <java:import>com.google.gwt.i18n.client.NumberFormat</java:import> format; 
+	 
+	/**
+    * The TextBox Widget that is being wrapped to handle Numbers
+	<sw:generated />
+    */
+	private final <java:import>com.google.gwt.user.client.ui.TextBox</java:import> box = new TextBox();
+	 
+   /**
+    * Construct a new IntegerBox which can be used to bind Integer values to the UI
+	<sw:generated />
+    */
+    public <sw:javaType select="$model" alias="gwtintegerbox" package="false"/>() {
+       this(NumberFormat.getFormat("#0"));
+    }
+    
+ 	/**
+    * Construct a new DecimalBox with a specific NumberFormat
+	<sw:generated />
+    */
+    public <sw:javaType select="$model" alias="gwtintegerbox" package="false"/>(NumberFormat format) {
+      this.format = format;
+      initWidget(box);
+    }
+	
+	/**
+    * Returns the value in the TextBox as an Integer
+	<sw:generated />
+    */
+	public Integer getValue() {
+		Double value = format.parse(box.getText());
+		return new Integer (value.intValue());
+	}
+
+	/**
+    * Sets the value in the text box to be the Integer value passed
+	<sw:generated />
+    */
+	public void setValue(Integer value) {
+		setValue (value, true);
+	}
+
+	/**
+    * Sets the value in the text box to be the Integer value passed
+	<sw:generated />
+    */
+	public void setValue(Integer value, boolean fireEvents) {
+		if (value == null)
+			throw new IllegalArgumentException ("The double value for a DecimalBox can not be null");
+			
+		box.setText(format.format(value.doubleValue()));
+	}
+	
+	/**
+    * Add value change Handler
+	<sw:generated />
+    */
+	public <java:import>com.google.gwt.event.shared.HandlerRegistration</java:import> addValueChangeHandler(<java:import>com.google.gwt.event.logical.shared.ValueChangeHandler</java:import><Integer> handler) {
+		return addHandler(handler, <java:import>com.google.gwt.event.logical.shared.ValueChangeEvent</java:import>.getType());
+	}
+	
+	/**
+    * Enable/Disable the TextBox
+	<sw:generated />
+    */
+	public void setEnabled (boolean enabled) {
+		box.setEnabled (enabled);
+	}
+}

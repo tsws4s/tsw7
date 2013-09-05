@@ -1,0 +1,65 @@
+<%@ jet 
+package="com.skyway.scaffolding.crud.templates.webflow" 
+class="CrudViewTemplate" 
+%>
+<%@taglib prefix="jet" id="org.eclipse.jet.controlTags"%>  
+<%@taglib prefix="f" id="org.eclipse.jet.formatTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+<%@taglib prefix="gen" id="com.skyway.scaffolding.crud.common.generationTags"%>
+<\%@page language="java" isELIgnored="false" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
+<jsp:directive.include file="/WEB-INF/sitemesh-decorators/include.jsp"/>
+<fmt:setBundle basename="bundles.<jet:get select="lower-case($dataType/@name)"/>-resources"/>
+<html>
+<head>
+<title>View <fmt:message key="<jet:get select="lower-case($currentDataType/@name)"/>.title"/></title>
+</head>
+<body>
+<div id="contentarea">
+	<div id="lb"><div id="rb"><div id="bb"><div id="blc">
+	<div id="brc"><div id="tb"><div id="tlc"><div id="trc">
+		<div id="content">
+			<h1><fmt:message key="<jet:get select="lower-case($currentDataType/@name)"/>.title"/> Details</h1>
+			<div class="navitem"><a class="button" href="${flowExecutionUrl}&_eventId=back"><span><img src="images/icons/back.gif" /><fmt:message key="navigation.back"/></span></a></div>
+			<table cellpadding="0" cellspacing="0" id="viewTable">
+				<tbody>
+				<jet:setVariable select="$currentName" var="currentDataTypeName" />
+				<jet:iterate select="$currentDataType/fields" var="field">
+					<gen:isFieldDisplayable select="$field" var="displayable" />
+					<gen:getDefaultFieldPattern select="$field" var="pattern" />
+					<jet:if test="$displayable" >
+					<tr>
+						<td class="label" valign="top">
+							<fmt:message key="<jet:get select="lower-case($currentDataType/@name)"/>.<jet:get select="lower-case($field/@name)" />.title"/>:
+						</td>
+						<td>
+							<jet:include template="templates/crud/common/crudViewField.jet" />
+						</td>
+					</tr>
+					</jet:if>
+				</jet:iterate>
+				</tbody>
+			</table>
+			<sw:compareElements sourceElement="$currentDataType" targetElement="$dataType" var="elementsEqual" />
+			<jet:choose>
+			<jet:when test="toBoolean($elementsEqual)" >
+				<jet:iterate select="$currentDataType/relationships" var="relationship">
+					<jet:setVariable select="$relationship/targetDataType" var="relatedType" />
+					<sw:relationshipCardinality select="$relationship" var="cardinality" />
+			<div class="navitem"><a class="button" href="${flowExecutionUrl}&_eventId=<jet:get select="lower-case($relationship/@name)"/>s"><span><jet:if test="$cardinality = 'ONE'"><c:if test='${<jet:get select="$currentDataTypeName"/>.<jet:get select="$relationship/@name"/> == null}'><fmt:message key="navigation.new" /> </c:if></jet:if><fmt:message key="<jet:get select="lower-case($relatedType/@name)"/>.title"/></span></a></div>
+				</jet:iterate>
+			</jet:when>
+			<jet:otherwise>
+				<sw:relationshipCardinality select="$relationship" var="cardinality" />
+				<jet:if test="$cardinality = 'ONE'">
+			<div class="navitem"><a class="button" href="${flowExecutionUrl}&_eventId=edit"><span><img src="images/icons/edit.gif" /><fmt:message key="navigation.edit"/></span></a></div>
+			<div class="navitem"><a class="button" href="${flowExecutionUrl}&_eventId=delete"><span><img src="images/icons/delete.gif" /><fmt:message key="navigation.delete"/></span></a></div>
+				</jet:if>
+			</jet:otherwise>
+			</jet:choose>
+			<div class="clear">&nbsp;</div>
+		</div>
+	</div></div></div></div>
+	</div></div></div></div>
+</div>
+</body>
+</html>

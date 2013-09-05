@@ -1,0 +1,68 @@
+<%@ jet 
+package="org.skyway.integration.java.spring.jet.query" 
+class="SQLSelectFragmentTemplate" 
+%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="f" id="org.eclipse.jet.formatTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+/**
+ * <c:get select="upper-case($namedQuery/@queryType)" /> Query - <sw:methodName select="$namedQuery"/>
+<sw:documentation select="$namedQuery" format=" * " />
+<sw:modelReference select="$namedQuery" suffix="SQLSelect" />
+ */
+<sw:variableStorageReset scope="method" />
+<sw:getModelExtension select="$namedQuery" extension="namedquerybean" var="beanDetail" />
+<c:include template="templates/common/spring/MethodTransactionAnnotation.jet" />
+public <java:import><sw:queryResultType select="$namedQuery" package="true"/></java:import> <sw:methodName select="$namedQuery" />(<c:iterate select="$namedQuery/inputs" var="input" delimiter=","><sw:declareMethodVariable select="$input"><sw:javaType select="$input" package="true" /></sw:declareMethodVariable></c:iterate><c:if test="$namedQuery/inputs" >, </c:if>int startResult, int maxRows) throws <java:import>org.springframework.dao.DataAccessException</java:import>{
+	<sw:getCollectionSize collection="$namedQuery/outputs" var="outputSize" />
+	String sqlText = <sw:encodeVariableText select="$namedQuery/@queryText" encoding="sql" />; 
+	<java:import>org.skyway.spring.util.dao.query.FixedPreparedStatementCreator</java:import> statementCreator = new <java:import>org.skyway.spring.util.dao.query.FixedPreparedStatementCreator</java:import>(sqlText, startResult, maxRows);
+	<java:import>org.skyway.spring.util.dao.query.SQLResultsProvider</java:import> resultsProvider = new <java:import>org.skyway.spring.util.dao.query.SQLResultsProvider</java:import>(startResult, maxRows);
+	<c:if test="$outputSize >= 1" >
+		<java:import><sw:queryResultType select="$namedQuery" package="true"/></java:import> result<c:if test="$outputSize > 1" > = new <java:import><sw:queryResultType select="$namedQuery" emitCollectionPolicy="concrete" package="true"/></java:import>()</c:if>;
+	</c:if>
+	
+	<c:include template="templates/common/java/UserCode.jet" />
+	<c:if test="$namedQuery/inputs and $namedQuery/queryText/variablePaths" >
+		statementCreator.prepare(
+			<c:iterate select="$namedQuery/queryText/variablePaths" var="inputVariable" delimiter=",">
+				<sw:getVariable select="$inputVariable" useMethod="false" />
+			</c:iterate>
+			);
+	</c:if>
+			
+	getJdbcTemplate().query(statementCreator, resultsProvider);
+	
+	<c:choose>
+		<c:when test="$outputSize = 1" >
+			<c:iterate select="$namedQuery/outputs" var="output" >
+				<c:choose>
+					<c:when test="$output/@collection = 'true'" >
+						result = new <java:import><sw:queryResultType select="$namedQuery" emitCollectionPolicy="concrete" package="true"/></java:import>(resultsProvider.getResultsAsSet("<sw:getVariableName select="$output" />", <java:import><sw:javaType select="$output" package="true" emitCollectionPolicy="omit"/></java:import>.class));
+					</c:when>
+					<c:otherwise >
+						result = resultsProvider.getSingleResult("<sw:getVariableName select="$output" />", <java:import><sw:javaType select="$output" package="true" emitCollectionPolicy="omit"/></java:import>.class);
+					</c:otherwise>
+				</c:choose>
+			</c:iterate>
+		</c:when>
+		<c:when test="$outputSize > 1" >
+			<c:iterate select="$namedQuery/outputs" var="output" >
+				<c:choose>
+					<c:when test="$output/@collection = 'true'" >
+						result.set<sw:getVariableName select="$output" capitalize="true" />(new <java:import><sw:javaType select="$output" package="true" emitCollectionPolicy="concrete"/></java:import>(resultsProvider.getResultsAsSet("<sw:getVariableName select="$output" />", <java:import><sw:javaType select="$output" package="true" emitCollectionPolicy="omit"/></java:import>.class)));
+					</c:when>
+					<c:otherwise >
+						result.set<sw:getVariableName select="$output" capitalize="true" />(resultsProvider.getSingleResult("<sw:getVariableName select="$output" />", <java:import><sw:javaType select="$output" package="true" emitCollectionPolicy="omit"/></java:import>.class));
+					</c:otherwise>
+				</c:choose>
+			</c:iterate>	
+		</c:when>
+	</c:choose>
+	
+	<c:if test="$outputSize >= 1" >
+		return result;
+	</c:if>
+}

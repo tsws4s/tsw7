@@ -1,0 +1,24 @@
+<%@ jet 
+package="com.skyway.integration.java.spring.jet.config.oracle" 
+class="OracleDataSourcesTemplate" 
+%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="f" id="org.eclipse.jet.formatTags"%>
+<%@taglib prefix="persistence" id="org.skyway.integration.data.persistence.skywayPersistenceTags"%>
+<%@taglib prefix="swspr" id="org.skyway.integration.java.spring.skywaySpringCodeGenTags"%>
+<%@taglib prefix="swsprjee" id="com.skyway.integration.java.spring.skywaySpringJeeCodeGenTags"%>
+<?xml version="1.0" encoding="UTF-8" ?> 
+<data-sources xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://xmlns.oracle.com/oracleas/schema/data-sources-10_1.xsd" schema-major-version="10" schema-minor-version="1">
+	<!-- add contents to {OC4J_HOME}/j2ee/home/config/data-sources.xml if deploying as a WAR -->
+	<persistence:getAllPersistenceUnits select="$model" var="persistenceUnits" />
+	<c:iterate select="$persistenceUnits" var="puDetail">
+		<managed-data-source name="<c:get select="$puDetail/persistenceUnitName" />DS" jndi-name="jdbc/<c:get select="$puDetail/persistenceUnitName" />DS" connection-pool-name="<c:get select="$puDetail/persistenceUnitName" />DS-Pool"/>
+		<connection-pool name="<c:get select="$puDetail/persistenceUnitName" />DS-Pool" min-connections="<c:get select="$puDetail/minPoolSize" />" max-connections="<c:get select="$puDetail/maxPoolSize" />">
+		    <connection-factory factory-class="<c:get select="$puDetail/driverClassName" />"
+		    user="<c:get select="$puDetail/userName" />"
+		    password="<c:get select="$puDetail/password" />"
+		    url="<c:get select="$puDetail/url" />"/>
+		 </connection-pool>
+		 
+ 	</c:iterate>
+</data-sources>

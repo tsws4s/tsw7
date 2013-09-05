@@ -1,0 +1,41 @@
+<%@ jet 
+package="com.skyway.integration.google.webtoolkit.deploy.templates" 
+class="EventBusTemplate" 
+%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+
+package <sw:package select="$model" alias="gwteventbus" var="pkg"/>;
+
+<java:importsLocation package="{$pkg}"/>
+
+/**
+* A common reference to the HandlerManager that represents the Event Bus.
+* The EventBus is responsible for managing events and notifications between various UI elements.
+* This approach gives the application a very loosely coupled implementation that is Command/Action driven and Event based
+* @see HandlerManager
+<sw:generated />
+*/
+public class <sw:javaType select="$model" alias="gwteventbus" package="false"/> {
+	/**
+	* Private constructor
+	<sw:generated />
+	*/
+	private <sw:javaType select="$model" alias="gwteventbus" package="false"/>(){}
+	
+	/**
+	* The static singleton instance of the HandlerManager that is used as the Event Bus
+	<sw:generated />
+	*/
+	private static HandlerManager INSTANCE = new <java:import>com.google.gwt.event.shared.HandlerManager</java:import>(null);
+	
+	/**
+	* Get the shared instance of the EventBus
+	<sw:generated />
+	*/
+	public static HandlerManager get() {
+		return INSTANCE;
+	}
+}

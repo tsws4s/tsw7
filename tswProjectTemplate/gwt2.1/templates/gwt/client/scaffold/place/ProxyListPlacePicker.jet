@@ -1,0 +1,52 @@
+<%@ jet package="com.skyway.templates" class="ProxyListPlacePickerTemplate"%>
+
+package <sw:package select="$model" alias="ProxyListPlacePicker"var="pkg"/>;
+<java:importsLocation package="{$pkg}"/>
+
+/**
+ * Drives a {@link <java:import>com.google.gwt.event.logical.shared.ValueChangeHandler</java:import>} populated with {@link ProxyListPlace}
+ * instances, keeping it in sync with the {@link <java:import>com.google.gwt.place.shared.PlaceController</java:import>}'s notion of
+ * the current place, and firing place change events as selections are made.
+ */
+public class <sw:javaType select="$model" alias="ProxyListPlacePicker" package="false"/> implements ValueChangeHandler<ProxyListPlace>,
+    <java:import>com.google.gwt.place.shared.PlaceChangeEvent</java:import>.Handler {
+
+  private <java:import>com.google.gwt.user.client.ui.HasConstrainedValue</java:import><ProxyListPlace> view;
+
+  private final PlaceController placeController;
+  private final ProxyPlaceToListPlace proxyPlaceToListPlace;
+
+  public <sw:javaType select="$model" alias="ProxyListPlacePicker" package="false"/>(PlaceController placeController,
+      ProxyPlaceToListPlace proxyPlaceToListPlace) {
+    this.placeController = placeController;
+    this.proxyPlaceToListPlace = proxyPlaceToListPlace;
+  }
+
+  public void onPlaceChange(PlaceChangeEvent event) {
+    view.setValue(proxyPlaceToListPlace.proxyListPlaceFor(event.getNewPlace()),
+        false);
+  }
+
+  public void onValueChange(<java:import>com.google.gwt.event.logical.shared.ValueChangeEvent</java:import><ProxyListPlace> event) {
+    placeController.goTo(event.getValue());
+  }
+
+  public <java:import>com.google.gwt.event.shared.HandlerRegistration</java:import> register(<java:import>com.google.gwt.event.shared.EventBus</java:import> eventBus,
+      HasConstrainedValue<ProxyListPlace> view) {
+
+    this.view = view;
+
+    final HandlerRegistration placeRegistration = eventBus.addHandler(
+        PlaceChangeEvent.TYPE, this);
+
+    final HandlerRegistration viewRegistration = view.addValueChangeHandler(this);
+
+    return new HandlerRegistration() {
+      public void removeHandler() {
+        placeRegistration.removeHandler();
+        viewRegistration.removeHandler();
+        <sw:javaType select="$model" alias="ProxyListPlacePicker" package="false"/>.this.view = null;
+      }
+    };
+  }
+}

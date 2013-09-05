@@ -1,0 +1,51 @@
+<%@ jet 
+package="com.skyway.scaffolding.crud.templates.method" 
+class="SaveCrudServiceRelationshipImplementationTemplate" 
+%>
+<%@taglib prefix="jet" id="org.eclipse.jet.controlTags"%>  
+<%@taglib prefix="f" id="org.eclipse.jet.formatTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+<%@taglib prefix="persistence" id="org.skyway.integration.data.persistence.skywayPersistenceTags"%>
+<%@taglib prefix="gen" id="com.skyway.scaffolding.crud.common.generationTags"%>
+<jet:setVariable select="0" var="keyCount" />
+<jet:get select="$dataType/@name"/> <jet:get select="lower-case($dataType/@name)"/> = <jet:get select="lowercaseFirst($dataType/dataStore/@name)"/>.find<jet:get select="$dataType/@name"/>ByPrimaryKey(<jet:iterate select="$dataType/fields" var="field" ><jet:if test="$field/@primaryKey = 'true'"><jet:if test="$keyCount > 0">, </jet:if><jet:get select="$field/@name" /><jet:setVariable select="$keyCount+1" var="keyCount" /></jet:if></jet:iterate>, -1, -1);
+<jet:setVariable select="0" var="keyCount" />
+<jet:get select="$relationship/targetDataType/@name"/> existing<jet:get select="$relationship/@name"/> = <jet:get select="lowercaseFirst($relationship/targetDataType/dataStore/@name)"/>.find<jet:get select="$relationship/targetDataType/@name"/>ByPrimaryKey(<jet:iterate select="$relationship/targetDataType/fields" var="field" ><jet:if test="$field/@primaryKey = 'true'"><jet:if test="$keyCount > 0">, </jet:if>related_<jet:get select="lower-case($relationship/@name)"/>.get<sw:getVariableName select="$field" capitalize="true"/>()<jet:setVariable select="$keyCount+1" var="keyCount" /></jet:if></jet:iterate>);
+<persistence:isRelationshipOwner select="$relationship" var="isOwner"/>
+<sw:compareElements sourceElement="$parentType" targetElement="$childType" var="isSelfRelationship"/>
+
+<jet:choose>
+<jet:when test="($isOwner = 'false') and ($isSelfRelationship = 'false')">
+	<jet:setVariable select="concat('related_',lower-case($relationship/@name))" var="parentVarName"/>
+	<jet:setVariable select="lower-case($childType/@name)" var="childVarName"/>
+</jet:when>
+<jet:otherwise>
+	<jet:setVariable select="concat('related_',lower-case($relationship/@name))" var="childVarName"/>
+	<jet:setVariable select="lower-case($parentType/@name)" var="parentVarName"/>
+</jet:otherwise>
+</jet:choose>
+
+// copy into the existing record to preserve existing relationships
+if (existing<jet:get select="$relationship/@name"/> != null)	{
+	<jet:iterate select="$relationship/targetDataType/fields" var="field" >
+		existing<jet:get select="$relationship/@name"/>.set<sw:getVariableName select="$field" capitalize="true"/> (
+		related_<jet:get select="lower-case($relationship/@name)"/>.get<sw:getVariableName select="$field" capitalize="true"/>());
+	</jet:iterate>
+	related_<jet:get select="lower-case($relationship/@name)"/> = existing<jet:get select="$relationship/@name"/>;
+}
+<persistence:isNullableRelationship select="$relationship">
+else	{
+	related_<jet:get select="lower-case($relationship/@name)"/> = <jet:get select="lowercaseFirst($relationship/targetDataType/dataStore/@name)"/>.store(related_<jet:get select="lower-case($relationship/@name)"/>);
+	<jet:get select="lowercaseFirst($relationship/targetDataType/dataStore/@name)"/>.flush();
+}
+</persistence:isNullableRelationship>
+
+<gen:createRelationshipText />
+
+<jet:get select="$parentVarName"/> = <jet:get select="lowercaseFirst($parentType/dataStore/@name)"/>.store(<jet:get select="$parentVarName"/>);
+<jet:get select="lowercaseFirst($parentType/dataStore/@name)"/>.flush();
+
+<jet:get select="$childVarName"/> = <jet:get select="lowercaseFirst($childType/dataStore/@name)"/>.store(<jet:get select="$childVarName"/>);
+<jet:get select="lowercaseFirst($childType/dataStore/@name)"/>.flush();
+
+return <jet:get select="lower-case($dataType/@name)"/>;

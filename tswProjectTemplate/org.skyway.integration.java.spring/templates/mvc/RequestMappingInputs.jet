@@ -1,0 +1,13 @@
+<%@ jet 
+package="org.skyway.integration.java.spring.jet.requestmapping" 
+class="RequestMappingInputsTemplate" 
+%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="f" id="org.eclipse.jet.formatTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+<%@taglib prefix="swspr" id="org.skyway.integration.java.spring.skywaySpringCodeGenTags"%>
+<c:if test="$currentOperation/inputs">
+	<c:iterate select="$currentOperation/inputs" var="input" delimiter=","><swspr:requestParameterAnnotation select="$input" var="requestParamAnnotation"/><c:if test="$requestParamAnnotation != ''">@<java:import><c:get select="$requestParamAnnotation"/></java:import>("<sw:getVariableName select="$input"/>") </c:if> <swspr:requestMappingInputAlias select="$input" mapping="$requestMapping" alias="inputAliasName"/> <sw:declareMethodVariable select="$input"><java:import><sw:javaType select="$input" package="true" alias="{$inputAliasName}"/></java:import></sw:declareMethodVariable></c:iterate>
+</c:if>

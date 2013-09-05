@@ -1,0 +1,120 @@
+<%@ jet 
+package="com.skyway.integration.google.webtoolkit.deploy.templates" 
+class="PickerTemplate" 
+%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+
+
+package <sw:package select="$model" alias="gwtpicker" var="pkg"/>;
+<sw:javaType select="$model" package="true" var="fullyQualifiedClassName" emit="false"/>
+<java:importsLocation package="{$pkg}"/>
+<java:impliedImport name="{$fullyQualifiedClassName}"/>
+
+<sw:getVariableName select="$model" uncapitalize="true" var="domainObjName" emit="false"/> <sw:getVariableName select="$model" uncapitalize="false" var="DomainObjName" emit="false"/>
+
+/**
+ * A Picker Dialog that can be used to provide the user with a list of <sw:javaType select="$model" alias="gwtdatatype" package="false"/>s.
+ * This picker can handle multi-selection and utilizes <sw:javaType select="$model" alias="gwtselectiontable" package="false"/> to provide the List UI
+<sw:generated />
+ */
+public class <sw:javaType select="$model" alias="gwtpicker" package="false"/> extends <java:import>com.google.gwt.user.client.ui.DialogBox</java:import> {
+	
+	/**
+	 * A Table to present the list of <sw:javaType select="$model" alias="gwtdatatype" package="false"/>s to the user 
+<sw:generated />
+	 */
+	private <java:import><sw:javaType select="$model" alias="gwtselectiontable" package="true"/></java:import> list;
+	
+	/**
+	 * HandlerRegistration for later removing the loaded handler 
+<sw:generated />
+	 */
+	private <java:import>com.google.gwt.event.shared.HandlerRegistration</java:import> loadedHandlerRegistration;
+	
+	/**
+	 * Track whether the user has canceled the dialog 
+<sw:generated />
+	 */
+	private boolean canceled = false;
+	
+	/**
+	 * Constructor 
+<sw:generated />
+	 */
+	public <sw:javaType select="$model" alias="gwtpicker" package="false"/>() {
+		setText ("Select");
+		<java:import>com.google.gwt.user.client.ui.VerticalPanel</java:import> vp = new VerticalPanel();
+		
+		<java:import>com.google.gwt.user.client.ui.HorizontalPanel</java:import> buttonPanel = new HorizontalPanel();
+		buttonPanel.setSpacing(10);
+		
+		list = new <java:import><sw:javaType select="$model" alias="gwtselectiontable" package="true"/></java:import>();
+		
+		<java:import>com.google.gwt.user.client.ui.Button</java:import> okButton = new Button("OK");
+		okButton.addClickHandler(new <java:import>com.google.gwt.event.dom.client.ClickHandler</java:import>() {
+			public void onClick(ClickEvent event) {
+				hide();
+			}
+	    });
+	    
+	    buttonPanel.add(okButton);
+	    
+	    Button cancelButton = new Button("Cancel");
+	    cancelButton.addClickHandler(new <java:import>com.google.gwt.event.dom.client.ClickHandler</java:import>() {
+			public void onClick(<java:import>com.google.gwt.event.dom.client.ClickEvent</java:import> event) {
+				canceled = true;
+				hide();
+			}
+	    });
+
+	    buttonPanel.add(cancelButton);
+	    
+	    <java:import>com.google.gwt.user.client.ui.ScrollPanel</java:import> scroll = new ScrollPanel(list);
+	    vp.add(scroll);
+	    vp.add(new <java:import>com.google.gwt.user.client.ui.HTML</java:import>("<hr>"));
+	    vp.add(buttonPanel);
+	        
+	    setWidget(vp);
+	}
+	
+	/**
+	 * Returns the set of <sw:javaType select="$model" alias="gwtdatatype" package="false"/> that are currently selected  
+<sw:generated />
+	 */
+	public <java:import>java.util.Set</java:import><<java:import><sw:javaType select="$model" alias="gwtdatatype" package="true"/></java:import>> getSelected<c:get select="$domainObjName"/>s() {
+		if (canceled)
+			return null;
+			
+		return list.getSelected<c:get select="$domainObjName"/>s();
+	}
+
+	/**
+	 * Removes Event Handlers from the EventBus
+<sw:generated />
+	 */
+	 @Override
+	 protected void onLoad() {
+	 	loadedHandlerRegistration = <sw:javaType select="$model/project" alias="gwteventbus" package="true"/>.get().addHandler(<java:import><sw:javaType select="$model" alias="gwtloadedevent" package="true"/></java:import>.TYPE, new <java:import><sw:javaType select="$model" alias="gwtloadedhandler" package="true"/></java:import>() {
+			public void on<c:get select="$DomainObjName"/>sLoaded(<java:import><sw:javaType select="$model" alias="gwtloadedevent" package="true"/></java:import> event) {
+				list.set<c:get select="$DomainObjName"/>s(event.get<c:get select="$DomainObjName"/>s());
+			}
+		});
+		
+	 	<java:import><sw:javaType select="$model" alias="gwtservice" package="true"/></java:import>.Util.getInstance().execute(new <java:import><sw:javaType select="$model" alias="gwtload" package="true"/></java:import>(), new <java:import><sw:javaType select="$model" alias="gwtloaded" package="true"/></java:import>() {
+			public void loaded (Set<<sw:javaType select="$model" alias="gwtdatatype" package="false"/>> <c:get select="$domainObjName"/>s) {}
+		});
+	 }
+	
+	/**
+	 * Removes Event Handlers from the EventBus
+<sw:generated />
+	 */
+	 @Override
+	protected void onUnload() {
+		loadedHandlerRegistration.removeHandler();
+		loadedHandlerRegistration = null;
+	}
+}

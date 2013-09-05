@@ -1,0 +1,56 @@
+<%@ jet 
+package="org.skyway.integration.java.spring.jet.core" 
+class="HashCodeAndEqualsTemplate" 
+%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+<%@taglib prefix="persistence" id="org.skyway.integration.data.persistence.skywayPersistenceTags"%>
+
+<c:if test="$model/dataStore">
+	/**
+	 <sw:generated />  
+	 <sw:auxiliaryModelComponent />
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		<c:iterate select="$model/fields" var="field">
+			<c:if test="$field/@primaryKey = 'true'">
+				<sw:generatesPrimitive select="$field" var="generatesPrimitive" />
+				result = (int) (prime * result + <c:choose><c:when test="$generatesPrimitive" ><sw:getVariableName select="$field"/></c:when><c:otherwise>((<sw:getVariableName select="$field"/> == null) ? 0 : <sw:getVariableName select="$field"/>.hashCode())</c:otherwise></c:choose>);
+			</c:if>
+		</c:iterate>
+		return result;
+	}
+	
+	/**
+	 <sw:generated />
+	 <sw:auxiliaryModelComponent />
+	 */
+	public boolean equals(Object obj)	{
+	    if (obj == this) return true;
+	    if (!(obj instanceof <sw:javaType alias="{$equalsTypeAlias}" select="$model" />)) return false;
+	    <sw:javaType alias="{$equalsTypeAlias}" select="$model" /> equalCheck = (<sw:javaType alias="{$equalsTypeAlias}" select="$model" />) obj;
+		<c:iterate select="$model/fields" var="field">
+			<c:if test="$field/@primaryKey = 'true'">
+				<sw:generatesPrimitive select="$field" var="generatesPrimitive" />
+				<c:choose>
+					<c:when test="$generatesPrimitive" >
+						if (<sw:getVariableName select="$field"/> != equalCheck.<sw:getVariableName select="$field"/>)
+							return false;
+					</c:when>
+					<c:otherwise>
+						if ((<sw:getVariableName select="$field"/> == null && equalCheck.<sw:getVariableName select="$field"/> != null) || (<sw:getVariableName select="$field"/> != null && equalCheck.<sw:getVariableName select="$field"/> == null))
+							return false;
+						if (<sw:getVariableName select="$field"/> != null && !<sw:getVariableName select="$field"/>.equals(equalCheck.<sw:getVariableName select="$field"/>))
+							return false;
+					</c:otherwise>
+				</c:choose>
+			</c:if>
+		</c:iterate>
+	    return true;
+	}
+</c:if>

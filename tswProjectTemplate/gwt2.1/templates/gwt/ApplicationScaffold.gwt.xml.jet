@@ -1,0 +1,91 @@
+<%@ jet package="com.skyway.integration.google.webtoolkit.deploy.templates" class="ApplicationScaffoldGWTXMLTemplate"%><?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE module PUBLIC "-//Google Inc.//DTD Google Web Toolkit 2.0.1//EN" "http://google-web-toolkit.googlecode.com/svn/tags/2.0.1/distro-source/core/src/gwt-module.dtd">
+<module rename-to="applicationScaffold">
+<%@taglib prefix="swgwt" id="com.skyway.integration.google.webtoolkit.common.skywayGWTCodeGenTags"%>
+  <inherits name='com.google.gwt.activity.Activity' />
+  <inherits name='com.google.gwt.place.Place' />
+  <inherits name="com.google.gwt.user.User" />
+  <inherits name="com.google.gwt.user.theme.standard.Standard" />
+  <inherits name='<swgwt:getRequestFactoryPackage/>.RequestFactory'/>
+  <inherits name="com.google.gwt.user.cellview.CellView" />
+  <inherits name='com.google.gwt.logging.Logging'/>
+  <inherits name="com.google.gwt.inject.Inject"/>
+  <inherits name="com.google.gwt.text.Text"/>
+
+  <source path='client'/>
+  <source path='shared'/>
+   
+  <public path="public"/>
+
+  <!-- Logging Configuration -->
+  <set-property name="gwt.logging.enabled" value="TRUE"/> 
+  <set-property name="gwt.logging.logLevel" value="INFO"/>
+  <set-property name="gwt.logging.consoleHandler" value="ENABLED" /> 
+  <set-property name="gwt.logging.developmentModeHandler" value="ENABLED" />
+  <set-property name="gwt.logging.firebugHandler" value="ENABLED" />
+  <set-property name="gwt.logging.hasWidgetsHandler" value="DISABLED" />
+  <set-property name="gwt.logging.popupHandler" value="DISABLED" />
+  <set-property name="gwt.logging.systemHandler" value="ENABLED" />
+  <set-property name="gwt.logging.simpleRemoteHandler" value="DISABLED" />
+
+  <!--  Change your locale properties later, using one locale by default for optimization -->
+ <set-property name="locale" value="default" />
+
+ <!--  Enable other user agents based on your own development, this set was selected to optimize compiles -->
+ <set-property name="user.agent" value="gecko1_8,safari,ie8" />
+
+ <!--  Uncomment this if you are using the mobile clients, leaving commented for compiler optimization 
+ <define-property name="mobile.user.agent" values="mobilesafari, none"/>
+  
+  <property-provider name="mobile.user.agent">
+  
+  <![CDATA[
+  		var ua = navigator.userAgent.toLowerCase();
+
+        if (ua.indexOf("webkit") != -1 && ua.indexOf("mobile") != -1) {
+        return "mobilesafari";
+        }
+
+        var isMobile;
+
+        // Look for the m as a url argument
+        if (isMobile == null) {
+        var args = location.search;
+        var startMobile = args.indexOf("m");
+        if (startMobile >= 0) {
+          var mobile = args.substring(startMobile);
+          var begin = mobile.indexOf("=") + 1;
+          var end = mobile.indexOf("&");
+          if (end == -1) {
+            end = mobile.length;
+          }
+          isMobile = mobile.substring(begin, end);
+        }
+        }
+
+        if (isMobile){
+        return "mobilesafari";
+        }
+
+        return "none";
+  ]]>
+  
+  </property-provider>
+  
+  <replace-with class="<sw:javaType select="$model" alias="MobileInjectorWrapper" package="true"/>">
+  		<when-type-is class="<sw:javaType select="$model" alias="DesktopInjectorWrapper" package="true"/>"/>
+  		<all>
+  			<when-property-is name="mobile.user.agent" value="mobilesafari"/>
+        </all>
+  </replace-with>
+  -->
+  
+  <!-- Uncomment if you are enabling server side deobfuscation of StackTraces
+  <set-property name="compiler.emulatedStack" value="true" />
+  <set-configuration-property name="compiler.emulatedStack.recordLineNumbers" value="true" />
+  <set-configuration-property name="compiler.emulatedStack.recordFileNames" value="true" />
+  -->
+  
+  <entry-point class="<sw:javaType select="$model" alias="Scaffold" package="true"/>" />
+  	
+</module>

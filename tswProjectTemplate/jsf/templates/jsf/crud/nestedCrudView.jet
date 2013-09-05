@@ -1,0 +1,35 @@
+<%@ jet 
+package="com.skyway.integration.jsf" 
+class="NestedCrudViewTemplate" 
+%>
+<%@taglib prefix="jet" id="org.eclipse.jet.controlTags"%>  
+<%@taglib prefix="f" id="org.eclipse.jet.formatTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+<%@taglib prefix="gen" id="com.skyway.scaffolding.crud.common.generationTags"%>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/WEB-INF/jsf/template.xhtml">
+
+	<ui:define name="content">
+		<h:form prependId="false">
+			<p:commandButton image="back" ajax="false" immediate="true" style="margin-right:20px;" value="#{<jet:get select="lower-case($dataType/@name)"/>msgs['navigation.back']}" action="/jsf/<jet:get select="lower-case($dataType/@name)"/>/view<jet:get select="$dataType/@name"/>.xhtml"/>
+		
+			<p:panel header="#{<jet:get select="lower-case($dataType/@name)"/>msgs['<jet:get select="lower-case($relatedType/@name)"/>.title']} Details" style="margin-top:10px">
+				<p:messages />
+				<h:panelGrid id="detail" columns="2" styleClass="grid" columnClasses="label,value">
+					<jet:setVariable select="concat($dataType/@name, 'Component.', lower-case($relationship/@name))" var="currentDataTypeName" />
+					<jet:iterate select="$relatedType/fields" var="field">
+					<gen:isFieldDisplayable select="$field" var="displayable" />
+					<jet:if test="$displayable" >
+					<h:outputText value="#{<jet:get select="lower-case($dataType/@name)"/>msgs['<jet:get select="lower-case($relatedType/@name)"/>.<jet:get select="lower-case($field/@name)" />.title']}:" />
+					<jet:include template="templates/jsf/crud/common/crudViewField.jet" />
+					</jet:if>
+				</jet:iterate>
+				</h:panelGrid>
+			</p:panel>
+		</h:form>
+	</ui:define>
+</ui:composition>

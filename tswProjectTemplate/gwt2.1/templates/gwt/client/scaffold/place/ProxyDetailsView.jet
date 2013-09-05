@@ -1,0 +1,24 @@
+<%@ jet package="com.skyway.templates" class="ProxyDetailsViewTemplate"%>
+
+package <sw:package select="$model" alias="ProxyDetailsView"var="pkg"/>;
+<java:importsLocation package="{$pkg}"/>
+
+/**
+ * Implemented by views that show the details of an object.
+ *
+ * @param <P> the type of object to show
+ */
+public interface <sw:javaType select="$model" alias="ProxyDetailsView" package="false"/><P> extends <java:import>com.google.gwt.user.client.TakesValue</java:import><P>, <java:import>com.google.gwt.user.client.ui.IsWidget</java:import> {
+
+  /**
+   * Implemented by the owner of the view.
+   */
+  interface Delegate {
+    void deleteClicked();
+    void editClicked();
+  }
+  
+  boolean confirm(String msg);
+  
+  void setDelegate(Delegate delegate);
+}

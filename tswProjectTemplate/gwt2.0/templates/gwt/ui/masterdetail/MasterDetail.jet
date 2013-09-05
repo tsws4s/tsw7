@@ -1,0 +1,275 @@
+<%@ jet 
+package="com.skyway.integration.google.webtoolkit.deploy.templates" 
+class="MasterDetailTemplate" 
+%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+<%@taglib prefix="swgwt" id="com.skyway.integration.google.webtoolkit.common.skywayGWTCodeGenTags"%>
+package <sw:package select="$model" alias="gwtmasterdetail" var="pkg"/>;
+<sw:javaType select="$model" package="true" var="fullyQualifiedClassName" emit="false"/>
+<java:importsLocation package="{$pkg}"/>
+<java:impliedImport name="{$fullyQualifiedClassName}"/>
+
+<sw:getVariableName select="$model" uncapitalize="true" var="domainObjName" emit="false"/> <sw:getVariableName select="$model" uncapitalize="false" var="DomainObjName" emit="false"/>
+<swgwt:getGWTDataType select="$model" var="gwtDataType"/>
+<c:setVariable select="false" var="tabTitleField"/>
+<c:iterate select="$gwtDataType/properties" var="propertyselection"><swgwt:ifPropertyHasAction select="$propertyselection" action="PICKER"><c:setVariable select="$propertyselection/Property" var="tabTitleField"/></swgwt:ifPropertyHasAction></c:iterate>
+<c:if test="not($tabTitleField)"><sw:getPrimaryKeyFields select="$model" var="primaryKeyFields"/><c:iterate select="$primaryKeyFields" var="pkField"><c:setVariable select="$pkField" var="tabTitleField"/></c:iterate></c:if>
+<c:if test="not($tabTitleField)"><c:iterate select="$model/fields" var="anyfield"><c:setVariable select="$anyfield" var="tabTitleField"/></c:iterate></c:if>
+/**
+ * A Master/Detail style UI that presents a list of <sw:javaType select="$model" alias="gwtdatatype" package="false"/>s with a "New" button to create new records as well as a Tab area
+ * to allow multiple records to be edited at the same time.  Also provides the ability to delete records.
+ <sw:generated />
+ */
+public class <sw:javaType select="$model" alias="gwtmasterdetail" package="false"/> implements <java:import><sw:javaType select="$model/project" alias="gwtcrudsection" package="true"/></java:import> {
+	
+	/**
+	 * The interface that must be implemented to be a View for the MasterDetail presenter
+	 <sw:generated />
+	 */
+	interface Display {
+		public <java:import><sw:javaType select="$model" alias="gwttable" package="true"/></java:import> get<sw:javaType select="$model" alias="gwttable" package="false"/>();
+		public <java:import>com.google.gwt.user.client.ui.TabLayoutPanel</java:import> getEditingTabs();
+		public <java:import>com.google.gwt.event.dom.client.HasClickHandlers</java:import> getNewButton(); 
+		public String getTitle();
+	}
+	
+	/**
+	 * The I18N Messages
+	 <sw:generated />
+	 */
+	private final static <java:import><sw:javaType select="$model" alias="gwtmessagesinterface" package="true"/></java:import> messages = (<sw:javaType select="$model" alias="gwtmessagesinterface" package="false"/>)<java:import>com.google.gwt.core.client.GWT</java:import>.create (<sw:javaType select="$model" alias="gwtmessagesinterface" package="false"/>.class);
+	
+	/**
+	 * The maximum number of tabs to show
+	 <sw:generated />
+	 */
+	private final static int MAX_TABS = 5;
+	
+	/**
+	 * The maximum length in characters for the title of a tab
+	 <sw:generated />
+	 */
+	private final static int MAX_TAB_TITLE_LENGTH = 15;
+	
+	/**
+	 * The Display to bind to the MasterDetail presenter
+	 <sw:generated />
+	 */
+	private Display display;
+
+	/**
+	 * Construct a new MasterDetail Presenter
+	 <sw:generated />
+	 */
+	public <sw:javaType select="$model" alias="gwtmasterdetail" package="false"/>() {
+		this (new <sw:javaType select="$model" alias="gwtmasterdetailwidget" package="false"/>());
+	}
+	
+	/**
+	 * Construct a new MasterDetail using the Display passed in
+	 <sw:generated />
+	 */
+	public <sw:javaType select="$model" alias="gwtmasterdetail" package="false"/>(Display display) {
+		bindDisplay(display);
+	}
+	
+	/**
+	* Binds the Display passed to the MasterDetail presenter
+	<sw:generated />
+	*/
+	public void bindDisplay(Display d) {
+		this.display = d;
+		
+		display.get<sw:javaType select="$model" alias="gwttable" package="false"/>().setDeleteHandler(new <java:import>com.google.gwt.event.dom.client.ClickHandler</java:import>() {
+			public void onClick(<java:import>com.google.gwt.event.dom.client.ClickEvent</java:import> event) {
+				delete<c:get select="$domainObjName"/>s(display.get<sw:javaType select="$model" alias="gwttable" package="false"/>().getSelected<c:get select="$domainObjName"/>s());
+			}
+		});
+
+		display.get<sw:javaType select="$model" alias="gwttable" package="false"/>().setEditHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				for (<sw:javaType select="$model" alias="gwtdatatype" package="false"/> <c:get select="$domainObjName"/>: display.get<sw:javaType select="$model" alias="gwttable" package="false"/>().getSelected<c:get select="$domainObjName"/>s()) {
+					addEditTab (<c:get select="$domainObjName"/>);
+				}
+			}
+		});
+		
+		display.getNewButton().addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				new<c:get select="$DomainObjName"/>();
+			}
+		});
+		
+		display.getEditingTabs().setVisible(false);
+	}
+	
+	/**
+	*
+	<sw:generated />
+	*/
+	public String getTitle() {
+		return display.getTitle();
+	}
+	
+	/**
+	 * 
+	 <sw:generated />
+	 */
+	private void removeTab (<java:import>com.google.gwt.user.client.ui.Widget</java:import> widget) {
+		display.getEditingTabs().remove(widget);
+		int tabCount = display.getEditingTabs().getWidgetCount();
+		
+		if (tabCount == 0)
+			display.getEditingTabs().setVisible(false);
+		else
+			display.getEditingTabs().selectTab(0);
+	}
+	
+	/**
+	 * Add a Tab to the Tab Layout for editing a specific <c:get select="$DomainObjName"/>
+	 <sw:generated />
+	 */
+	private void addEditTab(<java:import><sw:javaType select="$model" alias="gwtdatatype" package="true"/></java:import> <c:get select="$domainObjName"/>) {
+		<java:import><sw:javaType select="$model" alias="gwteditwidget" package="true"/></java:import> editWidget = new <sw:javaType select="$model" alias="gwteditwidget" package="false"/>();  
+		<java:import><sw:javaType select="$model" alias="gwteditor" package="true"/></java:import> editor = new <sw:javaType select="$model" alias="gwteditor" package="false"/>(editWidget);
+		
+		<java:import><sw:javaType select="$model" alias="gwtrelationshipswidget" package="true"/></java:import> relationshipsWidget = new <sw:javaType select="$model" alias="gwtrelationshipswidget" package="false"/>();  
+		<java:import><sw:javaType select="$model" alias="gwtrelationshipseditor" package="true"/></java:import> relationshipsEditor = new <sw:javaType select="$model" alias="gwtrelationshipseditor" package="false"/>(relationshipsWidget);
+	
+		final <java:import>com.google.gwt.user.client.ui.ScrollPanel</java:import> scroll = new ScrollPanel();
+		
+		<java:import>com.google.gwt.user.client.ui.HorizontalPanel</java:import> tabContent = new HorizontalPanel();
+		
+		if (display.getEditingTabs().getWidgetCount() >= MAX_TABS) {
+			Window.alert(messages.closeTabsMessage());
+			return;
+		}
+	
+		editWidget.getCancelButton().addClickHandler(new <java:import>com.google.gwt.event.dom.client.ClickHandler</java:import>() {
+			public void onClick(ClickEvent event) {
+				removeTab(scroll);	
+			}
+	    });
+	
+	    if (!display.getEditingTabs().isVisible())
+			display.getEditingTabs().setVisible(true);
+	    
+	    editWidget.setIsNew(false);
+		editor.edit(<c:get select="$domainObjName"/>);
+		relationshipsEditor.edit (<c:get select="$domainObjName"/>);
+		
+		tabContent.add(editWidget);
+		tabContent.add(relationshipsWidget);
+		
+		scroll.add(tabContent);
+		<sw:generatesPrimitive select="$tabTitleField" var="generatesPrimitive" />
+		// to change the title of the tabs, modify the line below
+		display.getEditingTabs().add (scroll, getTabWidget(scroll, <c:choose><c:when test="$generatesPrimitive = 'true'">"" + <c:get select="$domainObjName"/>.get<sw:getVariableName select="$tabTitleField" capitalize="true"/>()</c:when><c:otherwise><c:get select="$domainObjName"/>.get<sw:getVariableName select="$tabTitleField" capitalize="true"/>().toString()</c:otherwise></c:choose>));
+		display.getEditingTabs().selectTab(display.getEditingTabs().getWidgetCount() - 1);
+	}
+	
+	/**
+	 * Returns a String that is appropriate for the title of a Tab 
+	 <sw:generated />
+	 */
+	private <java:import>com.google.gwt.user.client.ui.Label</java:import> getTabTitleLabel (String title) {
+		if (title == null)
+			title = "";
+			
+		if (title.length() > MAX_TAB_TITLE_LENGTH)
+			title = title.substring (0, MAX_TAB_TITLE_LENGTH) + messages.ellipsis();
+		return new Label (title);
+	}
+	
+	/**
+	 * Returns the Widget that should be used as the Tab Header for the content passed 
+	 * @param tabContent
+	 * @param title
+	 * @return
+	 <sw:generated />
+	 */
+	private Widget getTabWidget (final Widget tabContent, String title)  {
+		<java:import>com.google.gwt.user.client.ui.HorizontalPanel</java:import> tab = new HorizontalPanel();
+		final <java:import>com.google.gwt.user.client.ui.Image</java:import> closeImage = new Image(<java:import><sw:javaType select="$model/project" alias="gwtcommonresources" package="true"/></java:import>.INSTANCE.closeAction());
+		
+		closeImage.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				removeTab (tabContent);
+			}
+		});
+		closeImage.addMouseOverHandler(new <java:import>com.google.gwt.event.dom.client.MouseOverHandler</java:import>() {
+			public void onMouseOver(<java:import>com.google.gwt.event.dom.client.MouseOverEvent</java:import> event) {
+				closeImage.setResource(<java:import><sw:javaType select="$model/project" alias="gwtcommonresources" package="true"/></java:import>.INSTANCE.closeActionHover());
+			}
+		});
+		closeImage.addMouseOutHandler(new <java:import>com.google.gwt.event.dom.client.MouseOutHandler</java:import>() {
+			public void onMouseOut(<java:import>com.google.gwt.event.dom.client.MouseOutEvent</java:import> event) {
+				closeImage.setResource(<sw:javaType select="$model/project" alias="gwtcommonresources" package="false"/>.INSTANCE.closeAction());
+			}
+		});
+
+		tab.add(getTabTitleLabel(title));
+		tab.add(closeImage);
+		
+		tab.setCellHorizontalAlignment(closeImage, <java:import>com.google.gwt.user.client.ui.HasHorizontalAlignment</java:import>.ALIGN_RIGHT);
+		tab.addStyleName("gwt-CrudEditTab");
+	
+		return tab;	
+	}
+	
+	/**
+	 <sw:generated />
+	 * @param animal
+	 */
+	void delete<c:get select="$domainObjName"/>s(<java:import>java.util.Set</java:import><<sw:javaType select="$model" alias="gwtdatatype" package="false"/>> <c:get select="$domainObjName"/>s) {
+		if (<java:import>com.google.gwt.user.client.Window</java:import>.confirm(messages.deleteConfirmation())) {
+			<sw:javaType select="$model" alias="gwtservice" package="false"/>.Util.getInstance().execute(new <java:import><sw:javaType select="$model" alias="gwtdelete" package="true"/></java:import>(<c:get select="$domainObjName"/>s), new <java:import><sw:javaType select="$model" alias="gwtdeleted" package="true"/></java:import>() {
+				public void deleted (Set< <sw:javaType select="$model" alias="gwtdatatype" package="false"/>> <c:get select="$domainObjName"/>s) {}
+			});
+		}
+	}
+	
+	/**
+	 * Open the <c:get select="$DomainObjName"/> edit dialog to create a new <c:get select="$DomainObjName"/>
+	 <sw:generated />
+	 */
+	void new<c:get select="$DomainObjName"/>() {
+		final <java:import><sw:javaType select="$model" alias="gwteditdialog" package="true"/></java:import> editDialog = new <sw:javaType select="$model" alias="gwteditdialog" package="false"/>(create<c:get select="$DomainObjName"/>());
+		editDialog.addCloseHandler(new <java:import>com.google.gwt.event.logical.shared.CloseHandler</java:import><<java:import>com.google.gwt.user.client.ui.PopupPanel</java:import>>() {
+			public void onClose(<java:import>com.google.gwt.event.logical.shared.CloseEvent</java:import><PopupPanel> event) {
+				if (editDialog.get<c:get select="$DomainObjName"/>() != null)
+					display.get<sw:javaType select="$model" alias="gwttable" package="false"/>().add<c:get select="$DomainObjName"/>(editDialog.get<c:get select="$DomainObjName"/>());
+			}
+		});
+		
+		editDialog.center();	
+	}
+	
+	/**
+	 * Create a new <c:get select="$DomainObjName"/> object. This method can be extended or modified to control default construction
+	 <sw:generated />
+	 * @return
+	 */
+	<sw:javaType select="$model" alias="gwtdatatype" package="false"/> create<c:get select="$DomainObjName"/>() {
+		<sw:javaType select="$model" alias="gwtdatatype" package="false"/> <c:get select="$domainObjName"/> = new <sw:javaType select="$model" alias="gwtdatatype" package="false"/>();
+		
+		return <c:get select="$domainObjName"/>;
+	}
+	
+	/**
+	 * Default implementation refreshes the list of <c:get select="$DomainObjName"/> when the MasterDetail section is shown
+	 <sw:generated />
+	 */
+	public void load() {
+		// refresh the list when the MasterDetail section is shown
+		<java:import><sw:javaType select="$model" alias="gwtservice" package="true"/></java:import>.Util.getInstance().execute(new <java:import><sw:javaType select="$model" alias="gwtload" package="true"/></java:import>(), new <java:import><sw:javaType select="$model" alias="gwtloaded" package="true"/></java:import>() {
+			public void loaded (Set<<sw:javaType select="$model" alias="gwtdatatype" package="false"/>> <c:get select="$domainObjName"/>s) {
+				display.get<sw:javaType select="$model" alias="gwttable" package="false"/>().set<c:get select="$DomainObjName"/>s(<c:get select="$domainObjName"/>s);
+			}
+		});
+	}
+}
+

@@ -1,0 +1,33 @@
+<%@ jet 
+package="com.skyway.integration.google.webtoolkit.deploy.templates" 
+class="SingleRelatedWidgetUiXmlTemplate" 
+%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+
+<ui:UiBinder
+  ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
+  ui:generateKeys="com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator"
+  ui:generateLocales="default"
+  xmlns:ui='urn:ui:com.google.gwt.uibinder'
+  xmlns:dp='urn:import:com.google.gwt.user.datepicker.client'
+  xmlns:<sw:getVariableName select="$model" uncapitalize="true"/>='urn:import:<sw:package select="$model" alias="gwteditwidget"/>'
+  xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+  <ui:style src='../<sw:javaType select="$model" alias="gwtcss" package="false"/>.css'/>
+
+  <g:DisclosurePanel ui:field="<sw:getVariableName select="$model" uncapitalize="true"/>Panel">
+  <g:header><sw:getVariableName select="$model" uncapitalize="false"/></g:header>
+  <g:VerticalPanel>
+  <<sw:getVariableName select="$model" uncapitalize="true"/>:<sw:javaType select="$model" alias="gwteditwidget" package="false"/> readOnly="true" ui:field="editWidget"/>
+  <g:HorizontalPanel>
+  <g:Button addStyleNames="{style.gwt-CrudEditSaveButton}" ui:field="newButton"><ui:msg description="NewButton">New <sw:getVariableName select="$model" uncapitalize="false"/>...</ui:msg></g:Button>
+  <g:Button addStyleNames="{style.gwt-CrudEditCancelButton}" ui:field="selectButton"><ui:msg description="SelectButton">Pick <sw:getVariableName select="$model" uncapitalize="false"/>...</ui:msg></g:Button>
+  <g:Button addStyleNames="{style.gwt-CrudEditCancelButton}" ui:field="removeButton"><ui:msg description="RemoveButton">Clear</ui:msg></g:Button>
+  <g:Button addStyleNames="{style.gwt-CrudEditCancelButton}" ui:field="editButton"><ui:msg description="EditButton">Edit</ui:msg></g:Button>
+ </g:HorizontalPanel>
+  </g:VerticalPanel>
+  </g:DisclosurePanel>
+  
+</ui:UiBinder>

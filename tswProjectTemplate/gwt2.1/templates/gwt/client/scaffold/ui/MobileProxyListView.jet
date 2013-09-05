@@ -1,0 +1,41 @@
+<%@ jet package="com.skyway.templates" class="MobileProxyListViewTemplate"%>
+<%@taglib prefix="swgwt" id="com.skyway.integration.google.webtoolkit.common.skywayGWTCodeGenTags"%>
+
+package <sw:package select="$model" alias="MobileProxyListView"var="pkg"/>;
+<java:importsLocation package="{$pkg}"/>
+
+public abstract class <sw:javaType select="$model" alias="MobileProxyListView" package="false"/><P extends <java:import><swgwt:getRequestFactoryPackage/>.shared.EntityProxy</java:import>> extends
+		<sw:javaType select="$model" alias="AbstractProxyListView" package="true"/> <P> {
+
+	interface Binder extends <java:import>com.google.gwt.uibinder.client.UiBinder</java:import><<java:import>com.google.gwt.user.client.ui.Widget</java:import>, <sw:javaType select="$model" alias="MobileProxyListView" package="false"/>> {
+	}
+
+	private static final Binder BINDER = <java:import>com.google.gwt.core.client.GWT</java:import>.create(Binder.class);
+
+	@<java:import>com.google.gwt.uibinder.client.UiField</java:import>(provided = true)
+	<java:import>com.google.gwt.user.cellview.client.CellList</java:import><P> list;
+	@UiField
+	<java:import>com.google.gwt.user.client.ui.Button</java:import> newButton;
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param buttonText the text to display on the create button
+	 * @param renderer the {@link <java:import>com.google.gwt.text.shared.SafeHtmlRenderer</java:import>} used to render the proxy
+	 */
+	public <sw:javaType select="$model" alias="MobileProxyListView" package="false"/>(String buttonText, final SafeHtmlRenderer<P> renderer) {
+		// Create the CellList to display the proxies.
+		<java:import>com.google.gwt.cell.client.AbstractCell</java:import><P> cell = new AbstractCell<P>() {
+	   	@Override
+			public void render(<java:import>com.google.gwt.cell.client.Cell.Context</java:import> context, P value, <java:import>com.google.gwt.safehtml.shared.SafeHtmlBuilder</java:import> sb) {
+				renderer.render(value, sb);
+			}
+		};
+		this.list = new CellList<P>(cell,
+				<sw:javaType select="$model" alias="ScaffoldMobileApp" package="true"/> .getMobileListResources());
+		init(BINDER.createAndBindUi(this), list, newButton);
+
+		// Initialize the widget.
+		this.newButton.setText(buttonText);
+	}
+}

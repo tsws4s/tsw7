@@ -1,0 +1,29 @@
+<%@ jet 
+package="org.skyway.integration.java.spring.jet.operation" 
+class="ActionMethodImplementationTemplate"
+%>
+<%@taglib prefix="java" id="org.eclipse.jet.javaTags" %>
+<%@taglib prefix="ws"   id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c"    id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="f"    id="org.eclipse.jet.formatTags"%>
+<%@taglib prefix="sw"   id="org.skyway.integration.java.skywayCodeGenTags"%>
+<%@taglib prefix="swspr" id="org.skyway.integration.java.spring.skywaySpringCodeGenTags"%>
+	
+	<c:include template="templates/operation/OperationVariableDeclarations.jet" />
+	
+	<c:if test="$currentOperation/entryPoint">
+		<sw:getCollectionSize collection="$action/methodSteps" var="methodStepSize" />
+		// <sw:modelReference select="$currentOperation/entryPoint" format="" />
+		<c:if test="$action/@startStep">
+			<sw:invokeStep select="$action/@startStep" />
+		</c:if>
+	</c:if>
+	
+	<sw:shouldGenerateReturn>
+		<c:include template="templates/operation/OperationResultDefinition.jet" />
+	</sw:shouldGenerateReturn>
+}
+<c:if test="$currentOperation/entryPoint">
+	<c:include template="templates/operation/OperationStepMethodDefinition.jet" />
+</c:if>
+

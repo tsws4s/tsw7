@@ -1,0 +1,84 @@
+<%@ jet 
+package="com.skyway.integration.service.webservice.jet.data" 
+class="ExceptionTemplate" 
+%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+<%@taglib prefix="jaxws" id="com.skyway.integration.service.webservice.skywayJAXWSTags"%>
+
+package <sw:package select="$model" var="pkg"/>;
+<sw:javaType select="$model" package="true" var="fullyQualifiedClassName" emit="false"/>
+<java:importsLocation package="{$pkg}"/>
+<java:impliedImport name="{$fullyQualifiedClassName}"/>
+
+<jaxws:getWebFault select="$model" var="webFault" />
+
+/**
+<sw:documentation select="$model" format=" * " />
+<sw:modelCoreReference select="$model" />
+<sw:generated />
+ */
+<c:if test="$webFault" >
+	<java:import><jaxws:webFault select="$webFault" /></java:import>
+</c:if>
+public class  <sw:javaType select="$model" /> extends <java:import>java.lang.Exception</java:import> {
+	private static final long serialVersionUID = 1L;
+	
+	<c:if test="$webFault and $webFault/faultBean" >
+		private <java:import><c:get select="$webFault/faultBean" /></java:import> faultBean;
+	</c:if>
+	
+	/**
+	* Default Constructor
+ 	<sw:generated />
+	*/
+	public <sw:javaType select="$model" /> () {
+		super();
+	}
+	
+	/**
+	* Constructor taking message
+ 	<sw:generated />
+	*/
+	public <sw:javaType select="$model" /> (String message) {
+		super (message);
+	}
+	
+	/**
+	* Constructor taking root cause
+ 	<sw:generated />
+	*/
+	public <sw:javaType select="$model" /> (Throwable t) {
+		super (t);
+	}
+
+	/**
+	* Constructor taking message and root cause
+ 	<sw:generated />
+	*/
+	public <sw:javaType select="$model" /> (String message, Throwable t) {
+		super (message, t);
+	}
+
+	<c:if test="$webFault and $webFault/faultBean" >
+	    public <sw:javaType select="$model" />(String message, <java:import><c:get select="$webFault/faultBean" /></java:import> faultBean) {
+	        super(message);
+	        this.faultBean = faultBean;
+	    }
+
+	    public <sw:javaType select="$model" />(String message, <java:import><c:get select="$webFault/faultBean" /></java:import> faultBean, Throwable cause) {
+	        super(message, cause);
+	        this.faultBean = faultBean;
+	    }
+
+	    public <java:import><c:get select="$webFault/faultBean" /></java:import> getFaultInfo() {
+	        return this.faultBean;
+	    }
+    </c:if>
+}
+
+
+
+

@@ -1,0 +1,54 @@
+<%@ jet 
+package="org.skyway.integration.java.spring.jet.core" 
+class="OperationResponseBeanInfoTemplate" 
+%>
+
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="f" id="org.eclipse.jet.formatTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+
+package <sw:package alias="responsebeaninfo" select="$model" var="pkg"/>;
+<sw:javaType alias="responsebeaninfo" select="$model" package="true" var="fullyQualifiedClassName" emit="false"/>
+<java:importsLocation package="{$pkg}"/>
+<java:impliedImport name="{$fullyQualifiedClassName}"/>
+
+
+/**
+ * Automatically generated wrapper class that holds the oputput of the Operation: 
+ * @see <sw:javaType alias="response" select="$model" package="true"/>
+<sw:generated />
+<sw:auxiliaryModelComponent />
+ */
+<sw:variableStorageReset scope="class" />
+public class <sw:javaType alias="responsebeaninfo" select="$model"/> extends <java:import>java.beans.SimpleBeanInfo</java:import>	{
+	
+	/**
+	 <sw:generated />  
+	 */
+	public <sw:javaType alias="responsebeaninfo" select="$model"/>()	{
+		
+	}
+
+	/**
+	 * Returns the property descriptors used by BeanInfo for getters and setters within this class.
+	 <sw:generated />
+	 */
+	@Override
+	public <java:import>java.beans.PropertyDescriptor</java:import>[] getPropertyDescriptors()	{
+		<c:if test="$model/outputs">
+		try {
+		</c:if>
+			return new <java:import>java.beans.PropertyDescriptor</java:import>[]{
+				<c:iterate select="$model/outputs" var="output" delimiter="," >
+					new <java:import>java.beans.PropertyDescriptor</java:import>("<sw:getVariableName select="$output" />", <sw:javaType alias="response" select="$model"/>.class, "get<sw:getVariableName select="$output" capitalize="true" />", "set<sw:getVariableName select="$output" capitalize="true" />")
+				</c:iterate>
+				};
+		<c:if test="$model/outputs">
+		}catch(<java:import>java.beans.IntrospectionException</java:import> x){
+			throw new <java:import>java.lang.RuntimeException</java:import>("Error getting property descriptors for [<sw:javaType alias="response" select="$model" package="true"/>]:", x);
+		}
+		</c:if>
+	}
+}

@@ -1,0 +1,18 @@
+<%@ jet 
+package="org.skyway.integration.java.spring.jet.operation" 
+class="RequestMappingSignatureTemplate"
+%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="f" id="org.eclipse.jet.formatTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+<%@taglib prefix="swspr" id="org.skyway.integration.java.spring.skywaySpringCodeGenTags"%>
+<c:choose>
+	<c:when test="$requestMapping/variable">
+		<c:include template="templates/requestmapping/RequestMappingVariableSignature.jet" />
+	</c:when>
+	<c:otherwise>
+		<c:include template="templates/requestmapping/RequestMappingOperationSignature.jet" />
+	</c:otherwise>
+</c:choose>

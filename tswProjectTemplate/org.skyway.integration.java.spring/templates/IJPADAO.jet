@@ -1,0 +1,60 @@
+<%@ jet 
+package="org.skyway.integration.java.spring.jet.core" 
+class="JPADAOInterfaceTemplate" 
+%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+
+package <sw:package alias="interface" select="$model" var="pkg"/>;
+<sw:javaType alias="interface" select="$model" package="true" var="fullyQualifiedClassName" emit="false"/>
+<java:importsLocation package="{$pkg}"/>
+<java:impliedImport name="{$fullyQualifiedClassName}"/>
+<sw:getDataTypeForDao select="$model" var="primaryDataType"/>
+/**
+<sw:documentation select="$model" format=" * " />
+<sw:modelCoreReference select="$model" />
+<sw:generated />
+<sw:auxiliaryModelComponent />
+ */
+<sw:variableStorageReset scope="class" />
+public interface <sw:javaType alias="interface" select="$model"  /> extends <java:import>org.skyway.spring.util.dao.JpaDao</java:import><<java:import><sw:javaType select="$primaryDataType" package="true"/></java:import>>  {
+	
+	<c:iterate select="$model/namedQueries" var="namedQuery">
+		<sw:daoStatementType statementText="$namedQuery/queryText/@text" var="statementType" />
+		<c:setVariable select="lower-case($namedQuery/@queryType)" var="queryType" />
+	 	<c:if test="$queryType = 'jpql' or $queryType = 'jpanative'" >
+			<c:choose>
+				<c:when test="string($statementType) = 'select'" >
+					/**
+					 * <c:get select="upper-case($namedQuery/@queryType)" /> Query - <sw:methodName select="$namedQuery"/>
+					<sw:documentation select="$namedQuery" format=" * " />
+					 *
+					<sw:modelCoreReference select="$namedQuery" suffix="JPASelect" />
+			 	 	 */
+					public <java:import><sw:queryResultType select="$namedQuery" package="true"/></java:import> <sw:methodName select="$namedQuery" />(<c:iterate select="$namedQuery/inputs" var="input" delimiter=","><sw:declareMethodVariable select="$input"><sw:javaType select="$input" package="true" /></sw:declareMethodVariable></c:iterate>) throws <java:import>org.springframework.dao.DataAccessException</java:import>;
+				
+					/**
+					 * <c:get select="upper-case($namedQuery/@queryType)" /> Query - <sw:methodName select="$namedQuery"/>
+					<sw:documentation select="$namedQuery" format=" * " />
+					 *
+					<sw:modelReference select="$namedQuery" suffix="JPASelectWithPagination" />
+			 	 	 */
+					public <java:import><sw:queryResultType select="$namedQuery" package="true"/></java:import> <sw:methodName select="$namedQuery" />(<c:iterate select="$namedQuery/inputs" var="input" delimiter=","><sw:declareMethodVariable select="$input"><java:import><sw:javaType select="$input" package="true" /></java:import></sw:declareMethodVariable></c:iterate><c:if test="$namedQuery/inputs" >, </c:if>int startResult, int maxRows) throws <java:import>org.springframework.dao.DataAccessException</java:import>;
+					
+				</c:when>
+				<c:when test="string($statementType) = 'update'" >
+					/**
+					 * <c:get select="upper-case($namedQuery/@queryType)" /> Query - <sw:methodName select="$namedQuery"/>
+					<sw:documentation select="$namedQuery" format=" * " />
+					 *
+					<sw:modelReference select="$namedQuery" suffix="NativeUpdate" />
+			 	 	 */
+					public int <sw:methodName select="$namedQuery" />(<c:iterate select="$namedQuery/inputs" var="input" delimiter=","><sw:declareMethodVariable select="$input"><java:import><sw:javaType select="$input" package="true" /></java:import></sw:declareMethodVariable></c:iterate>) throws <java:import>org.springframework.dao.DataAccessException</java:import>;
+				
+				</c:when>
+			</c:choose>	
+		</c:if>
+	</c:iterate>
+}

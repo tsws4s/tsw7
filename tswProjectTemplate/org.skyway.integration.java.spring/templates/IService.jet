@@ -1,0 +1,36 @@
+<%@ jet 
+package="org.skyway.integration.java.spring.jet.core" 
+class="IServiceTemplate" 
+%>
+<%@taglib id="org.eclipse.jet.javaTags" prefix="java"%>
+<%@taglib prefix="ws" id="org.eclipse.jet.workspaceTags"%>
+<%@taglib prefix="c" id="org.eclipse.jet.controlTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+
+package <sw:package alias="interface" select="$model" var="pkg"/>;
+<sw:javaType alias="interface" select="$model" package="true" var="fullyQualifiedClassName" emit="false"/>
+<java:importsLocation package="{$pkg}"/>
+<java:impliedImport name="{$fullyQualifiedClassName}"/>
+
+/**
+<sw:documentation select="$model" format=" * " />
+<sw:modelCoreReference select="$model" />
+<sw:generated />
+<sw:auxiliaryModelComponent />
+ */
+<sw:variableStorageReset scope="class" />
+public interface <sw:javaType alias="interface" select="$model" />  {
+
+ 	<c:iterate select="$model/operations" var="currentOperation">
+ 		<sw:hasModifiers select="$currentOperation" modifiers="public">
+ 		<c:if test="$currentOperation/@api = 'true'" >
+ 			
+		/**
+		<sw:documentation select="$currentOperation" format=" * " />
+		<sw:modelReference select="$currentOperation" />
+ 	 	 */
+		public <java:import><sw:operationReturnType select="$currentOperation" package="true"/></java:import> <sw:methodName select="$currentOperation" /> (<c:include template="templates/operation/OperationInputs.jet" />) <sw:throwsList select="$currentOperation" />;
+		</c:if>
+		</sw:hasModifiers>
+	</c:iterate>
+}

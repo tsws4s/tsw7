@@ -1,0 +1,72 @@
+<%@ jet package="com.skyway.templates" class="StylesTemplate"%>
+
+package <sw:package select="$model" alias="Styles"var="pkg"/>;
+<java:importsLocation package="{$pkg}"/>
+
+/**
+ * The Styles used in bikeshed.
+ */
+public class <sw:javaType select="$model" alias="Styles" package="false"/> {
+
+  /**
+   * Common styles
+   */
+  public interface Common extends <java:import>com.google.gwt.resources.client.CssResource</java:import> {
+    String box();
+
+    String header();
+
+    String headerLeft();
+
+    String headerMain();
+
+    String padded();
+
+    String table();
+  }
+
+  /**
+   * Shared resources.
+   */
+  public interface Resources extends <java:import>com.google.gwt.resources.client.ClientBundle</java:import> {
+    @<java:import>com.google.gwt.resources.client.CssResource.NotStrict</java:import>
+    @<java:import>com.google.gwt.resources.client.ClientBundle.Source</java:import>("common.css")
+    Common common();
+
+	/**
+	 * Icon used to represent a user group.
+	 */
+	ImageResource removeIcon();
+
+    /**
+     * Icon used to represent a user group.
+     */
+    <java:import>com.google.gwt.resources.client.ImageResource</java:import> groupIcon();
+
+    @<java:import>com.google.gwt.resources.client.ImageResource.ImageOptions</java:import>(repeatStyle = <java:import>com.google.gwt.resources.client.ImageResource.RepeatStyle</java:import>.Horizontal)
+    ImageResource openGradient();
+
+    @ImageOptions(repeatStyle = RepeatStyle.Horizontal)
+    ImageResource selectionGradient();
+
+    /**
+     * Icon used to represent a user.
+     */
+    ImageResource userIcon();
+  }
+
+  private static Resources resources;
+
+  static {
+    resources = <java:import>com.google.gwt.core.client.GWT</java:import>.create(Resources.class);
+    resources.common().ensureInjected();
+  }
+
+  public static Common common() {
+    return resources.common();
+  }
+
+  public static Resources resources() {
+    return resources;
+  }
+}

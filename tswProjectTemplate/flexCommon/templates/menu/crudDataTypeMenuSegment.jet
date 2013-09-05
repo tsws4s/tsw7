@@ -1,0 +1,11 @@
+<%@ jet 
+package="com.skyway.integration.service.flex.jet.menu" 
+class="CrudDataTypeMenuSegmentTemplate" 
+%>
+<%@taglib prefix="jet" id="org.eclipse.jet.controlTags"%>  
+<%@taglib prefix="f" id="org.eclipse.jet.formatTags"%>
+<%@taglib prefix="sw" id="org.skyway.integration.java.skywayCodeGenTags"%>
+<\%@page language="java" isELIgnored="false" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
+<jsp:directive.include file="/WEB-INF/sitemesh-decorators/include.jsp"/>
+<fmt:setBundle basename="bundles.<jet:get select="lower-case($dataType/@name)"/>-resources"/>
+<a class="button" href="${pageContext.request.contextPath}/flexweb/index<jet:get select="$dataType/@name" />.html"><span><img src="images/icons/view.gif" /><fmt:message key="navigation.view"/> <fmt:message key="<jet:get select="lower-case($dataType/@name)"/>.title"/>s</span></a>

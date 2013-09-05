@@ -1,0 +1,79 @@
+<%@ jet package="com.skyway.templates" class="ObjectActivitiesMapperTemplate"%>
+<%@taglib prefix="swgwt" id="com.skyway.integration.google.webtoolkit.common.skywayGWTCodeGenTags"%>
+
+package <sw:package select="$model" alias="ObjectActivitiesMapper"var="pkg"/>;
+<java:importsLocation package="{$pkg}"/>
+<sw:getVariableName select="$model" uncapitalize="true" var="domainObjName" emit="false"/> <sw:getVariableName select="$model" uncapitalize="false" var="DomainObjName" emit="false"/>
+
+public class <sw:javaType select="$model" alias="ObjectActivitiesMapper" package="false"/> {
+  private final <sw:javaType select="$model/project" alias="ApplicationRequestFactory" package="true"/> requests;
+  private final <java:import>com.google.gwt.place.shared.PlaceController</java:import> placeController;
+
+  public <sw:javaType select="$model" alias="ObjectActivitiesMapper" package="false"/>(<sw:javaType select="$model/project" alias="ApplicationRequestFactory" package="true"/> requests, PlaceController placeController) {
+    this.requests = requests;
+    this.placeController = placeController;
+  }
+
+  public Activity getActivity(<java:import><sw:javaType select="$model/project" alias="ProxyPlace" package="true"/></java:import> place) {
+    switch (place.getOperation()) {
+      case DETAILS:
+        return new <sw:javaType select="$model" alias="ObjectDetailsActivity" package="true"/>((<java:import><swgwt:getRequestFactoryPackage/>.shared.EntityProxyId</java:import><<java:import><sw:javaType select="$model" alias="ObjectProxy" package="true"/></java:import>>)place.getProxyId(), requests, 
+          placeController, <sw:javaType select="$model/project" alias="ScaffoldApp" emitIncludes="true" package="true"/>.isMobile() ? <sw:javaType select="$model" alias="ObjectMobileDetailsView" package="true"/>.instance() : <sw:javaType select="$model" alias="ObjectDetailsView" emitIncludes="true" package="true"/>.instance());
+
+      case EDIT:
+        return makeEditActivity(place);
+
+      case CREATE:
+        return makeCreateActivity();
+    }
+
+    throw new IllegalArgumentException("Unknown operation "
+        + place.getOperation());
+  }
+
+  @SuppressWarnings("unchecked")
+  private EntityProxyId<<sw:javaType select="$model" alias="ObjectProxy" package="true"/>> coerceId(<sw:javaType select="$model/project" alias="ProxyPlace" package="true"/> place) {
+    return (EntityProxyId<<sw:javaType select="$model" alias="ObjectProxy" package="true"/>>) place.getProxyId();
+  }
+
+  private <java:import>com.google.gwt.activity.shared.Activity</java:import> makeCreateActivity() {
+    <sw:javaType select="$model" alias="ObjectEditView" package="true"/>.instance().setCreating(true);
+    final <sw:javaType select="$model" alias="ObjectRequest" package="true"/> request = requests.<c:get select="$domainObjName"/>Request();
+    Activity activity = new <sw:javaType select="$model/project" alias="CreateAndEditProxy" package="true" emitIncludes="true"/><<sw:javaType select="$model" alias="ObjectProxy"/>>(
+        <sw:javaType select="$model" alias="ObjectProxy" emitIncludes="true" package="true"/>.class, request,
+        ScaffoldApp.isMobile() ? <sw:javaType select="$model" alias="ObjectMobileEditView" package="true" emitIncludes="true"/>.instance() : <sw:javaType select="$model" alias="ObjectEditView" package="true" emitIncludes="true"/>.instance(),
+        placeController) {
+      
+      @Override
+      protected <java:import><swgwt:getRequestFactoryPackage/>.shared.RequestContext</java:import> createSaveRequest(<sw:javaType select="$model" alias="ObjectProxy" emitIncludes="true" package="true"/> proxy) {
+        request.save<c:get select="$DomainObjName"/>(proxy);
+        return request;
+      }
+    };
+
+    return new <sw:javaType select="$model" alias="ObjectEditActivityWrapper" package="true"/>(requests,
+        <sw:javaType select="$model/project" alias="ScaffoldApp" package="true"/>.isMobile() ? <sw:javaType select="$model" alias="ObjectMobileEditView" package="true"/>.instance() : <sw:javaType select="$model" alias="ObjectEditView" package="true"/>.instance(),
+        activity, null);
+  }
+
+  private Activity makeEditActivity(ProxyPlace place) {
+    <sw:javaType select="$model" alias="ObjectEditView" package="true"/>.instance().setCreating(false);
+    EntityProxyId<<sw:javaType select="$model" alias="ObjectProxy" emitIncludes="true" package="true"/>> proxyId = coerceId(place);
+    Activity activity = new <sw:javaType select="$model/project" alias="FindAndEditProxy" package="true" emitIncludes="true"/><<sw:javaType select="$model" alias="ObjectProxy" emitIncludes="true" package="true"/>>(proxyId,
+        requests,
+        ScaffoldApp.isMobile() ? <sw:javaType select="$model" alias="ObjectMobileEditView" package="true"/>.instance() : <sw:javaType select="$model" alias="ObjectEditView" package="true"/>.instance(),
+        placeController) {
+      
+      @Override
+      protected RequestContext createSaveRequest(<sw:javaType select="$model" alias="ObjectProxy" package="true"/> proxy) {
+        <sw:javaType select="$model" alias="ObjectRequest" package="true" emitIncludes="true"/> request = requests.<c:get select="$domainObjName"/>Request();
+        request.save<c:get select="$DomainObjName"/>(proxy);
+        return request;
+      }
+    };
+
+    return new <sw:javaType select="$model" alias="ObjectEditActivityWrapper" emitIncludes="true" package="true"/>(requests,
+        ScaffoldApp.isMobile() ? <sw:javaType select="$model" alias="ObjectMobileEditView" package="true"/>.instance() : <sw:javaType select="$model" alias="ObjectEditView" package="true"/>.instance(),
+        activity, proxyId);
+  }
+}

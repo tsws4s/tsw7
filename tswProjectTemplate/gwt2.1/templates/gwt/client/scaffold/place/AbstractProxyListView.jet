@@ -1,0 +1,47 @@
+<%@ jet package="com.skyway.templates" class="AbstractProxyListViewTemplate"%>
+<%@taglib prefix="swgwt" id="com.skyway.integration.google.webtoolkit.common.skywayGWTCodeGenTags"%>
+
+package <sw:package select="$model" alias="AbstractProxyListView"var="pkg"/>;
+<java:importsLocation package="{$pkg}"/>
+
+/**
+ * Abstract implementation of ProxyListView.
+ * 
+ * @param <P> the type of the proxy
+ */
+public abstract class <sw:javaType select="$model" alias="AbstractProxyListView" package="false"/><P extends <java:import><swgwt:getRequestFactoryPackage/>.shared.EntityProxy</java:import>> extends
+    <java:import>com.google.gwt.user.client.ui.Composite</java:import> implements ProxyListView<P> {
+
+  private <java:import>com.google.gwt.view.client.HasData</java:import><P> display;
+  private ProxyListView.Delegate<P> delegate;
+
+  public HasData<P> asHasData() {
+    return display;
+  }
+
+  @Override
+  public <sw:javaType select="$model" alias="AbstractProxyListView" package="false"/><P> as<java:import>com.google.gwt.user.client.ui.Widget</java:import>() {
+    return this;
+  }
+
+  public void setDelegate(final Delegate<P> delegate) {
+    this.delegate = delegate;
+  }
+
+  protected void init(Widget root, HasData<P> display, <java:import>com.google.gwt.user.client.ui.Button</java:import> newButton) {
+    super.initWidget(root);
+    this.display = display;
+
+    newButton.add<java:import>com.google.gwt.event.dom.client.ClickHandler</java:import>(new ClickHandler() {
+      public void onClick(<java:import>com.google.gwt.event.dom.client.ClickEvent</java:import> event) {
+        delegate.createClicked();
+      }
+    });
+  }
+
+  protected void initWidget(Widget widget) {
+    throw new UnsupportedOperationException(
+        "AbstractRecordListView must be initialized via "
+            + "init(Widget, HasData<P>, Button) ");
+  }
+}
