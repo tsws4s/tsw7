@@ -1,0 +1,7 @@
+#org.skyway.core settings
+#Sat Jun 22 04:10:28 CDT 2013
+version=10.0.0.qualifier
+default.top.level.package=pm7
+customization.specification=/tswProjectTemplate
+models.folder.name=.springDSL
+initialized=true
