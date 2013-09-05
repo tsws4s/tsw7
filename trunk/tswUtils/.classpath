@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="melibrary.com.genuitec.eclipse.j2eedt.core.MYECLIPSE_JAVAEE_6_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
+	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
+	<classpathentry exported="true" kind="lib" path="WebRoot/WEB-INF/lib/mysql-connector-java-5.1.20-bin.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/commons-lang-2.4.jar"/>
+	<classpathentry exported="true" kind="lib" path="WebRoot/WEB-INF/lib/joda-time-2.1.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/opencsv-2.3.jar"/>
+	<classpathentry kind="src" path="generated"/>
+	<classpathentry kind="src" path="resources"/>
+	<classpathentry kind="con" path="melibrary.com.skyway.myeclipseforspring.lib.aopalliance.AOPALLIANCE_1_0">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="melibrary.com.skyway.myeclipseforspring.lib.apache.commons.APACHE_COMMONS_1_8">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="melibrary.com.skyway.myeclipseforspring.lib.apache.commons.APACHE_COMMONS_CODEC_1_5">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="melibrary.com.skyway.myeclipseforspring.lib.apache.commons.Apache_DBCP_1_3">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="melibrary.com.skyway.myeclipseforspring.lib.apache.commons.APACHE_COMMONS_IO_1_4">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="melibrary.com.skyway.myeclipseforspring.lib.apache.commons.APACHE_COMMONS_LANG_2_5">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="melibrary.com.skyway.myeclipseforspring.lib.atomikos.ATOMIKOS_3_6_4">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="melibrary.com.skyway.myeclipseforspring.lib.cxf.CXF_2_1_9">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="melibrary.com.skyway.myeclipseforspring.lib.cxf.CXF_SUPPORT_2_1_9">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="melibrary.com.skyway.myeclipseforspring.lib.web.DWR_2_0_5">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="melibrary.com.skyway.myeclipseforspring.lib.derby.Derby_10_1_1_0">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="melibrary.com.skyway.myeclipseforspring.lib.google.guice.GOOGLE_GUICE_3_0">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="melibrary.com.skyway.myeclipseforspring.lib.hibernate.Hibernate_Core_35">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="melibrary.com.skyway.myeclipseforspring.lib.spring.JSTL_1_2">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="melibrary.com.skyway.myeclipseforspring.lib.logging.Logging_1_5_10">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="melibrary.com.skyway.myeclipseforspring.lib.postgres.PostgresJDBC_8_3">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="melibrary.com.skyway.myeclipseforspring.lib.web.SiteMesh_2_4">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="melibrary.com.skyway.myeclipseforspring.lib.skyway.SkywaySpringUtils_7_1_3">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="melibrary.com.skyway.myeclipseforspring.lib.spring.Spring_Core_3">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="melibrary.com.skyway.myeclipseforspring.lib.spring.Spring_MVC_3">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="melibrary.com.skyway.myeclipseforspring.lib.spring.Spring_Security_3_0_0">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="melibrary.com.skyway.myeclipseforspring.lib.spring.Spring_WebFlow_2">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="output" path="WebRoot/WEB-INF/classes"/>
+</classpath>
