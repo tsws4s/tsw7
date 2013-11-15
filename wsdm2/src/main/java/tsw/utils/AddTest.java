@@ -14,7 +14,6 @@ import org.joda.time.MutableDateTime;
 import tsw.domain.GenGame;
 import tsw.domain.Program;
 import tsw.domain.Team;
-import tsw.service.GameGenerator;
 
 
 public class AddTest {

@@ -27,7 +27,6 @@ import tsw.dao.ProgramDAOImpl;
 import tsw.domain.GenGame;
 import tsw.domain.Program;
 import tsw.domain.Team;
-import tsw.service.GameGenerator;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @TestExecutionListeners({

@@ -23,7 +23,7 @@ import javax.xml.bind.annotation.*;
 
 import javax.persistence.*;
 
-import tsw.service.GameGenerator;
+import tsw.utils.GameGenerator;
 
 /**
  */
