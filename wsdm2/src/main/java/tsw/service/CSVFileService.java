@@ -1,6 +1,6 @@
 package tsw.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -10,20 +10,22 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.List;
+
 
 import javax.servlet.http.HttpServletRequest;
+import tsw.domain.ImportFile;
 
+
+/*
+import java.util.ArrayList;
+import java.util.List;
+import tsw.utils.ImportFileToBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import tsw.domain.Customer;
 import tsw.domain.Game;
-import tsw.domain.ImportFile;
 import tsw.domain.Program;
 import tsw.domain.Resource;
-import tsw.domain.Team;
-import tsw.utils.ImportFileToBean;
-import tsw.web.SessionConfigCache;
-import tsw.web.UsersController;
+import tsw.domain.Team;*/
 
 import au.com.bytecode.opencsv.CSVReader;
 import au.com.bytecode.opencsv.CSVWriter;
@@ -31,26 +33,12 @@ import au.com.bytecode.opencsv.CSVWriter;
 @Service("CSVFileService")
 public class CSVFileService {
     
-	SessionConfigCache sessionCache = UsersController.getSessionCache();
-
-	/**
-	 */
-	@Autowired
-	private CustomerService customerService;
-	@Autowired
-	private ProgramService programService;
-	@Autowired
-	private TeamService teamService;
-	@Autowired
-	private ResourceService resourceService;
-	@Autowired
-	private EventService eventService;
 	
 /*	private static final String SQL_INSERT = "INSERT INTO ${table}(${keys}) VALUES(${values})";
 	private static final String TABLE_REGEX = "\\$\\{table\\}";
 	private static final String KEYS_REGEX = "\\$\\{keys\\}";
 	private static final String VALUES_REGEX = "\\$\\{values\\}";
-*/
+
 
 	//  Import, Tables: Customer, Team, Game, Event, Teamplayer, Participant
 	public static String FILE_DATA_TYPE_CUSTOMER 	= "Customer";
@@ -112,7 +100,7 @@ public class CSVFileService {
 
 	public ImportFile createAndSaveObjects(HttpServletRequest request, ImportFile importFile) throws Exception {
 		
-		ImportFileToBean<Object> csvImport2Bean = new ImportFileToBean<Object>();
+/*		ImportFileToBean<Object> csvImport2Bean = new ImportFileToBean<Object>();
 		List<Object> list = csvImport2Bean.parse(importFile);
 		List<Boolean> recordLoaded = new ArrayList<Boolean>();
 		for (Object object : list) {			
@@ -193,8 +181,8 @@ public class CSVFileService {
 				e.printStackTrace();
 			}
 			recordLoaded.add(loaded);
-		}
-		importFile.setRecordLoaded(recordLoaded);
+		} 
+		importFile.setRecordLoaded(recordLoaded); */
 		return importFile;
 	}
 

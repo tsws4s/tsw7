@@ -15,7 +15,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import tsw.domain.Participant;
-import tsw.web.UsersController;
+import tsw.service.UsersController;
 
 /**
  * DAO to manage Participant entities.

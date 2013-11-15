@@ -20,7 +20,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import tsw.domain.Users;
-import tsw.web.UsersController;
+import tsw.service.UsersController;
 
 // import tsw.web.Info4Session;
 

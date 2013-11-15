@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import tsw.domain.Customer;
 import tsw.domain.Tswacct;
-import tsw.web.UsersController;
+import tsw.service.UsersController;
 
 /**
  * DAO to manage Customer entities.

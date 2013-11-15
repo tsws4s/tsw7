@@ -17,9 +17,9 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Service;
 
-import tsw.domain.Users;
+/*import tsw.domain.Users;
 import tsw.web.SessionConfigCache;
-import tsw.web.UsersController;
+import tsw.web.UsersController;*/
 
 import net.sf.jasperreports.engine.JRExporterParameter;
 import net.sf.jasperreports.engine.JasperCompileManager;
@@ -33,7 +33,7 @@ import net.sf.jasperreports.engine.export.JRXlsExporter;
 @Service("ReportService")
 public class ReportService {
 
-	private static SessionConfigCache sessionCache = UsersController.getSessionCache();
+//	private static SessionConfigCache sessionCache = UsersController.getSessionCache();
 
 	/** The Constant BUFFER. */
     final static int BUFFER = 10240;
@@ -74,9 +74,10 @@ public class ReportService {
         JasperPrint jasperPrint = null;
 		ServletContext srvltCntxt = request.getSession().getServletContext();
         SUB_DIR = srvltCntxt.getRealPath("/ReportsDir/"+ jrmxlFilename);
-		Users user = sessionCache.getUser4Session(request);
+/*		Users user = sessionCache.getUser4Session(request);
 		Integer tswAcct = user.getTswacct().getTswAcctId();
-
+*/
+        Integer tswAcct=null;
         if(parameters==null){
         	parameters = new HashMap<String, Object>();
         }

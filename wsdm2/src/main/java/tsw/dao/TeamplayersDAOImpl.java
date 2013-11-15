@@ -19,7 +19,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import tsw.domain.Teamplayers;
-import tsw.web.UsersController;
+import tsw.service.UsersController;
 
 /**
  * DAO to manage Teamplayers entities.

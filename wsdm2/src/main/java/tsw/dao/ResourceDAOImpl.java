@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import tsw.domain.Resource;
 import tsw.domain.Tswacct;
-import tsw.web.UsersController;
+import tsw.service.UsersController;
 
 /**
  * DAO to manage Resource entities.

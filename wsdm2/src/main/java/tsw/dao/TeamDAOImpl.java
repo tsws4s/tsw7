@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import tsw.domain.Program;
 import tsw.domain.Team;
 import tsw.domain.Tswacct;
-import tsw.web.UsersController;
+import tsw.service.UsersController;
 
 /**
  * DAO to manage Team entities.

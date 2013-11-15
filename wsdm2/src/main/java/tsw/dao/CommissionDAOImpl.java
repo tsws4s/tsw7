@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import tsw.domain.Authorities;
 import tsw.domain.Commission;
-import tsw.web.UsersController;
+import tsw.service.UsersController;
 
 /**
  * DAO to manage Authorities entities.
