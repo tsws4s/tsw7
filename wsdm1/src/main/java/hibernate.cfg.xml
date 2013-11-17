@@ -7,9 +7,9 @@
 
     <session-factory>
         <property name="dialect">org.hibernate.dialect.MySQLDialect</property>
-        <property name="connection.url">jdbc:mysql://tsws4s.com/tsws4s_4</property>
-        <property name="connection.username">tsws4s_testUser</property>
-        <property name="connection.password">Ind1a123</property>
+        <property name="connection.url">jdbc:mysql://mysql906.ixwebhosting.com</property>
+        <property name="connection.username">C324877_imsuser</property>
+        <property name="connection.password">imsaDm1n</property>
         <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
         <property name="myeclipse.connection.profile">mysql_tsw</property>
     
