@@ -1,6 +1,0 @@
-#org.skyway.core settings
-#Sat Nov 16 22:48:47 CST 2013
-version=10.0.0.qualifier
-default.top.level.package=wsdm
-models.folder.name=.springDSL
-initialized=true
