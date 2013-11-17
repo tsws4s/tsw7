@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="1.0" xmlns="http://java.sun.com/xml/ns/persistence" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd">
+	
+	
+		<persistence-unit name="mysql_tsw" transaction-type="JTA" >
+			<description>generated-persistence-unit</description>
+					<provider>org.hibernate.ejb.HibernatePersistence</provider>
+      			<class>wsdm.domain.Users</class>
+      			<class>wsdm.domain.Teamplayers</class>
+      			<class>wsdm.domain.Templatetimeslot</class>
+      			<class>wsdm.domain.Customer</class>
+      			<class>wsdm.domain.Tswacctsport</class>
+      			<class>wsdm.domain.Tswacct</class>
+      			<class>wsdm.domain.Event</class>
+      			<class>wsdm.domain.Resource</class>
+      			<class>wsdm.domain.Templatecalendardate</class>
+      			<class>wsdm.domain.Price</class>
+      			<class>wsdm.domain.Gamestats</class>
+      			<class>wsdm.domain.Team</class>
+      			<class>wsdm.domain.Authorities</class>
+      			<class>wsdm.domain.Sportstattype</class>
+      			<class>wsdm.domain.Templatedaily</class>
+      			<class>wsdm.domain.Templatemonthly</class>
+      			<class>wsdm.domain.Programresource</class>
+      			<class>wsdm.domain.Employee</class>
+      			<class>wsdm.domain.Program</class>
+      			<class>wsdm.domain.Level</class>
+      			<class>wsdm.domain.Sport</class>
+      			<class>wsdm.domain.Gengame</class>
+      			<class>wsdm.domain.Proggengames</class>
+      			<class>wsdm.domain.Templateweekly</class>
+      			<class>wsdm.domain.Sportposition</class>
+      			<class>wsdm.domain.Game</class>
+      			<class>wsdm.domain.Participant</class>
+   			<exclude-unlisted-classes>true</exclude-unlisted-classes>
+		</persistence-unit>
+
+	
+</persistence>
