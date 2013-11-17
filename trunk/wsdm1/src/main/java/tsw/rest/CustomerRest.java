@@ -1,5 +1,6 @@
 package tsw.rest;
 
+import java.util.ArrayList;
 import java.util.Set;
 
 import javax.ws.rs.GET;
@@ -22,11 +23,11 @@ public class CustomerRest {
 	@GET
 	@Path("list")
 	@Produces("application/json")
-	public Set<Customer> listCustomers() {
+	public ArrayList<Customer> listCustomers() {
 		// throw new UnsupportedOperationException("Not yet implemented.");
 		Integer tswId = new Integer(1);
 		Set<Customer> custList = customerDAO.findAllCustomers4tsw(tswId);
-		return custList;
+		return new ArrayList<Customer>(custList);
 	}
 
 	@GET
@@ -35,5 +36,13 @@ public class CustomerRest {
 		//throw new UnsupportedOperationException("Not yet implemented.");
 		Customer cust = customerDAO.findCustomerByCustomerId(param1);
 		return cust;
+	}
+	
+	@GET
+	@Path("ping")
+	@Produces("application/json")
+	public String getPing() {
+		//throw new UnsupportedOperationException("Not yet implemented.");
+		return "ping-ok";
 	}
 }
