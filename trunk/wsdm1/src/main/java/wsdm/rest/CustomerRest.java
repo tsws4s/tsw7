@@ -11,7 +11,7 @@ import javax.ws.rs.QueryParam;
 import wsdm.domain.Customer;
 
 @Produces("application/json")
-@Path("/customer")
+@Path("/customer1")
 public class CustomerRest {
 	
 
