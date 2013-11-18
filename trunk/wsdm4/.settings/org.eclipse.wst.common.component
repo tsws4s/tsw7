@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-modules id="moduleCoreId" project-version="1.5.0">
+    <wb-module deploy-name="wsdm4">
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
+        <wb-resource deploy-path="/" source-path="/src/main/webapp"/>
+        <property name="context-root" value="/wsdm4"/>
+        <property name="java-output-path" value="/wsdm4/src/main/webapp/WEB-INF/classes"/>
+    </wb-module>
+</project-modules>
