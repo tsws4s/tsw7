@@ -7,6 +7,10 @@ import java.lang.StringBuilder;
 import java.math.BigDecimal;
 
 import java.util.Calendar;
+
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -114,6 +118,43 @@ public class Program implements Serializable {
 	@Basic(fetch = FetchType.EAGER)
 	@XmlElement
 	Integer leagueYn;
+	
+	
+	@Column(name = "pgmCoordFK")
+	@Basic(fetch = FetchType.EAGER)
+	@XmlElement
+	Integer pgmCoordFK;
+	/**
+	 */
+	
+	@Column(name = "priceFK")
+	@Basic(fetch = FetchType.EAGER)
+	@XmlElement
+	Integer priceFK;
+	/**
+	 */
+	
+	@Column(name = "resourceFK")
+	@Basic(fetch = FetchType.EAGER)
+	@XmlElement
+	Integer resourceFK;
+	/**
+	 */
+	
+	@Column(name = "sportFK")
+	@Basic(fetch = FetchType.EAGER)
+	@XmlElement
+	Integer sportFK;
+	/**
+	 */
+	
+	@Column(name = "tswAcctFK")
+	@Basic(fetch = FetchType.EAGER)
+	@XmlElement
+	Integer tswAcctFK;
+	/**
+	 */
+	
 	public void setProgramId(Integer programId) {
 		this.programId = programId;
 	}
@@ -243,6 +284,48 @@ public class Program implements Serializable {
 	public Integer getLeagueYn() {
 		return this.leagueYn;
 	}
+	
+	
+	public Integer getPgmCoordFK() {
+		return pgmCoordFK;
+	}
+
+	public void setPgmCoordFK(Integer pgmCoordFK) {
+		this.pgmCoordFK = pgmCoordFK;
+	}
+
+	public Integer getPriceFK() {
+		return priceFK;
+	}
+
+	public void setPriceFK(Integer priceFK) {
+		this.priceFK = priceFK;
+	}
+
+	public Integer getResourceFK() {
+		return resourceFK;
+	}
+
+	public void setResourceFK(Integer resourceFK) {
+		this.resourceFK = resourceFK;
+	}
+
+	public Integer getSportFK() {
+		return sportFK;
+	}
+
+	public void setSportFK(Integer sportFK) {
+		this.sportFK = sportFK;
+	}
+
+	public Integer getTswAcctFK() {
+		return tswAcctFK;
+	}
+
+	public void setTswAcctFK(Integer tswAcctFK) {
+		this.tswAcctFK = tswAcctFK;
+	}
+
 	/**
 	 */
 	public Program() {

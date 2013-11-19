@@ -6,6 +6,9 @@ import java.lang.StringBuilder;
 
 import java.util.Calendar;
 
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 
 import javax.xml.bind.annotation.*;
@@ -100,7 +103,14 @@ public class Gengame implements Serializable {
 	@Basic(fetch = FetchType.EAGER)
 	@XmlElement
 	String refereeName;
-
+	
+	@Column(name = "progGenGameFK")
+	@Basic(fetch = FetchType.EAGER)
+	@XmlElement
+	Integer progGenGameFK;
+	/**
+	 */
+	
 	public void setGenGameId(Integer genGameId) {
 		this.genGameId = genGameId;
 	}
@@ -229,6 +239,14 @@ public class Gengame implements Serializable {
 	 */
 	public String getRefereeName() {
 		return this.refereeName;
+	}
+
+	public Integer getProgGenGameFK() {
+		return progGenGameFK;
+	}
+
+	public void setProgGenGameFK(Integer progGenGameFK) {
+		this.progGenGameFK = progGenGameFK;
 	}
 
 	/**

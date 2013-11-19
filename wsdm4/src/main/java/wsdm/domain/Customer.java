@@ -3,6 +3,10 @@ package wsdm.domain;
 import java.io.Serializable;
 
 import java.lang.StringBuilder;
+
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -136,7 +140,21 @@ public class Customer implements Serializable {
 	@Basic(fetch = FetchType.EAGER)
 	@XmlElement
 	Integer adminYn;
-
+	
+	@Column(name = "parentFK")
+	@Basic(fetch = FetchType.EAGER)
+	@XmlElement
+	Integer parentFK;
+	/**
+	 */
+	
+	@Column(name = "tswAcctFK")
+	@Basic(fetch = FetchType.EAGER)
+	@XmlElement
+	Integer tswAcctFK;
+	/**
+	 */
+	
 	/**
 	 */
 	public void setCustomerId(Integer customerId) {
@@ -317,6 +335,22 @@ public class Customer implements Serializable {
 		return this.adminYn;
 	}
 
+
+	public Integer getParentFK() {
+		return parentFK;
+	}
+
+	public void setParentFK(Integer parentFK) {
+		this.parentFK = parentFK;
+	}
+
+	public Integer getTswAcctFK() {
+		return tswAcctFK;
+	}
+
+	public void setTswAcctFK(Integer tswAcctFK) {
+		this.tswAcctFK = tswAcctFK;
+	}
 
 	/**
 	 */

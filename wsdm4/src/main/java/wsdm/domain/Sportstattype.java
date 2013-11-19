@@ -4,6 +4,9 @@ import java.io.Serializable;
 
 import java.lang.StringBuilder;
 
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -40,6 +43,11 @@ public class Sportstattype implements Serializable {
 	@Basic(fetch = FetchType.EAGER)
 	@XmlElement
 	String sportStatTypeName;
+	
+	@Column(name = "sportFK")
+	@Basic(fetch = FetchType.EAGER)
+	@XmlElement
+	Integer sportFK;
 
 	/**
 	 */
@@ -63,6 +71,15 @@ public class Sportstattype implements Serializable {
 	 */
 	public String getSportStatTypeName() {
 		return this.sportStatTypeName;
+	}
+
+	
+	public Integer getSportFK() {
+		return sportFK;
+	}
+
+	public void setSportFK(Integer sportFK) {
+		this.sportFK = sportFK;
 	}
 
 	/**

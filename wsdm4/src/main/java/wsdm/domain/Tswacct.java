@@ -8,6 +8,9 @@ import java.math.BigDecimal;
 
 import java.util.Calendar;
 
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -83,6 +86,11 @@ public class Tswacct implements Serializable {
 	@Basic(fetch = FetchType.EAGER)
 	@XmlElement
 	Integer activeYn;
+	
+	@Column(name = "acctAdminFK")
+	@Basic(fetch = FetchType.EAGER)
+	@XmlElement
+	Integer acctAdminFK;
 
 	/**
 	 */
@@ -166,6 +174,15 @@ public class Tswacct implements Serializable {
 	 */
 	public Integer getActiveYn() {
 		return this.activeYn;
+	}
+
+	
+	public Integer getAcctAdminFK() {
+		return acctAdminFK;
+	}
+
+	public void setAcctAdminFK(Integer acctAdminFK) {
+		this.acctAdminFK = acctAdminFK;
 	}
 
 	/**

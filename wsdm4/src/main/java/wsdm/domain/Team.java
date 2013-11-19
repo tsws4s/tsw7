@@ -5,6 +5,10 @@ import java.io.Serializable;
 import java.lang.StringBuilder;
 
 import java.math.BigDecimal;
+
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -108,6 +112,43 @@ public class Team implements Serializable {
 	@Basic(fetch = FetchType.EAGER)
 	@XmlElement
 	String notes;
+	
+	@Column(name = "levelFK")
+	@Basic(fetch = FetchType.EAGER)
+	@XmlElement
+	Integer levelFK;
+	/**
+	 */
+	
+	@Column(name = "programFK")
+	@Basic(fetch = FetchType.EAGER)
+	@XmlElement
+	Integer programFK;
+	/**
+	 */
+	
+	@Column(name = "coachCustFK")
+	@Basic(fetch = FetchType.EAGER)
+	@XmlElement
+	Integer coachCustFK;
+	/**
+	 */
+	
+	@Column(name = "managerCustFK")
+	@Basic(fetch = FetchType.EAGER)
+	@XmlElement
+	Integer managerCustFK;
+	/**
+	 */
+	
+	@Column(name = "tswAcctFK")
+	@Basic(fetch = FetchType.EAGER)
+	@XmlElement
+	Integer tswAcctFK;
+	/**
+	 */
+	
+	
 	public void setTeamId(Integer teamId) {
 		this.teamId = teamId;
 	}
@@ -239,7 +280,49 @@ public class Team implements Serializable {
 	}
 	/**
 	 */
+	
+	
 	public Team() {
+	}
+
+	public Integer getLevelFK() {
+		return levelFK;
+	}
+
+	public void setLevelFK(Integer levelFK) {
+		this.levelFK = levelFK;
+	}
+
+	public Integer getProgramFK() {
+		return programFK;
+	}
+
+	public void setProgramFK(Integer programFK) {
+		this.programFK = programFK;
+	}
+
+	public Integer getCoachCustFK() {
+		return coachCustFK;
+	}
+
+	public void setCoachCustFK(Integer coachCustFK) {
+		this.coachCustFK = coachCustFK;
+	}
+
+	public Integer getManagerCustFK() {
+		return managerCustFK;
+	}
+
+	public void setManagerCustFK(Integer managerCustFK) {
+		this.managerCustFK = managerCustFK;
+	}
+
+	public Integer getTswAcctFK() {
+		return tswAcctFK;
+	}
+
+	public void setTswAcctFK(Integer tswAcctFK) {
+		this.tswAcctFK = tswAcctFK;
 	}
 
 	/**
