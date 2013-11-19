@@ -50,11 +50,7 @@ public class Tswacctsport implements Serializable {
 	@Basic(fetch = FetchType.EAGER)
 	@XmlElement
 	Integer numPrograms;
-	
-	@Column(name = "sportFK")
-	@Basic(fetch = FetchType.EAGER)
-	@XmlElement
-	Integer sportFK;
+
 	/**
 	 */
 	
@@ -101,13 +97,6 @@ public class Tswacctsport implements Serializable {
 		return this.numPrograms;
 	}
 
-	public Integer getSportFK() {
-		return sportFK;
-	}
-
-	public void setSportFK(Integer sportFK) {
-		this.sportFK = sportFK;
-	}
 
 	public Integer getTswAcctFK() {
 		return tswAcctFK;
