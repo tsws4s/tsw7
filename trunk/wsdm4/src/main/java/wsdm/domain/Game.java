@@ -69,10 +69,40 @@ public class Game implements Serializable {
 	/**
 	 */
 
+	@Column(name = "homeTeamFK")
+	@Basic(fetch = FetchType.EAGER)
+	@XmlElement
+	Integer homeTeamFK;
+	/**
+	 */
+
+	@Column(name = "visitorTeamFK")
+	@Basic(fetch = FetchType.EAGER)
+	@XmlElement
+	Integer visitorTeamFK;
+	/**
+	 */
+
+	@Column(name = "programFK")
+	@Basic(fetch = FetchType.EAGER)
+	@XmlElement
+	Integer programFK;
+	
+	/**
+	 */
+
+	@Column(name = "tswAcctFK")
+	@Basic(fetch = FetchType.EAGER)
+	@XmlElement
+	Integer tswAcctFK;
+
+
 	@Column(name = "activeYN")
 	@Basic(fetch = FetchType.EAGER)
 	@XmlElement
 	Integer activeYn;
+	
+	
 	public void setGameId(Integer gameId) {
 		this.gameId = gameId;
 	}
@@ -142,7 +172,41 @@ public class Game implements Serializable {
 	public Integer getActiveYn() {
 		return this.activeYn;
 	}
+	
+	public Integer getHomeTeamFK() {
+		return homeTeamFK;
+	}
 
+	public void setHomeTeamFK(Integer homeTeamFK) {
+		this.homeTeamFK = homeTeamFK;
+	}
+
+	public Integer getVisitorTeamFK() {
+		return visitorTeamFK;
+	}
+
+	public void setVisitorTeamFK(Integer visitorTeamFK) {
+		this.visitorTeamFK = visitorTeamFK;
+	}
+
+	public Integer getProgramFK() {
+		return programFK;
+	}
+
+	public void setProgramFK(Integer programFK) {
+		this.programFK = programFK;
+	}
+
+	public Integer getTswAcctFK() {
+		return tswAcctFK;
+	}
+
+	public void setTswAcctFK(Integer tswAcctFK) {
+		this.tswAcctFK = tswAcctFK;
+	}
+
+	/**
+	 */
 	public Game() {
 	}
 

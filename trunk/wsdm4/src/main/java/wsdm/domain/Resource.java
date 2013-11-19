@@ -3,6 +3,10 @@ package wsdm.domain;
 import java.io.Serializable;
 
 import java.lang.StringBuilder;
+
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -113,9 +117,21 @@ public class Resource implements Serializable {
 	public void setResourceId(Integer resourceId) {
 		this.resourceId = resourceId;
 	}
-
+	
+	@Column(name = "priceFK")
+	@Basic(fetch = FetchType.EAGER)
+	@XmlElement
+	Integer priceFK;
 	/**
 	 */
+	
+	@Column(name = "tswAcctFK")
+	@Basic(fetch = FetchType.EAGER)
+	@XmlElement
+	Integer tswAcctFK;
+	/**
+	 */
+	
 	public Integer getResourceId() {
 		return this.resourceId;
 	}
@@ -241,7 +257,26 @@ public class Resource implements Serializable {
 	}
 	/**
 	 */
+	
+	
+	
 	public Resource() {
+	}
+
+	public Integer getPriceFK() {
+		return priceFK;
+	}
+
+	public void setPriceFK(Integer priceFK) {
+		this.priceFK = priceFK;
+	}
+
+	public Integer getTswAcctFK() {
+		return tswAcctFK;
+	}
+
+	public void setTswAcctFK(Integer tswAcctFK) {
+		this.tswAcctFK = tswAcctFK;
 	}
 
 	/**

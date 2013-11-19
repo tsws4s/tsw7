@@ -3,6 +3,10 @@ package wsdm.domain;
 import java.io.Serializable;
 
 import java.lang.StringBuilder;
+
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -69,6 +73,14 @@ public class Level implements Serializable {
 	@Basic(fetch = FetchType.EAGER)
 	@XmlElement
 	Integer activeYn;
+	
+	/**
+	 */
+
+	@Column(name = "tswAcctFK")
+	@Basic(fetch = FetchType.EAGER)
+	@XmlElement
+	Integer tswAcctFK;
 
 	public void setLevelId(Integer levelId) {
 		this.levelId = levelId;
@@ -139,6 +151,17 @@ public class Level implements Serializable {
 	public Integer getActiveYn() {
 		return this.activeYn;
 	}
+	
+	
+	
+	public Integer getTswAcctFK() {
+		return tswAcctFK;
+	}
+
+	public void setTswAcctFK(Integer tswAcctFK) {
+		this.tswAcctFK = tswAcctFK;
+	}
+
 	/**
 	 */
 	public Level() {

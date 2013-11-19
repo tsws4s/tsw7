@@ -3,6 +3,10 @@ package wsdm.domain;
 import java.io.Serializable;
 
 import java.lang.StringBuilder;
+
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -53,7 +57,14 @@ public class Sportposition implements Serializable {
 	@Basic(fetch = FetchType.EAGER)
 	@XmlElement
 	Integer numTeamPlayers;
-
+	
+	@Column(name = "sportFK")
+	@Basic(fetch = FetchType.EAGER)
+	@XmlElement
+	Integer sportFK;
+	/**
+	 */
+	
 	/**
 	 */
 	public void setSportPositionId(Integer sportPositionId) {
@@ -100,6 +111,15 @@ public class Sportposition implements Serializable {
 	 */
 	public Integer getNumTeamPlayers() {
 		return this.numTeamPlayers;
+	}
+
+	
+	public Integer getSportFK() {
+		return sportFK;
+	}
+
+	public void setSportFK(Integer sportFK) {
+		this.sportFK = sportFK;
 	}
 
 	/**

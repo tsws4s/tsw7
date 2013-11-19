@@ -3,6 +3,10 @@ package wsdm.domain;
 import java.io.Serializable;
 
 import java.lang.StringBuilder;
+
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -46,7 +50,21 @@ public class Tswacctsport implements Serializable {
 	@Basic(fetch = FetchType.EAGER)
 	@XmlElement
 	Integer numPrograms;
-
+	
+	@Column(name = "sportFK")
+	@Basic(fetch = FetchType.EAGER)
+	@XmlElement
+	Integer sportFK;
+	/**
+	 */
+	
+	@Column(name = "tswAcctFK")
+	@Basic(fetch = FetchType.EAGER)
+	@XmlElement
+	Integer tswAcctFK;
+	/**
+	 */
+	
 	/**
 	 */
 	public void setTswAcctSportId(Integer tswAcctSportId) {
@@ -81,6 +99,22 @@ public class Tswacctsport implements Serializable {
 	 */
 	public Integer getNumPrograms() {
 		return this.numPrograms;
+	}
+
+	public Integer getSportFK() {
+		return sportFK;
+	}
+
+	public void setSportFK(Integer sportFK) {
+		this.sportFK = sportFK;
+	}
+
+	public Integer getTswAcctFK() {
+		return tswAcctFK;
+	}
+
+	public void setTswAcctFK(Integer tswAcctFK) {
+		this.tswAcctFK = tswAcctFK;
 	}
 
 	/**

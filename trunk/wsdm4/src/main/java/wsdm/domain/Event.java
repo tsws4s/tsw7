@@ -6,6 +6,9 @@ import java.lang.StringBuilder;
 
 import java.util.Calendar;
 
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -95,6 +98,55 @@ public class Event implements Serializable {
 	@XmlElement
 	Boolean allDay;
 
+	/**
+	 */
+
+	@Column(name = "resourceFK")
+	@Basic(fetch = FetchType.EAGER)
+	@XmlElement
+	Integer resourceFK;
+	
+	/**
+	 */
+
+	@Column(name = "priceFK")
+	@Basic(fetch = FetchType.EAGER)
+	@XmlElement
+	Integer priceFK;
+	
+	/**
+	 */
+
+	@Column(name = "programFK")
+	@Basic(fetch = FetchType.EAGER)
+	@XmlElement
+	Integer programFK;
+	
+	/**
+	 */
+
+	@Column(name = "gameFK")
+	@Basic(fetch = FetchType.EAGER)
+	@XmlElement
+	Integer gameFK;
+	
+	/**
+	 */
+
+	@Column(name = "customerFK")
+	@Basic(fetch = FetchType.EAGER)
+	@XmlElement
+	Integer customerFK;
+	
+	/**
+	 */
+
+	@Column(name = "tswAcctFK")
+	@Basic(fetch = FetchType.EAGER)
+	@XmlElement
+	Integer tswAcctFK;
+
+	
 	public void setEventId(Integer eventId) {
 		this.eventId = eventId;
 	}
@@ -199,6 +251,54 @@ public class Event implements Serializable {
 	 */
 	public Boolean getAllDay() {
 		return this.allDay;
+	}
+
+	public Integer getResourceFK() {
+		return resourceFK;
+	}
+
+	public void setResourceFK(Integer resourceFK) {
+		this.resourceFK = resourceFK;
+	}
+
+	public Integer getPriceFK() {
+		return priceFK;
+	}
+
+	public void setPriceFK(Integer priceFK) {
+		this.priceFK = priceFK;
+	}
+
+	public Integer getProgramFK() {
+		return programFK;
+	}
+
+	public void setProgramFK(Integer programFK) {
+		this.programFK = programFK;
+	}
+
+	public Integer getGameFK() {
+		return gameFK;
+	}
+
+	public void setGameFK(Integer gameFK) {
+		this.gameFK = gameFK;
+	}
+
+	public Integer getCustomerFK() {
+		return customerFK;
+	}
+
+	public void setCustomerFK(Integer customerFK) {
+		this.customerFK = customerFK;
+	}
+
+	public Integer getTswAcctFK() {
+		return tswAcctFK;
+	}
+
+	public void setTswAcctFK(Integer tswAcctFK) {
+		this.tswAcctFK = tswAcctFK;
 	}
 
 	public Event() {

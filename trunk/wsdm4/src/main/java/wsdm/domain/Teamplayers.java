@@ -5,6 +5,10 @@ import java.io.Serializable;
 import java.lang.StringBuilder;
 
 import java.math.BigDecimal;
+
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -98,6 +102,49 @@ public class Teamplayers implements Serializable {
 	public void setTeamPlayersId(Integer teamPlayersId) {
 		this.teamPlayersId = teamPlayersId;
 	}
+	
+	@Column(name = "teamFK")
+	@Basic(fetch = FetchType.EAGER)
+	@XmlElement
+	Integer teamFK;
+	/**
+	 */
+	
+	@Column(name = "customerFK")
+	@Basic(fetch = FetchType.EAGER)
+	@XmlElement
+	Integer customerFK;
+	/**
+	 */
+	
+	@Column(name = "programFK")
+	@Basic(fetch = FetchType.EAGER)
+	@XmlElement
+	Integer programFK;
+	/**
+	 */
+	
+	@Column(name = "levelFK")
+	@Basic(fetch = FetchType.EAGER)
+	@XmlElement
+	Integer levelFK;
+	/**
+	 */
+	
+	@Column(name = "sportPositionFK")
+	@Basic(fetch = FetchType.EAGER)
+	@XmlElement
+	Integer sportPositionFK;
+	/**
+	 */
+	
+	@Column(name = "tswAcctFK")
+	@Basic(fetch = FetchType.EAGER)
+	@XmlElement
+	Integer tswAcctFK;
+	/**
+	 */
+	
 
 	/**
 	 */
@@ -199,6 +246,56 @@ public class Teamplayers implements Serializable {
 	 */
 	public BigDecimal getOtherAmtPaid() {
 		return this.otherAmtPaid;
+	}
+	
+	
+
+	public Integer getTeamFK() {
+		return teamFK;
+	}
+
+	public void setTeamFK(Integer teamFK) {
+		this.teamFK = teamFK;
+	}
+
+	public Integer getCustomerFK() {
+		return customerFK;
+	}
+
+	public void setCustomerFK(Integer customerFK) {
+		this.customerFK = customerFK;
+	}
+
+	public Integer getProgramFK() {
+		return programFK;
+	}
+
+	public void setProgramFK(Integer programFK) {
+		this.programFK = programFK;
+	}
+
+	public Integer getLevelFK() {
+		return levelFK;
+	}
+
+	public void setLevelFK(Integer levelFK) {
+		this.levelFK = levelFK;
+	}
+
+	public Integer getSportPositionFK() {
+		return sportPositionFK;
+	}
+
+	public void setSportPositionFK(Integer sportPositionFK) {
+		this.sportPositionFK = sportPositionFK;
+	}
+
+	public Integer getTswAcctFK() {
+		return tswAcctFK;
+	}
+
+	public void setTswAcctFK(Integer tswAcctFK) {
+		this.tswAcctFK = tswAcctFK;
 	}
 
 	/**

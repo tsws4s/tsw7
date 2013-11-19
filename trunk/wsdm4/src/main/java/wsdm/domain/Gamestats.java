@@ -5,6 +5,10 @@ import java.io.Serializable;
 import java.lang.StringBuilder;
 
 import java.util.Calendar;
+
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -53,7 +57,28 @@ public class Gamestats implements Serializable {
 	@Basic(fetch = FetchType.EAGER)
 	@XmlElement
 	Calendar gameStatTime;
-
+	
+	@Column(name = "sportStatTypeFK")
+	@Basic(fetch = FetchType.EAGER)
+	@XmlElement
+	Integer sportStatTypeFK;
+	/**
+	 */
+	
+	@Column(name = "teamplayerFK")
+	@Basic(fetch = FetchType.EAGER)
+	@XmlElement
+	Integer teamplayerFK;
+	/**
+	 */
+	
+	@Column(name = "tswAcctFK")
+	@Basic(fetch = FetchType.EAGER)
+	@XmlElement
+	Integer tswAcctFK;
+	/**
+	 */
+	
 	public void setGameStatsId(Integer gameStatsId) {
 		this.gameStatsId = gameStatsId;
 	}
@@ -99,6 +124,32 @@ public class Gamestats implements Serializable {
 	public Calendar getGameStatTime() {
 		return this.gameStatTime;
 	}
+	
+	
+	public Integer getSportStatTypeFK() {
+		return sportStatTypeFK;
+	}
+
+	public void setSportStatTypeFK(Integer sportStatTypeFK) {
+		this.sportStatTypeFK = sportStatTypeFK;
+	}
+
+	public Integer getTeamplayerFK() {
+		return teamplayerFK;
+	}
+
+	public void setTeamplayerFK(Integer teamplayerFK) {
+		this.teamplayerFK = teamplayerFK;
+	}
+
+	public Integer getTswAcctFK() {
+		return tswAcctFK;
+	}
+
+	public void setTswAcctFK(Integer tswAcctFK) {
+		this.tswAcctFK = tswAcctFK;
+	}
+
 	public Gamestats() {
 	}
 
