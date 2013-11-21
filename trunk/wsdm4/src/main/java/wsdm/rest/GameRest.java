@@ -6,7 +6,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import wsdm.domain.Customer;
+import wsdm.domain.Game;
 /*
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -24,20 +24,20 @@ public class GameRest extends AbstractRest {
 	
 	@GET
 	@Produces("application/json")
-	public Customer getCustomer(@QueryParam("custid") Integer custId) {
+	public Game getGame(@QueryParam("gameid") Integer gameId) {
 		
-		String sqlString = "select myCustomer from Customer myCustomer where customerId = "+custId;
-		Customer customer = (Customer) executeUniqueResultQuery(sqlString);
-		return customer;
+		String sqlString = "select myGame from Game myGame where myGame.gameId = "+gameId;
+		Game game = (Game) executeUniqueResultQuery(sqlString);
+		return game;
 	}
 
 	@SuppressWarnings("unchecked")
 	@GET
 	@Path("list")
 	@Produces("application/json")
-	public ArrayList<Customer> listCustomers() {
+	public ArrayList<Game> listGames() {
 		
-		ArrayList<Customer> customers = (ArrayList<Customer>) executeResultListQuery("select myCustomer from Customer myCustomer");
-		return customers;
+		ArrayList<Game> game = (ArrayList<Game>) executeResultListQuery("select myGame from Game myGame");
+		return game;
 	}
 }

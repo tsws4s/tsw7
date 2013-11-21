@@ -6,7 +6,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import wsdm.domain.Customer;
+import wsdm.domain.Programresource;
 /*
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -20,20 +20,20 @@ public class ProgramresourceRest extends AbstractRest {
 	
 	@GET
 	@Produces("application/json")
-	public Customer getCustomer(@QueryParam("custid") Integer custId) {
+	public Programresource getProgramresource(@QueryParam("programresourceid") Integer programresourceId) {
 		
-		String sqlString = "select myCustomer from Customer myCustomer where customerId = "+custId;
-		Customer customer = (Customer) executeUniqueResultQuery(sqlString);
-		return customer;
+		String sqlString = "select myProgramresource from Programresource myProgramresource where myProgramresource.programResourceId = "+programresourceId;
+		Programresource programresource = (Programresource) executeUniqueResultQuery(sqlString);
+		return programresource;
 	}
 
 	@SuppressWarnings("unchecked")
 	@GET
 	@Path("list")
 	@Produces("application/json")
-	public ArrayList<Customer> listCustomers() {
+	public ArrayList<Programresource> listProgramresources() {
 		
-		ArrayList<Customer> customers = (ArrayList<Customer>) executeResultListQuery("select myCustomer from Customer myCustomer");
-		return customers;
+		ArrayList<Programresource> programresource = (ArrayList<Programresource>) executeResultListQuery("select myProgramresource from Programresource myProgramresource");
+		return programresource;
 	}
 }

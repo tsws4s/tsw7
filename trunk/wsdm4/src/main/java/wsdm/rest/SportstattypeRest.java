@@ -7,7 +7,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import wsdm.domain.Customer;
+import wsdm.domain.Sportstattype;
 /*
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -22,20 +22,20 @@ public class SportstattypeRest extends AbstractRest {
 	
 	@GET
 	@Produces("application/json")
-	public Customer getCustomer(@QueryParam("custid") Integer custId) {
+	public Sportstattype getSportstattype(@QueryParam("sportstattypeid") Integer sportstattypeId) {
 		
-		String sqlString = "select myCustomer from Customer myCustomer where customerId = "+custId;
-		Customer customer = (Customer) executeUniqueResultQuery(sqlString);
-		return customer;
+		String sqlString = "select mySportstattype from Sportstattype mySportstattype where mySportstattype.sportStatTypeId = "+sportstattypeId;
+		Sportstattype sportstattype = (Sportstattype) executeUniqueResultQuery(sqlString);
+		return sportstattype;
 	}
 
 	@SuppressWarnings("unchecked")
 	@GET
 	@Path("list")
 	@Produces("application/json")
-	public ArrayList<Customer> listCustomers() {
+	public ArrayList<Sportstattype> listCustomers() {
 		
-		ArrayList<Customer> customers = (ArrayList<Customer>) executeResultListQuery("select myCustomer from Customer myCustomer");
-		return customers;
+		ArrayList<Sportstattype> sportstattype = (ArrayList<Sportstattype>) executeResultListQuery("select mySportstattype from Sportstattype mySportstattype");
+		return sportstattype;
 	}
 }
