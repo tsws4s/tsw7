@@ -58,24 +58,10 @@ public class Gamestats implements Serializable {
 	@XmlElement
 	Calendar gameStatTime;
 	
-	@Column(name = "sportStatTypeFK")
-	@Basic(fetch = FetchType.EAGER)
-	@XmlElement
-	Integer sportStatTypeFK;
-	/**
-	 */
-	
 	@Column(name = "teamplayerFK")
 	@Basic(fetch = FetchType.EAGER)
 	@XmlElement
 	Integer teamplayerFK;
-	/**
-	 */
-	
-	@Column(name = "tswAcctFK")
-	@Basic(fetch = FetchType.EAGER)
-	@XmlElement
-	Integer tswAcctFK;
 	/**
 	 */
 	
@@ -125,29 +111,12 @@ public class Gamestats implements Serializable {
 		return this.gameStatTime;
 	}
 	
-	
-	public Integer getSportStatTypeFK() {
-		return sportStatTypeFK;
-	}
-
-	public void setSportStatTypeFK(Integer sportStatTypeFK) {
-		this.sportStatTypeFK = sportStatTypeFK;
-	}
-
 	public Integer getTeamplayerFK() {
 		return teamplayerFK;
 	}
 
 	public void setTeamplayerFK(Integer teamplayerFK) {
 		this.teamplayerFK = teamplayerFK;
-	}
-
-	public Integer getTswAcctFK() {
-		return tswAcctFK;
-	}
-
-	public void setTswAcctFK(Integer tswAcctFK) {
-		this.tswAcctFK = tswAcctFK;
 	}
 
 	public Gamestats() {
