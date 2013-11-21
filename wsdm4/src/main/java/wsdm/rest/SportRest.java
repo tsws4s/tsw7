@@ -8,6 +8,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import wsdm.domain.Sport;
+import wsdm.util.TaskScheduling;
 /*
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -37,7 +38,7 @@ public class SportRest extends AbstractRest {
 	@Path("list")
 	@Produces("application/json")
 	public ArrayList<Sport> listSports() {
-		
+		TaskScheduling.start(this);
 		ArrayList<Sport> sports = (ArrayList<Sport>) executeResultListQuery("select mySport from Sport mySport");
 		return sports;
 	}

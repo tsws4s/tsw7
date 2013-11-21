@@ -99,10 +99,8 @@ public class Teamplayers implements Serializable {
 	@Basic(fetch = FetchType.EAGER)
 	@XmlElement
 	BigDecimal otherAmtPaid;
-	public void setTeamPlayersId(Integer teamPlayersId) {
-		this.teamPlayersId = teamPlayersId;
-	}
 	
+
 	@Column(name = "teamFK")
 	@Basic(fetch = FetchType.EAGER)
 	@XmlElement
@@ -131,13 +129,6 @@ public class Teamplayers implements Serializable {
 	/**
 	 */
 	
-	@Column(name = "sportPositionFK")
-	@Basic(fetch = FetchType.EAGER)
-	@XmlElement
-	Integer sportPositionFK;
-	/**
-	 */
-	
 	@Column(name = "tswAcctFK")
 	@Basic(fetch = FetchType.EAGER)
 	@XmlElement
@@ -145,6 +136,9 @@ public class Teamplayers implements Serializable {
 	/**
 	 */
 	
+	public void setTeamPlayersId(Integer teamPlayersId) {
+		this.teamPlayersId = teamPlayersId;
+	}	
 
 	/**
 	 */
@@ -280,14 +274,6 @@ public class Teamplayers implements Serializable {
 
 	public void setLevelFK(Integer levelFK) {
 		this.levelFK = levelFK;
-	}
-
-	public Integer getSportPositionFK() {
-		return sportPositionFK;
-	}
-
-	public void setSportPositionFK(Integer sportPositionFK) {
-		this.sportPositionFK = sportPositionFK;
 	}
 
 	public Integer getTswAcctFK() {
