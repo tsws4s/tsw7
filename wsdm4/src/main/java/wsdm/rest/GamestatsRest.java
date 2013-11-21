@@ -5,7 +5,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import wsdm.domain.Customer;
+import wsdm.domain.Gamestats;
 /*
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -19,20 +19,20 @@ public class GamestatsRest extends AbstractRest {
 	
 	@GET
 	@Produces("application/json")
-	public Customer getCustomer(@QueryParam("custid") Integer custId) {
+	public Gamestats getGamestats(@QueryParam("gamestatsid") Integer gamestatsId) {
 		
-		String sqlString = "select myCustomer from Customer myCustomer where customerId = "+custId;
-		Customer customer = (Customer) executeUniqueResultQuery(sqlString);
-		return customer;
+		String sqlString = "select myGamestats from Gamestats myGamestats where myGamestats.gameStatsId = "+gamestatsId;
+		Gamestats gamestats = (Gamestats) executeUniqueResultQuery(sqlString);
+		return gamestats;
 	}
 
 	@SuppressWarnings("unchecked")
 	@GET
 	@Path("list")
 	@Produces("application/json")
-	public ArrayList<Customer> listCustomers() {
+	public ArrayList<Gamestats> listGamestats() {
 		
-		ArrayList<Customer> customers = (ArrayList<Customer>) executeResultListQuery("select myCustomer from Customer myCustomer");
-		return customers;
+		ArrayList<Gamestats> gamestats = (ArrayList<Gamestats>) executeResultListQuery("select myGamestats from Gamestats myGamestats");
+		return gamestats;
 	}
 }

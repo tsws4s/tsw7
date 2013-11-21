@@ -30,8 +30,6 @@
       			<mapping class="wsdm.domain.Program" />
       			<mapping class="wsdm.domain.Level" />
       			<mapping class="wsdm.domain.Sport" />
-      			<mapping class="wsdm.domain.Gengame" />
-      			<mapping class="wsdm.domain.Proggengames" />
       			<mapping class="wsdm.domain.Sportposition" />
       			<mapping class="wsdm.domain.Game" />
       			<mapping class="wsdm.domain.Participant" />

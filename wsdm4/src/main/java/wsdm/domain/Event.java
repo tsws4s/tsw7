@@ -101,7 +101,7 @@ public class Event implements Serializable {
 	/**
 	 */
 
-	@Column(name = "resourceFK")
+	@Column(name = "resourceFk")
 	@Basic(fetch = FetchType.EAGER)
 	@XmlElement
 	Integer resourceFK;
@@ -109,7 +109,7 @@ public class Event implements Serializable {
 	/**
 	 */
 
-	@Column(name = "priceFK")
+	@Column(name = "priceFk")
 	@Basic(fetch = FetchType.EAGER)
 	@XmlElement
 	Integer priceFK;
@@ -117,7 +117,7 @@ public class Event implements Serializable {
 	/**
 	 */
 
-	@Column(name = "programFK")
+	@Column(name = "programFk")
 	@Basic(fetch = FetchType.EAGER)
 	@XmlElement
 	Integer programFK;
@@ -125,7 +125,7 @@ public class Event implements Serializable {
 	/**
 	 */
 
-	@Column(name = "gameFK")
+	@Column(name = "gameFk")
 	@Basic(fetch = FetchType.EAGER)
 	@XmlElement
 	Integer gameFK;
@@ -133,7 +133,7 @@ public class Event implements Serializable {
 	/**
 	 */
 
-	@Column(name = "customerFK")
+	@Column(name = "customerFk")
 	@Basic(fetch = FetchType.EAGER)
 	@XmlElement
 	Integer customerFK;
@@ -141,7 +141,7 @@ public class Event implements Serializable {
 	/**
 	 */
 
-	@Column(name = "tswAcctFK")
+	@Column(name = "tswAcctFk")
 	@Basic(fetch = FetchType.EAGER)
 	@XmlElement
 	Integer tswAcctFK;

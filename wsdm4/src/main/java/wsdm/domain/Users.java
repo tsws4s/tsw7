@@ -70,7 +70,7 @@ public class Users implements Serializable {
 	/**
 	 */
 
-	@Column(name = "tswAcctFk")
+	@Column(name = "tswAcctFK")
 	@Basic(fetch = FetchType.EAGER)
 	@XmlElement
 	Integer tswAcctFk;

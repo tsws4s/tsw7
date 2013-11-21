@@ -7,7 +7,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import wsdm.domain.Customer;
+import wsdm.domain.Price;
 /*
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -21,20 +21,20 @@ public class PriceRest extends AbstractRest {
 	
 	@GET
 	@Produces("application/json")
-	public Customer getCustomer(@QueryParam("custid") Integer custId) {
+	public Price getPrice(@QueryParam("priceid") Integer priceId) {
 		
-		String sqlString = "select myCustomer from Customer myCustomer where customerId = "+custId;
-		Customer customer = (Customer) executeUniqueResultQuery(sqlString);
-		return customer;
+		String sqlString = "select myPrice from Price myPrice where myPrice.priceId = "+priceId;
+		Price price = (Price) executeUniqueResultQuery(sqlString);
+		return price;
 	}
 
 	@SuppressWarnings("unchecked")
 	@GET
 	@Path("list")
 	@Produces("application/json")
-	public ArrayList<Customer> listCustomers() {
+	public ArrayList<Price> listPrices() {
 		
-		ArrayList<Customer> customers = (ArrayList<Customer>) executeResultListQuery("select myCustomer from Customer myCustomer");
-		return customers;
+		ArrayList<Price> price = (ArrayList<Price>) executeResultListQuery("select myPrice from Price myPrice");
+		return price;
 	}
 }
