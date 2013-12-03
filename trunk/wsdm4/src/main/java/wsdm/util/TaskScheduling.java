@@ -23,7 +23,7 @@ private static Timer timer =  null;
 				timer = new Timer();
 			    // Schedule to run after every 15 mins - 900000
 				runTask = new Task(sportRest);
-			    timer.schedule(runTask, 15000, 900000);  
+			    timer.schedule(runTask, 15000, 300000);  
 			    isRunning = true;
 		   }
 	   }  
